@@ -48,9 +48,11 @@ def compile_ffmpeg_timeline(
     plan: TimelineRenderPlan,
     profile: VideoNormalizationProfile | None = None,
     overwrite: bool = False,
+    output_path: Path | None = None,
 ) -> FFmpegTimelineCommand:
     """Compile semantic plan timing into deterministic argv and filter graph."""
     selected_profile = profile or VideoNormalizationProfile.academia_default()
+    selected_output_path = Path(output_path) if output_path is not None else plan.destination
     scenes = plan.scenes
     _validate_scenes(plan)
     transitions_by_boundary = _validate_and_index_transitions(plan)
@@ -102,10 +104,10 @@ def compile_ffmpeg_timeline(
     )
     if has_audio:
         args.extend(["-c:a", selected_profile.audio_codec])
-    args.append(str(plan.destination))
+    args.append(str(selected_output_path))
     return FFmpegTimelineCommand(
         args=tuple(args),
-        expected_output_path=plan.destination,
+        expected_output_path=selected_output_path,
         filter_complex=filter_complex,
         input_count=len(scenes),
         has_audio_output=has_audio,
