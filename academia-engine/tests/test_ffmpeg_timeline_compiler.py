@@ -9,6 +9,7 @@ from app.timeline import (
 )
 from tests.test_timeline_render_plan import validated, vscene
 from app.timeline import build_render_plan
+from app.media import VideoNormalizationProfile
 
 
 class FFmpegTimelineCompilerTests(unittest.TestCase):
@@ -16,7 +17,8 @@ class FFmpegTimelineCompilerTests(unittest.TestCase):
         plan = build_render_plan(validated([vscene("one", 0, 1, 5, audio=False, transition=TimelineTransition(kind="cut")), vscene("two", 1, 2, 8, audio=False)], total=10))
         before = plan.to_json()
         command = compile_ffmpeg_timeline(plan)
-        self.assertEqual(command.filter_complex, "[0:v:0]trim=start=1:end=5,setpts=PTS-STARTPTS[v0];[1:v:0]trim=start=2:end=8,setpts=PTS-STARTPTS[v1];[v0][v1]concat=n=2:v=1:a=0[vout]")
+        normalization = "scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30"
+        self.assertEqual(command.filter_complex, f"[0:v:0]trim=start=1:end=5,setpts=PTS-STARTPTS,{normalization}[v0];[1:v:0]trim=start=2:end=8,setpts=PTS-STARTPTS,{normalization}[v1];[v0][v1]concat=n=2:v=1:a=0[vout]")
         self.assertEqual(command.args[:6], ("ffmpeg", "-n", "-i", "one.mp4", "-i", "two.mp4"))
         self.assertEqual(command.args.count("-map"), 1)
         self.assertIn("[vout]", command.args)
@@ -42,6 +44,29 @@ class FFmpegTimelineCompilerTests(unittest.TestCase):
         graph = compile_ffmpeg_timeline(plan).filter_complex
         self.assertIn("[v0][v1][v2]concat=n=3:v=1:a=0[vout]", graph)
         self.assertIn("[a0][a1][a2]concat=n=3:v=0:a=1[aout]", graph)
+
+    def test_every_scene_is_normalized_in_exact_order_before_composition(self) -> None:
+        plan = build_render_plan(validated([vscene("one", 0, 0, 5, audio=False, transition=TimelineTransition(kind="cut")), vscene("two", 1, 0, 5, audio=False)], total=10))
+        graph = compile_ffmpeg_timeline(plan).filter_complex
+        chain = "trim=start=0:end=5,setpts=PTS-STARTPTS,scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30"
+        self.assertEqual(graph.count(chain), 2)
+        self.assertLess(graph.rfind(chain), graph.index("concat="))
+
+    def test_custom_profile_controls_scene_dimensions_frame_rate_and_output_settings(self) -> None:
+        plan = build_render_plan(validated([vscene("one", 0, 0, 5, audio=False, transition=TimelineTransition(kind="cut")), vscene("two", 1, 0, 5, audio=False)], total=10))
+        profile = VideoNormalizationProfile(width=1920, height=1080, frame_rate=24, video_codec="libx264", audio_codec="aac", pixel_format="yuv420p")
+        command = compile_ffmpeg_timeline(plan, profile=profile)
+        normalization = "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=24"
+        self.assertEqual(command.filter_complex.count(normalization), 2)
+        self.assertEqual(command.args[command.args.index("-r") + 1], "24")
+
+    def test_compilation_is_deterministic_with_normalized_scene_streams(self) -> None:
+        plan = build_render_plan(validated([vscene("one", 0, 0, 6, audio=False, transition=TimelineTransition(kind="dissolve", duration_seconds=1)), vscene("two", 1, 0, 5, audio=False)], total=10))
+        first = compile_ffmpeg_timeline(plan)
+        second = compile_ffmpeg_timeline(plan)
+        self.assertEqual(first, second)
+        self.assertIn("setsar=1,fps=30[v0];", first.filter_complex)
+        self.assertIn("setsar=1,fps=30[v1];", first.filter_complex)
 
     def test_fade_and_dissolve_map_to_xfade_and_acrossfade(self) -> None:
         for kind in ("fade", "dissolve"):

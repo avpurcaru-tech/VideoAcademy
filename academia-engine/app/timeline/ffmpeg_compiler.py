@@ -64,12 +64,14 @@ def compile_ffmpeg_timeline(
     has_audio = scenes[0].has_audio
 
     filters: list[str] = []
+    video_normalization = _video_normalization_filters(selected_profile)
     for scene in scenes:
         index = scene.input_index
         start = _format_number(scene.source_start_seconds)
         end = _format_number(scene.source_end_seconds)
         filters.append(
-            f"[{index}:v:0]trim=start={start}:end={end},setpts=PTS-STARTPTS[v{index}]"
+            f"[{index}:v:0]trim=start={start}:end={end},setpts=PTS-STARTPTS,"
+            f"{video_normalization}[v{index}]"
         )
         if has_audio:
             filters.append(
@@ -264,6 +266,21 @@ def _xfade_kind(kind: TimelineTransitionKind) -> str:
         return mapping[kind]
     except KeyError as error:
         raise FFmpegTimelineTransitionError("Unsupported semantic transition kind.") from error
+
+
+def _video_normalization_filters(profile: VideoNormalizationProfile) -> str:
+    """Return the deterministic trim-following scene normalization chain.
+
+    Every scene is fitted without cropping, centered on the exact output canvas,
+    assigned square pixels, and converted to the profile frame rate before it
+    reaches concat or xfade.
+    """
+    frame_rate = _format_number(profile.frame_rate)
+    return (
+        f"scale={profile.width}:{profile.height}:force_original_aspect_ratio=decrease,"
+        f"pad={profile.width}:{profile.height}:(ow-iw)/2:(oh-ih)/2,"
+        f"setsar=1,fps={frame_rate}"
+    )
 
 
 def _format_number(value: float) -> str:
