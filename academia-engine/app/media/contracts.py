@@ -89,3 +89,28 @@ class LoudnessNormalizedVideoArtifact(BaseModel):
     byte_size: int = Field(gt=0)
     sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     media_info: MediaProbeResult
+
+
+class VideoAssemblyRequest(BaseModel):
+    """Ordered inputs and explicit policies for one isolated assembly workflow."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    sources: tuple[Path, ...]
+    destination: Path
+    workspace: Path
+    normalization_profile: VideoNormalizationProfile
+    loudness_profile: AudioLoudnessProfile
+    overwrite: bool = False
+
+
+class AssembledVideoArtifact(BaseModel):
+    """Durable final metadata with no intermediate workspace paths."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    local_path: Path
+    byte_size: int = Field(gt=0)
+    sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    media_info: MediaProbeResult
+    source_count: int = Field(ge=2)

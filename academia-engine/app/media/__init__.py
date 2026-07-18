@@ -16,7 +16,18 @@ from .concat import (
     MixedAudioPresenceError,
     VideoConcatenationError,
 )
-from .contracts import AudioLoudnessProfile, ConcatenatedVideoArtifact, LoudnessNormalizedVideoArtifact, MediaProbeResult, NormalizedVideoArtifact, VideoNormalizationProfile
+from .assembly import (
+    AssemblyConcatenationError,
+    AssemblyDestinationExistsError,
+    AssemblyLoudnessNormalizationError,
+    AssemblySceneNormalizationError,
+    AssemblySourceValidationError,
+    AssemblyWorkspaceCleanupError,
+    AssemblyWorkspaceError,
+    VideoAssemblyError,
+    VideoAssemblyService,
+)
+from .contracts import AssembledVideoArtifact, AudioLoudnessProfile, ConcatenatedVideoArtifact, LoudnessNormalizedVideoArtifact, MediaProbeResult, NormalizedVideoArtifact, VideoAssemblyRequest, VideoNormalizationProfile
 from .loudness import (
     DEFAULT_AUDIO_DURATION_TOLERANCE_SECONDS,
     EmptyLoudnessOutputError,
@@ -54,6 +65,17 @@ __all__ = [
     "MediaProbeError",
     "MediaProbeResult",
     "AudioLoudnessProfile",
+    "AssembledVideoArtifact",
+    "VideoAssemblyRequest",
+    "VideoAssemblyService",
+    "VideoAssemblyError",
+    "AssemblyConcatenationError",
+    "AssemblyDestinationExistsError",
+    "AssemblyLoudnessNormalizationError",
+    "AssemblySceneNormalizationError",
+    "AssemblySourceValidationError",
+    "AssemblyWorkspaceCleanupError",
+    "AssemblyWorkspaceError",
     "LoudnessNormalizedVideoArtifact",
     "DEFAULT_AUDIO_DURATION_TOLERANCE_SECONDS",
     "EmptyLoudnessOutputError",
