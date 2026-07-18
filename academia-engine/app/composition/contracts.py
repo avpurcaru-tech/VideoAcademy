@@ -6,6 +6,8 @@ from typing import Annotated, Any
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, field_validator, model_validator
 
+from app.media import MediaProbeResult
+
 
 _URI_SCHEME = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 _WINDOWS_DRIVE = re.compile(r"^[A-Za-z]:[\\/]")
@@ -106,6 +108,19 @@ class ResolvedVideoComposition(BaseModel):
     ordered_sources: tuple[Path, ...]
     destination: Path
     workspace: Path
+    source_count: int = Field(ge=2)
+
+
+class CompositionExecutionResult(BaseModel):
+    """Durable final composition metadata with no execution intermediates."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    composition_id: str = Field(min_length=1)
+    local_path: Path
+    byte_size: int = Field(gt=0)
+    sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    media_info: MediaProbeResult
     source_count: int = Field(ge=2)
 
 
