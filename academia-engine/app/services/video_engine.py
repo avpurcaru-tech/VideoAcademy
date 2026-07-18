@@ -139,6 +139,34 @@ class VideoEngine:
         refreshed = self._refreshed_record(existing, task)
         return self._persist(refreshed)
 
+    def reconcile_existing_task(self, provider: str, provider_task_id: str) -> GenerationTaskRecord:
+        """Query and durably adopt an existing provider task without submitting work."""
+        task = self._query(provider, provider_task_id)
+        now = _now()
+        if self._registry.exists(provider_task_id):
+            existing = self._load(provider_task_id)
+            if existing.provider != provider:
+                raise VideoEngineContractError("The existing task belongs to a different provider.")
+            record = existing.model_copy(update={
+                "external_correlation_id": task.external_correlation_id,
+                "normalized_status": task.normalized_status,
+                "updated_at": task.updated_at or now,
+            })
+            return self._persist(record)
+        record = GenerationTaskRecord(
+            provider=provider,
+            provider_task_id=task.external_task_id,
+            external_correlation_id=task.external_correlation_id,
+            normalized_status=task.normalized_status,
+            created_at=task.submitted_at or now,
+            updated_at=task.updated_at or now,
+        )
+        try:
+            self._registry.create(record)
+            return self._registry.load(provider_task_id)
+        except TaskRegistryError as error:
+            raise VideoEngineRegistryError("The reconciled task could not be stored safely.") from error
+
     def download(self, provider_task_id: str, destination: Path) -> GenerationTaskRecord:
         existing = self._load(provider_task_id)
         task = self._query(existing.provider, provider_task_id)

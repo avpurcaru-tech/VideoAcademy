@@ -71,6 +71,7 @@ class EpisodeSceneResult(BaseModel):
     order: int = Field(ge=0)
     generation_request_reference: GenerationRequestReference
     provider_task_id: str | None = None
+    external_correlation_id: str | None = None
     normalized_status: GenerationTaskStatus | None = None
     local_path: Path | None = None
     artifact_id: str | None = None
