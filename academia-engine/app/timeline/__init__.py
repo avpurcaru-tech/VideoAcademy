@@ -19,6 +19,15 @@ from .render_plan import (
     TimelineRenderPlanInvariantError,
     build_render_plan,
 )
+from .ffmpeg_compiler import (
+    FFmpegTimelineAudioCompatibilityError,
+    FFmpegTimelineCommand,
+    FFmpegTimelineCompilerError,
+    FFmpegTimelineDurationError,
+    FFmpegTimelineInputError,
+    FFmpegTimelineTransitionError,
+    compile_ffmpeg_timeline,
+)
 from .validator import (
     TIMELINE_TIME_TOLERANCE_SECONDS,
     TimelineEmptyEffectiveDurationError,
@@ -54,6 +63,13 @@ __all__ = [
     "TimelineRenderPlanError",
     "TimelineRenderPlanInvariantError",
     "build_render_plan",
+    "FFmpegTimelineAudioCompatibilityError",
+    "FFmpegTimelineCommand",
+    "FFmpegTimelineCompilerError",
+    "FFmpegTimelineDurationError",
+    "FFmpegTimelineInputError",
+    "FFmpegTimelineTransitionError",
+    "compile_ffmpeg_timeline",
     "TIMELINE_TIME_TOLERANCE_SECONDS",
     "TimelineEmptyEffectiveDurationError",
     "TimelineInvalidSourceDurationError",
