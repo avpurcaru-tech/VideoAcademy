@@ -36,6 +36,11 @@ class ProductionRegistry:
         path = self._path(record.production_id)
         if not path.is_file():
             raise ProductionRegistryNotFoundError("Production was not found.")
+        existing = self.load(record.production_id)
+        old = tuple(scene.generation_request_reference for scene in existing.scenes)
+        new = tuple(scene.generation_request_reference for scene in record.scenes)
+        if old != new:
+            raise ProductionRegistryError("Generation request references are immutable.")
         self._write(record, path, True)
 
     def exists(self, production_id: str) -> bool:

@@ -2,7 +2,8 @@ import argparse
 from pathlib import Path
 
 from app.media import FFprobeAdapter, SubprocessProcessRunner
-from app.production import EpisodeProductionError, EpisodeProductionOrchestrator, EpisodeProductionRequest, ProductionRegistry
+from app.production import (EpisodeProductionError, EpisodeProductionOrchestrator, EpisodeProductionRequest,
+                            GenerationRequestStore, ProductionRegistry)
 from app.providers import KlingProvider, KlingVideoArtifactDownloader
 from app.services import TaskRegistry, VideoEngine, VideoPollingPolicy
 from app.timeline import FFmpegTimelineRenderer
@@ -12,7 +13,8 @@ def build_orchestrator() -> EpisodeProductionOrchestrator:
     runner = SubprocessProcessRunner()
     probe = FFprobeAdapter(runner)
     engine = VideoEngine({"kling": KlingProvider()}, TaskRegistry(), KlingVideoArtifactDownloader())
-    return EpisodeProductionOrchestrator(engine, FFmpegTimelineRenderer(runner, probe), ProductionRegistry(), probe)
+    return EpisodeProductionOrchestrator(engine, FFmpegTimelineRenderer(runner, probe), ProductionRegistry(), probe,
+                                         GenerationRequestStore())
 
 
 def _policy(args) -> VideoPollingPolicy:
@@ -43,6 +45,9 @@ def main() -> int:
     parser.add_argument("--max-attempts", type=int); args = parser.parse_args()
     try:
         request = EpisodeProductionRequest.from_json(args.request.read_text(encoding="utf-8"))
+        store = GenerationRequestStore()
+        for reference, generation_request in zip(request.generation_request_references, request.video_requests, strict=True):
+            store.create(reference, generation_request)
         result = build_orchestrator().produce(request, _policy(args))
     except EpisodeProductionError as error:
         print(f"Episode production failed: {str(error)[:500]}"); return 1

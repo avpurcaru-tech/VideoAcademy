@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 from app.models import GenerationTaskStatus, VideoGenerationRequest
 from app.timeline import RenderedTimelineArtifact, TimelineTransitionKind
+from .request_reference import GenerationRequestReference
 
 
 class EpisodeProductionStatus(str, Enum):
@@ -37,6 +38,7 @@ class EpisodeProductionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     production_id: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
     video_requests: tuple[VideoGenerationRequest, ...] = Field(min_length=2)
+    generation_request_references: tuple[GenerationRequestReference, ...] = Field(min_length=2)
     provider: str = Field(min_length=1, max_length=100)
     scene_output_directory: Path
     final_output_path: Path
@@ -48,6 +50,11 @@ class EpisodeProductionRequest(BaseModel):
         ids = [request.request_id for request in self.video_requests]
         if len(ids) != len(set(ids)):
             raise ValueError("Episode video request IDs must be unique.")
+        if len(self.generation_request_references) != len(self.video_requests):
+            raise ValueError("Every episode scene requires one generation request reference.")
+        references = [reference.reference_id for reference in self.generation_request_references]
+        if len(references) != len(set(references)):
+            raise ValueError("Episode generation request references must be unique.")
         return self
 
     def to_json(self) -> str:
@@ -62,6 +69,7 @@ class EpisodeSceneResult(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     scene_id: str
     order: int = Field(ge=0)
+    generation_request_reference: GenerationRequestReference
     provider_task_id: str | None = None
     normalized_status: GenerationTaskStatus | None = None
     local_path: Path | None = None
@@ -84,6 +92,10 @@ class ProductionRecord(BaseModel):
     status: EpisodeProductionStatus
     provider: str
     scenes: tuple[EpisodeSceneResult, ...]
+    scene_output_directory: Path
+    final_output_path: Path
+    media_workspace: Path
+    transition_policy: EpisodeTransitionPolicy
     final_artifact: RenderedTimelineArtifact | None = None
     created_at: datetime
     updated_at: datetime

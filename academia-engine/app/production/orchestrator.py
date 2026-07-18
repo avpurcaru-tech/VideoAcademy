@@ -13,6 +13,7 @@ from .contracts import (EpisodeProductionRequest, EpisodeProductionResult, Episo
                         EpisodeSceneResult, ProductionRecord)
 from .registry import (ProductionRegistry, ProductionRegistryConflictError, ProductionRegistryError,
                        ProductionRegistryNotFoundError, utc_now)
+from .request_reference import GenerationRequestResolver, GenerationRequestResolverError
 
 
 class EpisodeProductionError(RuntimeError): pass
@@ -30,18 +31,18 @@ class EpisodeTimelineValidationError(EpisodeProductionError): pass
 class EpisodeRenderPlanError(EpisodeProductionError): pass
 class EpisodeFinalRenderError(EpisodeProductionError): pass
 class EpisodeUnsupportedProductionStateError(EpisodeProductionError): pass
+class EpisodeGenerationRequestResolutionError(EpisodeProductionError): pass
 
 
 class EpisodeProductionOrchestrator:
     def __init__(self, video_engine, timeline_renderer, production_registry: ProductionRegistry, probe,
-                 *, clock: Callable = utc_now) -> None:
+                 request_resolver: GenerationRequestResolver, *, clock: Callable = utc_now) -> None:
         self._video_engine = video_engine
         self._renderer = timeline_renderer
         self._registry = production_registry
         self._validator = TimelineMediaValidator(probe)
         self._clock = clock
-        self._requests: dict[str, tuple[VideoGenerationRequest, ...]] = {}
-        self._request_contracts: dict[str, EpisodeProductionRequest] = {}
+        self._request_resolver = request_resolver
 
     def produce(self, request: EpisodeProductionRequest, polling_policy: VideoPollingPolicy) -> EpisodeProductionResult:
         try:
@@ -50,19 +51,28 @@ class EpisodeProductionOrchestrator:
             raise EpisodeProductionInvalidRequestError("Episode production request is invalid.") from error
         if self._registry.exists(request.production_id):
             raise EpisodeProductionConflictError("Episode production already exists.")
+        for reference, expected in zip(request.generation_request_references, request.video_requests, strict=True):
+            try:
+                resolved = self._request_resolver.resolve(reference)
+            except Exception as error:
+                raise EpisodeGenerationRequestResolutionError("A generation request reference could not be resolved.") from error
+            if not isinstance(resolved, VideoGenerationRequest) or resolved != expected:
+                raise EpisodeGenerationRequestResolutionError("A generation request reference resolved inconsistently.")
         now = self._clock()
-        scenes = tuple(EpisodeSceneResult(scene_id=f"scene-{index + 1:04d}", order=index) for index in range(len(request.video_requests)))
+        scenes = tuple(EpisodeSceneResult(scene_id=f"scene-{index + 1:04d}", order=index,
+            generation_request_reference=request.generation_request_references[index]) for index in range(len(request.video_requests)))
         record = ProductionRecord(production_id=request.production_id, status=EpisodeProductionStatus.PENDING,
-                                  provider=request.provider, scenes=scenes, created_at=now, updated_at=now)
+                                  provider=request.provider, scenes=scenes,
+                                  scene_output_directory=request.scene_output_directory,
+                                  final_output_path=request.final_output_path, media_workspace=request.media_workspace,
+                                  transition_policy=request.transition_policy, created_at=now, updated_at=now)
         try:
             self._registry.create(record)
         except ProductionRegistryConflictError as error:
             raise EpisodeProductionConflictError("Episode production already exists.") from error
         except ProductionRegistryError as error:
             raise EpisodeProductionRegistryError("Episode production could not be stored.") from error
-        self._requests[request.production_id] = request.video_requests
-        self._request_contracts[request.production_id] = request
-        return self._execute(request, polling_policy)
+        return self._execute(request.production_id, polling_policy)
 
     def resume(self, production_id: str, polling_policy: VideoPollingPolicy) -> EpisodeProductionResult:
         try:
@@ -73,26 +83,27 @@ class EpisodeProductionOrchestrator:
             raise EpisodeProductionRegistryError("Episode production could not be loaded.") from error
         if record.status == EpisodeProductionStatus.SUCCEEDED:
             return self._result(record)
-        request = self._request_contracts.get(production_id)
-        if request is None:
-            if all(scene.local_path is not None for scene in record.scenes):
-                raise EpisodeUnsupportedProductionStateError("Resume requires the original prompt-free production request paths and transition policy.")
-            raise EpisodeUnsupportedProductionStateError("Unsubmitted scenes require the original production request.")
-        return self._execute(request, polling_policy)
+        return self._execute(production_id, polling_policy)
 
-    def _execute(self, request: EpisodeProductionRequest, policy: VideoPollingPolicy) -> EpisodeProductionResult:
+    def _execute(self, production_id: str, policy: VideoPollingPolicy) -> EpisodeProductionResult:
         try:
-            record = self._set_status(self._registry.load(request.production_id), EpisodeProductionStatus.GENERATING)
-            for index, generation_request in enumerate(request.video_requests):
+            record = self._set_status(self._registry.load(production_id), EpisodeProductionStatus.GENERATING)
+            for index in range(len(record.scenes)):
                 scene = record.scenes[index]
                 if scene.local_path is not None:
                     if not scene.local_path.is_file():
                         raise EpisodeSceneArtifactMissingError(f"Local artifact for {scene.scene_id} is missing.")
                     continue
-                destination = request.scene_output_directory / f"scene-{index + 1:04d}.mp4"
+                destination = record.scene_output_directory / f"scene-{index + 1:04d}.mp4"
                 if scene.provider_task_id is None:
                     try:
-                        task = self._video_engine.submit(generation_request, provider=request.provider)
+                        generation_request = self._request_resolver.resolve(scene.generation_request_reference)
+                        if not isinstance(generation_request, VideoGenerationRequest):
+                            raise TypeError("Resolver returned the wrong request type.")
+                    except Exception as error:
+                        raise EpisodeGenerationRequestResolutionError(f"Scene {scene.scene_id} request could not be resolved.") from error
+                    try:
+                        task = self._video_engine.submit(generation_request, provider=record.provider)
                     except VideoEngineError as error:
                         raise EpisodeSceneSubmissionError(f"Scene {scene.scene_id} submission failed.") from error
                     scene = scene.model_copy(update={"provider_task_id": task.provider_task_id, "normalized_status": task.normalized_status})
@@ -113,7 +124,7 @@ class EpisodeProductionOrchestrator:
                 record = self._replace_scene(record, index, scene)
 
             record = self._set_status(record, EpisodeProductionStatus.ASSEMBLING)
-            timeline = self._timeline(request, record)
+            timeline = self._timeline(record)
             try:
                 validated = self._validator.validate(timeline)
             except TimelineMediaValidationError as error:
@@ -132,23 +143,23 @@ class EpisodeProductionOrchestrator:
             return self._result(record)
         except EpisodeProductionError:
             try:
-                current = self._registry.load(request.production_id)
+                current = self._registry.load(production_id)
                 if current.status != EpisodeProductionStatus.SUCCEEDED:
                     self._set_status(current, EpisodeProductionStatus.FAILED)
             except ProductionRegistryError:
                 pass
             raise
 
-    def _timeline(self, request: EpisodeProductionRequest, record: ProductionRecord) -> VideoTimeline:
+    def _timeline(self, record: ProductionRecord) -> VideoTimeline:
         try:
             scenes = []
             for index, scene in enumerate(record.scenes):
                 transition = None if index == len(record.scenes) - 1 else TimelineTransition(
-                    kind=request.transition_policy.kind, duration_seconds=request.transition_policy.duration_seconds)
+                    kind=record.transition_policy.kind, duration_seconds=record.transition_policy.duration_seconds)
                 scenes.append(TimelineScene(scene_id=scene.scene_id, source_path=scene.local_path,
                                             order=scene.order, transition_to_next=transition))
-            return VideoTimeline(timeline_id=request.production_id, scenes=tuple(scenes),
-                                 output=TimelineOutput(destination=request.final_output_path, workspace=request.media_workspace))
+            return VideoTimeline(timeline_id=record.production_id, scenes=tuple(scenes),
+                                 output=TimelineOutput(destination=record.final_output_path, workspace=record.media_workspace))
         except Exception as error:
             raise EpisodeTimelineConstructionError("Episode timeline could not be constructed.") from error
 

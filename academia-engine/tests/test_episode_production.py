@@ -9,7 +9,9 @@ from app.models import Camera, GenerationTaskStatus, Transition, VideoEnvironmen
 from app.production import (EpisodeProductionConflictError, EpisodeProductionOrchestrator,
                             EpisodeProductionRequest, EpisodeProductionStatus, EpisodeSceneArtifactMissingError,
                             EpisodeTransitionPolicy, ProductionRecord, ProductionRegistry,
-                            ProductionRegistryError)
+                            ProductionRegistryError, GenerationRequestReference, GenerationRequestStore,
+                            GenerationRequestConflictError, GenerationRequestCorruptedError)
+from pydantic import ValidationError
 from app.services import ArtifactRecord, GenerationTaskRecord, VideoPollingPolicy
 from app.timeline import RenderedTimelineArtifact
 
@@ -24,8 +26,9 @@ class EpisodeProductionTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.registry = ProductionRegistry(self.root / "productions")
         self.engine = FakeEngine()
+        self.store = GenerationRequestStore(self.root / "requests")
         self.renderer = FakeRenderer(self.root / "final.mp4")
-        self.orchestrator = EpisodeProductionOrchestrator(self.engine, self.renderer, self.registry, FakeProbe(), clock=lambda: NOW)
+        self.orchestrator = EpisodeProductionOrchestrator(self.engine, self.renderer, self.registry, FakeProbe(), self.store, clock=lambda: NOW)
 
     def tearDown(self): self.temp.cleanup()
 
@@ -59,12 +62,12 @@ class EpisodeProductionTests(unittest.TestCase):
 
     def test_missing_durable_artifact_is_explicit_and_marks_failed(self):
         request = self.request("cut", None)
-        self.orchestrator._requests[request.production_id] = request.video_requests
-        self.orchestrator._request_contracts[request.production_id] = request
         missing = self.root / "missing.mp4"
-        scenes = ({"scene_id":"scene-0001","order":0,"provider_task_id":"task-1","normalized_status":"succeeded","local_path":missing,"artifact_id":"a","sha256":"a"*64},
-                  {"scene_id":"scene-0002","order":1,"provider_task_id":"task-2","normalized_status":"succeeded","local_path":missing,"artifact_id":"b","sha256":"b"*64})
-        self.registry.create(ProductionRecord(production_id="episode-001", status="failed", provider="fake", scenes=scenes, created_at=NOW, updated_at=NOW))
+        scenes = ({"scene_id":"scene-0001","order":0,"generation_request_reference":{"reference_id":"ref-1"},"provider_task_id":"task-1","normalized_status":"succeeded","local_path":missing,"artifact_id":"a","sha256":"a"*64},
+                  {"scene_id":"scene-0002","order":1,"generation_request_reference":{"reference_id":"ref-2"},"provider_task_id":"task-2","normalized_status":"succeeded","local_path":missing,"artifact_id":"b","sha256":"b"*64})
+        self.registry.create(ProductionRecord(production_id="episode-001", status="failed", provider="fake", scenes=scenes,
+            scene_output_directory=self.root/"scenes", final_output_path=self.root/"final.mp4", media_workspace=self.root/"media",
+            transition_policy={"kind":"cut"}, created_at=NOW, updated_at=NOW))
         with self.assertRaises(EpisodeSceneArtifactMissingError): self.orchestrator.resume("episode-001", POLICY)
         self.assertEqual(self.registry.load("episode-001").status, EpisodeProductionStatus.FAILED)
 
@@ -73,9 +76,39 @@ class EpisodeProductionTests(unittest.TestCase):
         request = self.request("cut", None)
         self.assertEqual(request.to_json(), EpisodeProductionRequest.from_json(request.to_json()).to_json())
 
+    def test_request_reference_store_is_atomic_validated_and_immutable(self):
+        with self.assertRaises(ValidationError): GenerationRequestReference(reference_id="../escape")
+        reference = GenerationRequestReference(reference_id="stable-request")
+        first = generation("request-1", 1); self.store.create(reference, first)
+        self.assertEqual(self.store.resolve(reference), first)
+        with self.assertRaises(GenerationRequestConflictError): self.store.create(reference, generation("request-2", 2))
+        self.assertFalse((self.root / "requests/stable-request.json.part").exists())
+        (self.root / "requests/stable-request.json").write_text("{broken", encoding="utf-8")
+        with self.assertRaises(GenerationRequestCorruptedError): self.store.resolve(reference)
+
+    def test_new_process_resolves_only_unsubmitted_scene_and_never_resubmits_first(self):
+        request = self.request("cut", None)
+        scene_one_path = self.root / "scenes/scene-0001.mp4"
+        scenes = ({"scene_id":"scene-0001","order":0,"generation_request_reference":{"reference_id":"ref-1"},"provider_task_id":"existing-task","normalized_status":"processing"},
+                  {"scene_id":"scene-0002","order":1,"generation_request_reference":{"reference_id":"ref-2"}})
+        self.registry.create(ProductionRecord(production_id="episode-001", status="failed", provider="fake", scenes=scenes,
+            scene_output_directory=request.scene_output_directory, final_output_path=request.final_output_path,
+            media_workspace=request.media_workspace, transition_policy=request.transition_policy, created_at=NOW, updated_at=NOW))
+        new_engine = FakeEngine(); counting = CountingResolver(self.store)
+        process_b = EpisodeProductionOrchestrator(new_engine, self.renderer, ProductionRegistry(self.root / "productions"),
+                                                  FakeProbe(), counting, clock=lambda: NOW)
+        result = process_b.resume("episode-001", POLICY)
+        self.assertEqual(result.status, EpisodeProductionStatus.SUCCEEDED)
+        self.assertEqual(new_engine.submits, ["request-2"])
+        self.assertEqual(new_engine.resume_calls[0], "existing-task")
+        self.assertEqual(counting.calls, ["ref-2"])
+
     def request(self, kind, duration):
-        return EpisodeProductionRequest(production_id="episode-001", provider="fake",
-            video_requests=(generation("request-1", 1), generation("request-2", 2)),
+        requests=(generation("request-1", 1), generation("request-2", 2))
+        references=(GenerationRequestReference(reference_id="ref-1"), GenerationRequestReference(reference_id="ref-2"))
+        for reference, request in zip(references, requests): self.store.create(reference, request)
+        return EpisodeProductionRequest(production_id="episode-001", provider="fake", video_requests=requests,
+            generation_request_references=references,
             scene_output_directory=self.root / "scenes", final_output_path=self.root / "final.mp4",
             media_workspace=self.root / "media", transition_policy=EpisodeTransitionPolicy(kind=kind, duration_seconds=duration))
 
@@ -107,6 +140,11 @@ class FakeRenderer:
         self.plan=plan
         media=MediaProbeResult(local_path=self.path, duration_seconds=plan.expected_duration_seconds, width=1280, height=720, frame_rate=30, video_codec="h264", has_audio=False, container_format="mp4")
         return RenderedTimelineArtifact(timeline_id=plan.timeline_id, local_path=self.path, byte_size=10, sha256="f"*64, media_info=media, source_count=2, transition_count=len(plan.transitions))
+
+
+class CountingResolver:
+    def __init__(self, store): self.store=store; self.calls=[]
+    def resolve(self, reference): self.calls.append(reference.reference_id); return self.store.resolve(reference)
 
 
 if __name__ == "__main__": unittest.main()
