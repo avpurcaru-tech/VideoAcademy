@@ -52,6 +52,7 @@ from .ffmpeg import (
 )
 from .ffprobe import FFprobeAdapter, FFprobeExecutionError, FFprobeResponseError, MediaProbeError
 from .process_runner import ProcessResult, ProcessRunner, SubprocessProcessRunner
+from .tool_availability import MediaToolAvailabilityChecker, MediaToolAvailabilityError
 
 __all__ = [
     "FFmpegExecutionError",
@@ -107,6 +108,8 @@ __all__ = [
     "ProcessResult",
     "ProcessRunner",
     "SubprocessProcessRunner",
+    "MediaToolAvailabilityChecker",
+    "MediaToolAvailabilityError",
     "VideoNormalizationDestinationExistsError",
     "VideoNormalizationError",
     "VideoNormalizationProfile",
