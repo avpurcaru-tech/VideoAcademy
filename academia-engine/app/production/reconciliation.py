@@ -79,7 +79,9 @@ class EpisodeProductionReconciler:
             "normalized_status": completed.normalized_status,
             "local_path": artifact.local_path,
             "artifact_id": artifact.artifact_id,
+            "byte_size": artifact.byte_size,
             "sha256": artifact.sha256,
+            "content_type": artifact.content_type,
         })
         scenes = list(record.scenes); scenes[index] = updated_scene
         updated = record.model_copy(update={"scenes": tuple(scenes), "updated_at": self._clock()})

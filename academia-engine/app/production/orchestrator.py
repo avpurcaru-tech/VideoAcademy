@@ -120,7 +120,8 @@ class EpisodeProductionOrchestrator:
                     raise EpisodeSceneDownloadError(f"Scene {scene.scene_id} has no downloaded artifact.")
                 artifact = completed.artifact
                 scene = scene.model_copy(update={"normalized_status": completed.normalized_status,
-                    "local_path": artifact.local_path, "artifact_id": artifact.artifact_id, "sha256": artifact.sha256})
+                    "local_path": artifact.local_path, "artifact_id": artifact.artifact_id,
+                    "byte_size": artifact.byte_size, "sha256": artifact.sha256, "content_type": artifact.content_type})
                 record = self._replace_scene(record, index, scene)
 
             record = self._set_status(record, EpisodeProductionStatus.ASSEMBLING)

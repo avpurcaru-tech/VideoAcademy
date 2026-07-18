@@ -75,7 +75,9 @@ class EpisodeSceneResult(BaseModel):
     normalized_status: GenerationTaskStatus | None = None
     local_path: Path | None = None
     artifact_id: str | None = None
+    byte_size: int | None = Field(default=None, gt=0)
     sha256: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    content_type: str | None = None
 
 
 class EpisodeProductionResult(BaseModel):
