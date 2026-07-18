@@ -10,6 +10,15 @@ from .contracts import (
     VideoTimeline,
 )
 from .resolver import resolve_timeline, timeline_from_composition_manifest
+from .render_plan import (
+    RenderScene,
+    RenderTransition,
+    TimelineRenderPlan,
+    TimelineRenderPlanDurationError,
+    TimelineRenderPlanError,
+    TimelineRenderPlanInvariantError,
+    build_render_plan,
+)
 from .validator import (
     TIMELINE_TIME_TOLERANCE_SECONDS,
     TimelineEmptyEffectiveDurationError,
@@ -38,6 +47,13 @@ __all__ = [
     "VideoTimeline",
     "resolve_timeline",
     "timeline_from_composition_manifest",
+    "RenderScene",
+    "RenderTransition",
+    "TimelineRenderPlan",
+    "TimelineRenderPlanDurationError",
+    "TimelineRenderPlanError",
+    "TimelineRenderPlanInvariantError",
+    "build_render_plan",
     "TIMELINE_TIME_TOLERANCE_SECONDS",
     "TimelineEmptyEffectiveDurationError",
     "TimelineInvalidSourceDurationError",
