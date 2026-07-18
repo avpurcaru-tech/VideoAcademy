@@ -1,6 +1,4 @@
 import json
-import ntpath
-import re
 from pathlib import Path
 from typing import Annotated, Any
 
@@ -8,9 +6,9 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, field_validator, m
 
 from app.media import MediaProbeResult
 
+from .paths import normalized_local_path, validate_local_path
 
-_URI_SCHEME = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
-_WINDOWS_DRIVE = re.compile(r"^[A-Za-z]:[\\/]")
+
 SceneOrder = Annotated[StrictInt, Field(ge=0)]
 
 
@@ -33,7 +31,7 @@ class VideoCompositionScene(BaseModel):
     @field_validator("source_path", mode="before")
     @classmethod
     def source_must_be_local(cls, value: Any) -> Any:
-        _validate_local_path(value, "Scene source path")
+        validate_local_path(value, "Scene source path")
         return value
 
 
@@ -48,12 +46,12 @@ class VideoCompositionOutput(BaseModel):
     @field_validator("destination", "workspace", mode="before")
     @classmethod
     def output_paths_must_be_local(cls, value: Any) -> Any:
-        _validate_local_path(value, "Composition output path")
+        validate_local_path(value, "Composition output path")
         return value
 
     @model_validator(mode="after")
     def destination_and_workspace_must_differ(self) -> "VideoCompositionOutput":
-        if _normalized_path(self.destination) == _normalized_path(self.workspace):
+        if normalized_local_path(self.destination) == normalized_local_path(self.workspace):
             raise ValueError("Composition destination and workspace must be different paths.")
         return self
 
@@ -122,22 +120,3 @@ class CompositionExecutionResult(BaseModel):
     sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     media_info: MediaProbeResult
     source_count: int = Field(ge=2)
-
-
-def _validate_local_path(value: Any, field_name: str) -> None:
-    if not isinstance(value, (str, Path)):
-        raise ValueError(f"{field_name} must be an explicit local path.")
-    raw = str(value).strip()
-    if not raw or raw in {".", ".."}:
-        raise ValueError(f"{field_name} must be explicit.")
-    normalized = raw.replace("\\", "/")
-    if not _WINDOWS_DRIVE.match(raw) and _URI_SCHEME.match(raw):
-        raise ValueError(f"{field_name} must not contain a URI scheme.")
-    if normalized.lower().startswith(("http:/", "https:/", "//")):
-        raise ValueError(f"{field_name} must be local, not remote.")
-    if "?" in raw or "#" in raw:
-        raise ValueError(f"{field_name} must not contain URL query or fragment data.")
-
-
-def _normalized_path(path: Path) -> str:
-    return ntpath.normcase(ntpath.abspath(str(path)))
