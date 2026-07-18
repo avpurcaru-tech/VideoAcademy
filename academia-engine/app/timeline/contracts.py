@@ -6,6 +6,7 @@ from typing import Annotated, Any
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, field_validator, model_validator
 
 from app.composition.paths import normalized_local_path, validate_local_path
+from app.media import MediaProbeResult
 
 
 TimelineOrder = Annotated[StrictInt, Field(ge=0)]
@@ -152,3 +153,31 @@ class ResolvedVideoTimeline(BaseModel):
     destination: Path
     workspace: Path
     source_count: int = Field(ge=2)
+
+
+class ValidatedTimelineScene(BaseModel):
+    """One temporally feasible scene backed by normalized probe metadata."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
+
+    scene_id: str
+    source_path: Path
+    order: int = Field(ge=0)
+    source_media_info: MediaProbeResult
+    effective_start_seconds: float = Field(ge=0)
+    effective_end_seconds: float = Field(gt=0)
+    effective_duration_seconds: float = Field(gt=0)
+    transition_to_next: TimelineTransition | None
+
+
+class ValidatedVideoTimeline(BaseModel):
+    """Read-only media-aware timeline validation result."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
+
+    timeline_id: str
+    scenes: tuple[ValidatedTimelineScene, ...]
+    destination: Path
+    workspace: Path
+    source_count: int = Field(ge=2)
+    total_duration_seconds: float = Field(gt=0)
