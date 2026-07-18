@@ -8,9 +8,23 @@ from pydantic import ValidationError
 from app.composition.paths import validate_local_path
 from app.models import VideoGenerationRequest
 from app.production import (
+    EpisodeFinalRenderError,
+    EpisodeGenerationRequestResolutionError,
+    EpisodeProviderSceneFailedError,
     EpisodeProductionError,
+    EpisodeProductionConflictError,
+    EpisodeProductionNotFoundError,
+    EpisodeProductionRegistryError,
     EpisodeProductionRequest,
+    EpisodeRenderPlanError,
+    EpisodeSceneArtifactMissingError,
+    EpisodeSceneDownloadError,
+    EpisodeScenePollingError,
+    EpisodeSceneSubmissionError,
+    EpisodeTimelineConstructionError,
+    EpisodeTimelineValidationError,
     EpisodeTransitionPolicy,
+    EpisodeUnsupportedProductionStateError,
     GenerationRequestReference,
     GenerationRequestConflictError,
     GenerationRequestCorruptedError,
@@ -18,6 +32,7 @@ from app.production import (
     GenerationRequestStore,
     ProductionRegistry,
     ProductionRegistryError,
+    ProductionRegistryNotFoundError,
 )
 from app.services import VideoPollingPolicy
 
@@ -42,6 +57,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--confirm", action="store_true")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--preflight", action="store_true")
+    parser.add_argument("--status", action="store_true")
     return parser
 
 
@@ -60,6 +76,11 @@ def main() -> int:
         max_attempts=args.max_attempts,
     )
 
+    if args.status:
+        if args.resume or args.preflight or args.confirm or args.requests:
+            parser.error("--status cannot be combined with production, resume, or request options")
+        return _show_status(args.production_id)
+
     if args.resume:
         if args.preflight:
             parser.error("--resume cannot be combined with --preflight")
@@ -67,9 +88,8 @@ def main() -> int:
             parser.error("--resume does not accept --request files")
         try:
             result = build_orchestrator().resume(args.production_id, policy)
-        except EpisodeProductionError:
-            print("Episode smoke-test resume failed at the production boundary.")
-            return 1
+        except EpisodeProductionError as error:
+            return _handle_production_failure(args.production_id, error)
         except Exception:
             print("Episode smoke-test resume failed due to an unexpected local error.")
             return 1
@@ -110,9 +130,8 @@ def main() -> int:
         ):
             preflight.store.create(reference, generation_request)
         result = build_orchestrator().produce(preflight.request, policy)
-    except EpisodeProductionError:
-        print("Episode smoke test failed at the production boundary.")
-        return 1
+    except EpisodeProductionError as error:
+        return _handle_production_failure(args.production_id, error)
     except (GenerationRequestConflictError, GenerationRequestCorruptedError):
         print("Episode smoke test failed because durable request state changed after preflight.")
         return 1
@@ -122,6 +141,78 @@ def main() -> int:
 
     _print_result(result)
     return 0
+
+
+_PRODUCTION_FAILURE_MESSAGES = {
+    EpisodeProductionConflictError: "Production could not start because its durable ID already exists.",
+    EpisodeProductionRegistryError: "Production failed while accessing durable production state.",
+    EpisodeGenerationRequestResolutionError: "Production failed while resolving a scene generation request.",
+    EpisodeSceneSubmissionError: "Production failed during scene submission.",
+    EpisodeScenePollingError: "Production failed while waiting for a generated scene.",
+    EpisodeProviderSceneFailedError: "The provider reported that a generated scene failed.",
+    EpisodeSceneDownloadError: "Production failed while downloading a completed scene.",
+    EpisodeSceneArtifactMissingError: "A durable local scene artifact is missing.",
+    EpisodeTimelineConstructionError: "Production failed while constructing the final timeline.",
+    EpisodeTimelineValidationError: "Production failed while validating final assembly media.",
+    EpisodeRenderPlanError: "Production failed while preparing final assembly.",
+    EpisodeFinalRenderError: "Production failed during final assembly rendering.",
+    EpisodeUnsupportedProductionStateError: "Production has an unsupported durable state.",
+    EpisodeProductionNotFoundError: "Production was not found.",
+}
+
+
+def _handle_production_failure(production_id: str, error: EpisodeProductionError) -> int:
+    message = next(
+        (value for error_type, value in _PRODUCTION_FAILURE_MESSAGES.items() if isinstance(error, error_type)),
+        "Episode production failed at a safe production boundary.",
+    )
+    print(message)
+    try:
+        record = ProductionRegistry().load(production_id)
+    except ProductionRegistryNotFoundError:
+        print("No durable production task was created.")
+        print("A new confirmed production may be started after the reported error is fixed.")
+        return 1
+    except ProductionRegistryError:
+        print("Durable production state could not be inspected safely.")
+        return 1
+
+    if isinstance(error, (EpisodeTimelineConstructionError, EpisodeTimelineValidationError, EpisodeRenderPlanError, EpisodeFinalRenderError)):
+        print("Completed scene artifacts are preserved.")
+    _print_durable_state(record, diagnostic=True)
+    print("Durable production state exists.")
+    print("Use --resume to continue without resubmitting completed or already-submitted scenes.")
+    return 1
+
+
+def _show_status(production_id: str) -> int:
+    try:
+        record = ProductionRegistry().load(production_id)
+    except ProductionRegistryNotFoundError:
+        print("Production was not found:")
+        print(f"- production_id: {production_id}")
+        return 1
+    except ProductionRegistryError:
+        print("Production registry could not be inspected.")
+        return 1
+    _print_durable_state(record, diagnostic=False)
+    return 0
+
+
+def _print_durable_state(record, *, diagnostic: bool) -> None:
+    print(f"Production ID: {record.production_id}")
+    label = "Production status" if diagnostic else "Status"
+    print(f"{label}: {record.status.value}")
+    for scene in record.scenes:
+        print(f"Scene: {scene.scene_id}")
+        print(f"Scene status: {scene.normalized_status.value if scene.normalized_status else ''}")
+        if diagnostic:
+            print(f"Provider task ID present: {'yes' if scene.provider_task_id else 'no'}")
+            print(f"Local artifact present: {'yes' if scene.local_path else 'no'}")
+        else:
+            print(f"Provider task ID: {scene.provider_task_id or ''}")
+            print(f"Local artifact: {scene.local_path or ''}")
+    print(f"Final artifact present: {'yes' if record.final_artifact else 'no'}")
 
 
 class _SafePreflightError(RuntimeError):

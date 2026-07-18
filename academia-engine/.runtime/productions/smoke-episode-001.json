@@ -1,0 +1,41 @@
+{
+  "production_id": "smoke-episode-001",
+  "status": "failed",
+  "provider": "kling",
+  "scenes": [
+    {
+      "scene_id": "scene-0001",
+      "order": 0,
+      "generation_request_reference": {
+        "reference_id": "smoke-episode-001-scene-0001"
+      },
+      "provider_task_id": null,
+      "normalized_status": null,
+      "local_path": null,
+      "artifact_id": null,
+      "sha256": null
+    },
+    {
+      "scene_id": "scene-0002",
+      "order": 1,
+      "generation_request_reference": {
+        "reference_id": "smoke-episode-001-scene-0002"
+      },
+      "provider_task_id": null,
+      "normalized_status": null,
+      "local_path": null,
+      "artifact_id": null,
+      "sha256": null
+    }
+  ],
+  "scene_output_directory": ".runtime\\productions\\smoke-episode-001\\scenes",
+  "final_output_path": ".runtime\\productions\\smoke-episode-001\\final.mp4",
+  "media_workspace": ".runtime\\media\\smoke-episode-001",
+  "transition_policy": {
+    "kind": "fade",
+    "duration_seconds": 0.5
+  },
+  "final_artifact": null,
+  "created_at": "2026-07-18T23:05:12.982520Z",
+  "updated_at": "2026-07-18T23:05:13.692214Z"
+}

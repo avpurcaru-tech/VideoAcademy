@@ -1,12 +1,16 @@
 import tempfile
 import unittest
+from types import SimpleNamespace
 from pathlib import Path
 from unittest.mock import Mock, patch
 
 from app.cli.episode_smoke_test import main
 from app.media import MediaProbeResult
 from app.production import (EpisodeProductionError, EpisodeProductionResult, EpisodeProductionStatus, EpisodeSceneResult,
-                            GenerationRequestConflictError, GenerationRequestCorruptedError, GenerationRequestNotFoundError)
+                            EpisodeFinalRenderError, EpisodeSceneDownloadError, EpisodeScenePollingError,
+                            EpisodeSceneSubmissionError, EpisodeTimelineValidationError,
+                            GenerationRequestConflictError, GenerationRequestCorruptedError, GenerationRequestNotFoundError,
+                            ProductionRegistryNotFoundError)
 from app.timeline import RenderedTimelineArtifact
 from tests.test_episode_production import generation
 
@@ -124,6 +128,52 @@ class EpisodeSmokeCliTests(unittest.TestCase):
                     registry.return_value.exists.return_value=False; self.assertEqual(main(),1); builder.assert_not_called()
                     self.assertIn(expected, " ".join(str(c.args[0]) for c in emit.call_args_list))
 
+    def test_status_reads_registry_only_and_reports_durable_presence(self):
+        record = durable_record(task=True, artifact=True, final=True)
+        argv = ["episode_smoke_test", "--production-id", "smoke-episode-001", "--status"]
+        with patch("sys.argv", argv), patch("app.cli.episode_smoke_test.ProductionRegistry") as registry, \
+             patch("app.cli.episode_smoke_test.build_orchestrator") as builder, \
+             patch("app.cli.episode_smoke_test.GenerationRequestStore") as store, patch("builtins.print") as emit:
+            registry.return_value.load.return_value = record
+            self.assertEqual(main(), 0)
+        builder.assert_not_called(); store.assert_not_called()
+        output = " ".join(str(c.args[0]) for c in emit.call_args_list)
+        self.assertIn("Provider task ID: task-1", output)
+        self.assertIn("Local artifact: scene-1.mp4", output)
+        self.assertIn("Final artifact present: yes", output)
+
+    def test_status_missing_production_is_safe(self):
+        argv = ["episode_smoke_test", "--production-id", "missing", "--status"]
+        with patch("sys.argv", argv), patch("app.cli.episode_smoke_test.ProductionRegistry") as registry, \
+             patch("app.cli.episode_smoke_test.build_orchestrator") as builder, patch("builtins.print") as emit:
+            registry.return_value.load.side_effect = ProductionRegistryNotFoundError("raw prompt signed URL")
+            self.assertEqual(main(), 1)
+        builder.assert_not_called()
+        output = " ".join(str(c.args[0]) for c in emit.call_args_list)
+        self.assertIn("Production was not found", output); self.assertNotIn("signed URL", output)
+
+    def test_stage_errors_show_durable_state_and_only_recommend_resume(self):
+        cases = (
+            (EpisodeSceneSubmissionError("prompt Authorization"), "during scene submission"),
+            (EpisodeScenePollingError("signed URL"), "while waiting"),
+            (EpisodeSceneDownloadError("credentials"), "while downloading"),
+            (EpisodeTimelineValidationError("raw body"), "validating final assembly"),
+            (EpisodeFinalRenderError("filter graph"), "final assembly rendering"),
+        )
+        for error, expected in cases:
+            orchestrator = Mock(); orchestrator.resume.side_effect = error
+            argv = ["episode_smoke_test", "--production-id", "smoke-episode-001", "--resume"]
+            with self.subTest(expected=expected), patch("sys.argv", argv), \
+                 patch("app.cli.episode_smoke_test.build_orchestrator", return_value=orchestrator), \
+                 patch("app.cli.episode_smoke_test.ProductionRegistry") as registry, patch("builtins.print") as emit:
+                registry.return_value.load.return_value = durable_record(task=True, artifact=False, final=False)
+                self.assertEqual(main(), 1)
+            output = " ".join(str(c.args[0]) for c in emit.call_args_list)
+            self.assertIn(expected, output); self.assertIn("Provider task ID present: yes", output)
+            self.assertIn("Use --resume", output); self.assertNotIn("--confirm", output)
+            for forbidden in ("prompt", "Authorization", "signed URL", "credentials", "raw body", "filter graph"):
+                self.assertNotIn(forbidden, output)
+
     @staticmethod
     def _produce_argv(first, second):
         return ["episode_smoke_test", "--production-id", "smoke-episode-001", "--request", str(first), "--request", str(second),
@@ -148,6 +198,24 @@ def result(path):
         for index in (1, 2))
     return EpisodeProductionResult(production_id="smoke-episode-001", status=EpisodeProductionStatus.SUCCEEDED,
                                    scenes=scenes, final_artifact=artifact)
+
+
+def durable_record(*, task, artifact, final):
+    completed = result(Path("final.mp4"))
+    scenes = []
+    for scene in completed.scenes:
+        scenes.append(scene.model_copy(update={
+            "provider_task_id": scene.provider_task_id if task else None,
+            "local_path": scene.local_path if artifact else None,
+            "artifact_id": scene.artifact_id if artifact else None,
+            "sha256": scene.sha256 if artifact else None,
+        }))
+    return SimpleNamespace(
+        production_id="smoke-episode-001",
+        status=EpisodeProductionStatus.FAILED,
+        scenes=tuple(scenes),
+        final_artifact=completed.final_artifact if final else None,
+    )
 
 
 if __name__ == "__main__": unittest.main()

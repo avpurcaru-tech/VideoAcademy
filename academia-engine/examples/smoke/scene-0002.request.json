@@ -1,0 +1,39 @@
+{
+  "request_id": "smoke-ladybug-garden-002",
+  "video_request": {
+    "scene_number": 2,
+    "duration_seconds": 15,
+    "environment": {
+      "location_name": "sunny preschool vegetable garden",
+      "location_description": "The same cheerful animated garden continues beside neat rows of round tomatoes, leafy carrots, and a small blue watering can.",
+      "time_of_day": "bright morning",
+      "lighting_description": "Soft sunny preschool animation lighting matching the colorful flower garden.",
+      "lighting_intensity": "medium"
+    },
+    "characters": [
+      {
+        "id": "lila-ladybug",
+        "name": "Lila",
+        "role": "friendly ladybug guide",
+        "appearance": "A small round red ladybug with black spots, large kind eyes, and a simple cheerful preschool animation design."
+      }
+    ],
+    "character_actions": [
+      {
+        "character_id": "lila-ladybug",
+        "action": "Points toward one red tomato and two orange carrots, then gives a friendly wave beside the blue watering can.",
+        "emotion": "proud and encouraging"
+      }
+    ],
+    "camera": {
+      "shot_type": "medium",
+      "angle": "eye_level",
+      "movement": "pan",
+      "description": "A gentle stable pan reveals the vegetables and finishes on Lila waving."
+    },
+    "transition": {
+      "type": "fade",
+      "duration_seconds": 0.5
+    }
+  }
+}

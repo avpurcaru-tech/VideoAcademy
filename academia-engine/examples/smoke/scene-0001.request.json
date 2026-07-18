@@ -1,0 +1,39 @@
+{
+  "request_id": "smoke-ladybug-garden-001",
+  "video_request": {
+    "scene_number": 1,
+    "duration_seconds": 15,
+    "environment": {
+      "location_name": "colorful preschool flower garden",
+      "location_description": "A cheerful animated garden with large red, yellow, and blue flowers, rounded green leaves, and a clear walking path.",
+      "time_of_day": "bright morning",
+      "lighting_description": "Soft sunny preschool animation lighting with clear friendly colors.",
+      "lighting_intensity": "medium"
+    },
+    "characters": [
+      {
+        "id": "lila-ladybug",
+        "name": "Lila",
+        "role": "friendly ladybug guide",
+        "appearance": "A small round red ladybug with black spots, large kind eyes, and a simple cheerful preschool animation design."
+      }
+    ],
+    "character_actions": [
+      {
+        "character_id": "lila-ladybug",
+        "action": "Walks slowly beside three differently colored flowers and pauses to look at each one.",
+        "emotion": "curious and happy"
+      }
+    ],
+    "camera": {
+      "shot_type": "wide",
+      "angle": "eye_level",
+      "movement": "tracking",
+      "description": "A slow stable tracking view follows Lila along the flower path."
+    },
+    "transition": {
+      "type": "fade",
+      "duration_seconds": 0.5
+    }
+  }
+}
