@@ -1,0 +1,84 @@
+{
+  "episode_id": "garden-colors-001",
+  "episode_title": "Lila Learns Garden Colors",
+  "scenes": [
+    {
+      "scene_number": 1,
+      "duration_seconds": 15,
+      "location": {
+        "name": "colorful flower garden",
+        "description": "A cheerful preschool garden path surrounded by large red, yellow, and blue flowers.",
+        "time_of_day": "bright morning"
+      },
+      "characters": [
+        {
+          "id": "lila-ladybug",
+          "name": "Lila",
+          "role": "friendly garden guide",
+          "description": "A curious ladybug who helps preschool children notice colors.",
+          "appearance": "A small round red ladybug with black spots, large kind eyes, and a simple animated design."
+        }
+      ],
+      "character_actions": [
+        {
+          "character_id": "lila-ladybug",
+          "action": "Lila walks beside one red flower, one yellow flower, and one blue flower, pausing at each color.",
+          "emotion": "curious and cheerful"
+        }
+      ],
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "tracking",
+        "description": "A slow stable tracking view follows Lila along the flower path."
+      },
+      "lighting": {
+        "description": "Soft sunny preschool animation lighting with clear friendly colors.",
+        "intensity": "medium"
+      },
+      "transition": {
+        "type": "fade",
+        "duration_seconds": 0.5
+      }
+    },
+    {
+      "scene_number": 2,
+      "duration_seconds": 15,
+      "location": {
+        "name": "garden vegetable patch",
+        "description": "The same cheerful garden continues beside red tomatoes, orange carrots, green leaves, and a blue watering can.",
+        "time_of_day": "bright morning"
+      },
+      "characters": [
+        {
+          "id": "lila-ladybug",
+          "name": "Lila",
+          "role": "friendly garden guide",
+          "description": "A curious ladybug who helps preschool children notice colors.",
+          "appearance": "A small round red ladybug with black spots, large kind eyes, and a simple animated design."
+        }
+      ],
+      "character_actions": [
+        {
+          "character_id": "lila-ladybug",
+          "action": "Lila points to the vegetables and then waves beside the blue watering can.",
+          "emotion": "proud and encouraging"
+        }
+      ],
+      "camera": {
+        "shot_type": "medium",
+        "angle": "eye_level",
+        "movement": "pan",
+        "description": "A gentle stable pan reveals the vegetables and finishes on Lila waving."
+      },
+      "lighting": {
+        "description": "Soft sunny lighting matching the flower garden scene.",
+        "intensity": "medium"
+      },
+      "transition": {
+        "type": "cut",
+        "duration_seconds": 0
+      }
+    }
+  ]
+}
