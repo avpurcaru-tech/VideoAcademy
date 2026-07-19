@@ -1,0 +1,59 @@
+{
+  "id": "garden-counting-001",
+  "title": "Lila Counts in the Garden",
+  "lyrics": "One bright flower, two orange carrots, three green leaves.",
+  "metadata": {
+    "topic": "counting from one to three",
+    "language": "en",
+    "target_age_min": 3,
+    "target_age_max": 5,
+    "tags": ["preschool", "counting", "garden"]
+  },
+  "characters": [
+    {
+      "id": "lila-ladybug",
+      "name": "Lila",
+      "role": "friendly counting guide",
+      "description": "A curious ladybug who helps children count garden objects.",
+      "appearance": "A small round red ladybug with black spots and large kind eyes."
+    }
+  ],
+  "scenes": [
+    {
+      "number": 1,
+      "narration": "Lila finds one bright yellow flower and happily counts one.",
+      "visual_description": "Lila stands beside one large yellow flower on a colorful garden path.",
+      "duration_seconds": 15,
+      "character_ids": ["lila-ladybug"],
+      "location": {
+        "name": "flower garden",
+        "description": "A cheerful preschool garden with one large yellow flower.",
+        "time_of_day": "morning"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "tracking",
+        "description": "A slow stable view follows Lila toward the flower."
+      }
+    },
+    {
+      "number": 2,
+      "narration": "Lila finds two orange carrots and counts one, two.",
+      "visual_description": "Lila points toward two orange carrots growing beside green leaves.",
+      "duration_seconds": 15,
+      "character_ids": ["lila-ladybug"],
+      "location": {
+        "name": "vegetable garden",
+        "description": "A tidy preschool vegetable patch with two orange carrots.",
+        "time_of_day": "morning"
+      },
+      "camera": {
+        "shot_type": "medium",
+        "angle": "eye_level",
+        "movement": "pan",
+        "description": "A gentle stable pan reveals both carrots and Lila waving."
+      }
+    }
+  ]
+}
