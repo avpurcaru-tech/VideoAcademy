@@ -5,7 +5,7 @@ from typing import Callable
 from app.models import GenerationTaskStatus
 from app.services import VideoEngineError
 
-from .contracts import EpisodeProductionStatus, ProductionRecord
+from .contracts import EpisodeProductionStatus, EpisodeSceneStatus, ProductionRecord
 from .registry import ProductionRegistry, ProductionRegistryError, ProductionRegistryNotFoundError, utc_now
 
 
@@ -47,6 +47,7 @@ class EpisodeProductionReconciler:
             "provider_task_id": task.provider_task_id,
             "external_correlation_id": task.external_correlation_id,
             "normalized_status": task.normalized_status,
+            "production_status": EpisodeSceneStatus.FAILED if task.normalized_status == GenerationTaskStatus.FAILED else EpisodeSceneStatus.GENERATING,
         })
         scenes = list(record.scenes); scenes[index] = updated_scene
         updated = record.model_copy(update={
@@ -82,6 +83,7 @@ class EpisodeProductionReconciler:
             "byte_size": artifact.byte_size,
             "sha256": artifact.sha256,
             "content_type": artifact.content_type,
+            "production_status": EpisodeSceneStatus.READY,
         })
         scenes = list(record.scenes); scenes[index] = updated_scene
         updated = record.model_copy(update={"scenes": tuple(scenes), "updated_at": self._clock()})

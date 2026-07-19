@@ -10,7 +10,7 @@ from app.timeline import (TimelineMediaValidationError, TimelineMediaValidator, 
                           build_render_plan)
 
 from .contracts import (EpisodeProductionRequest, EpisodeProductionResult, EpisodeProductionStatus,
-                        EpisodeSceneResult, ProductionRecord)
+                        EpisodeSceneResult, EpisodeSceneStatus, ProductionRecord)
 from .registry import (ProductionRegistry, ProductionRegistryConflictError, ProductionRegistryError,
                        ProductionRegistryNotFoundError, utc_now)
 from .request_reference import GenerationRequestResolver, GenerationRequestResolverError
@@ -60,6 +60,7 @@ class EpisodeProductionOrchestrator:
                 raise EpisodeGenerationRequestResolutionError("A generation request reference resolved inconsistently.")
         now = self._clock()
         scenes = tuple(EpisodeSceneResult(scene_id=f"scene-{index + 1:04d}", order=index,
+            source_scene_id=request.source_scene_ids[index] if request.source_scene_ids else None,
             generation_request_reference=request.generation_request_references[index]) for index in range(len(request.video_requests)))
         record = ProductionRecord(production_id=request.production_id, status=EpisodeProductionStatus.PENDING,
                                   provider=request.provider, scenes=scenes,
@@ -107,11 +108,13 @@ class EpisodeProductionOrchestrator:
                     except VideoEngineError as error:
                         raise EpisodeSceneSubmissionError(f"Scene {scene.scene_id} submission failed.") from error
                     scene = scene.model_copy(update={"provider_task_id": task.provider_task_id, "normalized_status": task.normalized_status})
+                    scene = scene.model_copy(update={"production_status": EpisodeSceneStatus.GENERATING})
                     record = self._replace_scene(record, index, scene)
                 try:
                     completed = self._video_engine.resume(scene.provider_task_id, destination, policy)
                 except VideoEngineTaskFailedError as error:
                     failed = scene.model_copy(update={"normalized_status": GenerationTaskStatus.FAILED})
+                    failed = failed.model_copy(update={"production_status": EpisodeSceneStatus.FAILED})
                     self._replace_scene(record, index, failed)
                     raise EpisodeProviderSceneFailedError(f"Scene {scene.scene_id} failed.") from error
                 except VideoEngineError as error:
@@ -121,7 +124,8 @@ class EpisodeProductionOrchestrator:
                 artifact = completed.artifact
                 scene = scene.model_copy(update={"normalized_status": completed.normalized_status,
                     "local_path": artifact.local_path, "artifact_id": artifact.artifact_id,
-                    "byte_size": artifact.byte_size, "sha256": artifact.sha256, "content_type": artifact.content_type})
+                    "byte_size": artifact.byte_size, "sha256": artifact.sha256, "content_type": artifact.content_type,
+                    "production_status": EpisodeSceneStatus.READY})
                 record = self._replace_scene(record, index, scene)
 
             record = self._set_status(record, EpisodeProductionStatus.ASSEMBLING)

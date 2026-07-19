@@ -18,6 +18,13 @@ class EpisodeProductionStatus(str, Enum):
     FAILED = "failed"
 
 
+class EpisodeSceneStatus(str, Enum):
+    PENDING = "pending"
+    GENERATING = "generating"
+    READY = "ready"
+    FAILED = "failed"
+
+
 class EpisodeTransitionPolicy(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
     kind: TimelineTransitionKind
@@ -25,12 +32,12 @@ class EpisodeTransitionPolicy(BaseModel):
 
     @model_validator(mode="after")
     def supported_policy(self) -> "EpisodeTransitionPolicy":
-        if self.kind not in {TimelineTransitionKind.CUT, TimelineTransitionKind.FADE}:
-            raise ValueError("Episode production supports only cut and fade transitions.")
+        if self.kind not in {TimelineTransitionKind.CUT, TimelineTransitionKind.FADE, TimelineTransitionKind.DISSOLVE}:
+            raise ValueError("Episode production supports only cut, fade, and dissolve transitions.")
         if self.kind == TimelineTransitionKind.CUT and self.duration_seconds not in {None, 0}:
             raise ValueError("Cut transition duration must be zero or absent.")
-        if self.kind == TimelineTransitionKind.FADE and (self.duration_seconds is None or self.duration_seconds <= 0):
-            raise ValueError("Fade transition duration must be positive.")
+        if self.kind in {TimelineTransitionKind.FADE, TimelineTransitionKind.DISSOLVE} and (self.duration_seconds is None or self.duration_seconds <= 0):
+            raise ValueError("Fade and dissolve transition duration must be positive.")
         return self
 
 
@@ -39,6 +46,7 @@ class EpisodeProductionRequest(BaseModel):
     production_id: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
     video_requests: tuple[VideoGenerationRequest, ...] = Field(min_length=2)
     generation_request_references: tuple[GenerationRequestReference, ...] = Field(min_length=2)
+    source_scene_ids: tuple[str, ...] = ()
     provider: str = Field(min_length=1, max_length=100)
     scene_output_directory: Path
     final_output_path: Path
@@ -52,6 +60,8 @@ class EpisodeProductionRequest(BaseModel):
             raise ValueError("Episode video request IDs must be unique.")
         if len(self.generation_request_references) != len(self.video_requests):
             raise ValueError("Every episode scene requires one generation request reference.")
+        if self.source_scene_ids and len(self.source_scene_ids) != len(self.video_requests):
+            raise ValueError("Source scene traceability must align with episode scenes.")
         references = [reference.reference_id for reference in self.generation_request_references]
         if len(references) != len(set(references)):
             raise ValueError("Episode generation request references must be unique.")
@@ -68,16 +78,35 @@ class EpisodeProductionRequest(BaseModel):
 class EpisodeSceneResult(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     scene_id: str
+    source_scene_id: str | None = None
     order: int = Field(ge=0)
     generation_request_reference: GenerationRequestReference
     provider_task_id: str | None = None
     external_correlation_id: str | None = None
     normalized_status: GenerationTaskStatus | None = None
+    production_status: EpisodeSceneStatus = EpisodeSceneStatus.PENDING
     local_path: Path | None = None
     artifact_id: str | None = None
     byte_size: int | None = Field(default=None, gt=0)
     sha256: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
     content_type: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def infer_legacy_production_status(cls, value):
+        if not isinstance(value, dict) or "production_status" in value:
+            return value
+        copied = dict(value)
+        provider_status = copied.get("normalized_status")
+        if copied.get("local_path") is not None:
+            copied["production_status"] = EpisodeSceneStatus.READY
+        elif provider_status == GenerationTaskStatus.FAILED or provider_status == "failed":
+            copied["production_status"] = EpisodeSceneStatus.FAILED
+        elif copied.get("provider_task_id") is not None:
+            copied["production_status"] = EpisodeSceneStatus.GENERATING
+        else:
+            copied["production_status"] = EpisodeSceneStatus.PENDING
+        return copied
 
 
 class EpisodeProductionResult(BaseModel):

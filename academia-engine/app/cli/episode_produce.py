@@ -27,7 +27,8 @@ def print_result(result, *, emit=print) -> None:
     emit(f"Scenes: {len(result.scenes)}")
     for scene in result.scenes:
         emit(f"Scene: {scene.scene_id}")
-        emit(f"Scene status: {scene.normalized_status.value if scene.normalized_status else ''}")
+        emit(f"Scene status: {scene.production_status.value}")
+        emit(f"Provider status: {scene.normalized_status.value if scene.normalized_status else ''}")
         emit(f"Provider task ID: {scene.provider_task_id or ''}")
         emit(f"Local artifact: {scene.local_path or ''}")
     if result.final_artifact:

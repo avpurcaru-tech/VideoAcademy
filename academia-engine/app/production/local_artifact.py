@@ -6,7 +6,7 @@ from typing import Callable
 
 from app.composition.paths import normalized_local_path, validate_local_path
 
-from .contracts import EpisodeProductionStatus, ProductionRecord
+from .contracts import EpisodeProductionStatus, EpisodeSceneStatus, ProductionRecord
 from .registry import ProductionRegistry, ProductionRegistryError, ProductionRegistryNotFoundError, utc_now
 
 
@@ -68,6 +68,7 @@ class EpisodeLocalArtifactService:
                 "byte_size": byte_size,
                 "sha256": sha256,
                 "content_type": "video/mp4",
+                "production_status": EpisodeSceneStatus.READY,
             })
             scenes = list(record.scenes); scenes[index] = updated_scene
             updated = record.model_copy(update={

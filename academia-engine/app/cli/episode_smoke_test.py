@@ -205,7 +205,8 @@ def _print_durable_state(record, *, diagnostic: bool) -> None:
     print(f"{label}: {record.status.value}")
     for scene in record.scenes:
         print(f"Scene: {scene.scene_id}")
-        print(f"Scene status: {scene.normalized_status.value if scene.normalized_status else ''}")
+        print(f"Scene status: {scene.production_status.value}")
+        print(f"Provider status: {scene.normalized_status.value if scene.normalized_status else ''}")
         if diagnostic:
             print(f"Provider task ID present: {'yes' if scene.provider_task_id else 'no'}")
             print(f"Local artifact present: {'yes' if scene.local_path else 'no'}")
@@ -324,7 +325,8 @@ def _print_result(result, *, emit=None) -> None:
     emit(f"Scenes: {len(result.scenes)}")
     for scene in result.scenes:
         emit(f"Scene: {scene.scene_id}")
-        emit(f"Scene status: {scene.normalized_status.value if scene.normalized_status else ''}")
+        emit(f"Scene status: {scene.production_status.value}")
+        emit(f"Provider status: {scene.normalized_status.value if scene.normalized_status else ''}")
         emit(f"Provider task ID: {scene.provider_task_id or ''}")
         emit(f"Local artifact: {scene.local_path or ''}")
     if result.final_artifact is None:
