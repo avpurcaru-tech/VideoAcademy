@@ -334,7 +334,17 @@ python -m app.cli.song_generate_lyrics ^
 
 Omit `--show` to keep full lyrics out of console output. The durable output contains only the provider-neutral `LyricsPlan`, never request headers, provider responses, credentials, or internal instructions.
 
-## Real music generation (Mureka)
+## Music provider status
+
+Suno's official API at `platform.suno.com` is the intended production music
+provider. Its complete technical contract is not publicly accessible, so no
+Suno adapter is implemented yet. See `docs/MUSIC_PROVIDER_SUNO.md` for the
+verified provider distinction and the contract items required before coding.
+
+Mureka is retained as an isolated evaluation adapter and is not the intended
+production provider or an automatic fallback.
+
+### Legacy evaluation integration (Mureka)
 
 The `mureka` adapter uses Mureka's official asynchronous v1 song API ([quickstart](https://platform.mureka.ai/docs/en/quickstart.html), [submit operation](https://platform.mureka.ai/docs/api/operations/post-v1-song-generate.html), [query operation](https://platform.mureka.ai/docs/api/operations/get-v1-song-query-%7Btask_id%7D.html)). Configure `MUREKA_API_KEY`; optionally set `MUREKA_MUSIC_MODEL` (default `auto`) and `MUREKA_TIMEOUT_SECONDS` (default `30`). Never put credentials in JSON or command arguments.
 
