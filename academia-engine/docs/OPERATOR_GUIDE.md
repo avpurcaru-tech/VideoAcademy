@@ -318,6 +318,22 @@ The current Academia normalization profile is 1280×720, 30 FPS, H.264 through `
 
 The final artifact is published atomically at the configured `--output` path and includes durable byte size, SHA-256, and probed media metadata.
 
+## Lyrics generation
+
+The `deterministic` lyrics generator is local test/development logic and is not AI. It needs no external credentials and does not require confirmation.
+
+The `openai` generator performs real structured AI generation through the OpenAI Responses API. It requires `OPENAI_API_KEY`, optionally accepts a model through `OPENAI_LYRICS_MODEL`, requires explicit `--confirm`, and may incur API costs. Never place the key directly in commands or JSON files.
+
+```bat
+python -m app.cli.song_generate_lyrics ^
+  --brief examples\smoke\song-brief.json ^
+  --generator openai ^
+  --output .runtime\songs\counting-1-to-5\lyrics-openai.json ^
+  --confirm
+```
+
+Omit `--show` to keep full lyrics out of console output. The durable output contains only the provider-neutral `LyricsPlan`, never request headers, provider responses, credentials, or internal instructions.
+
 ## Version readiness checklist
 
 - [ ] Input preflight passes
@@ -328,4 +344,3 @@ The final artifact is published atomically at the configured `--output` path and
 - [ ] Integrity verification passes
 - [ ] `final.mp4` exists
 - [ ] Manual publication completed externally if desired
-

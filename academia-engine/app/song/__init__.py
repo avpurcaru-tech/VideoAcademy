@@ -8,3 +8,6 @@ media generation.
 
 from .contracts import *
 from .planner import *
+from .lyrics_generator import *
+from .lyrics_service import *
+from .lyrics_writer import *
