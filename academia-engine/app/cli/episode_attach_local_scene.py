@@ -11,7 +11,8 @@ def build_service() -> EpisodeLocalArtifactService:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Attach one validated local video to a production scene.")
+    parser = argparse.ArgumentParser(description=("Administrative recovery: probe and attach one local video without "
+                                                  "provider submission or fabricated provider state."))
     parser.add_argument("--production-id", required=True)
     parser.add_argument("--scene-id", required=True)
     parser.add_argument("--input", required=True, type=Path)

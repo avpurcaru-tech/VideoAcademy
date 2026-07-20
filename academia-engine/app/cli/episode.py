@@ -21,22 +21,32 @@ from .episode_project_plan import build_project_planner, load_episode
 
 
 def _parser() -> argparse.ArgumentParser:
-    parser=argparse.ArgumentParser(description="Unified provider-neutral episode production lifecycle.")
+    parser=argparse.ArgumentParser(
+        description="Safely operate the provider-neutral episode production lifecycle.",
+        epilog=("Credit safety: --generate submits only with --confirm. "
+                "Use --plan --preflight for a non-persistent validation, --resume for an existing "
+                "production, and --cleanup without --confirm for a dry run."))
     operations=parser.add_mutually_exclusive_group(required=True)
-    operations.add_argument("--plan",action="store_true"); operations.add_argument("--generate",action="store_true")
-    operations.add_argument("--status",action="store_true"); operations.add_argument("--resume",action="store_true")
-    operations.add_argument("--verify",action="store_true")
-    operations.add_argument("--repair-metadata",action="store_true")
-    operations.add_argument("--cleanup",action="store_true")
-    parser.add_argument("--input",type=Path); parser.add_argument("--production-id")
-    parser.add_argument("--provider",default="kling"); parser.add_argument("--scene-output-dir",type=Path)
-    parser.add_argument("--workspace",type=Path); parser.add_argument("--output",type=Path)
+    operations.add_argument("--plan",action="store_true",help="validate and optionally persist an episode production plan")
+    operations.add_argument("--generate",action="store_true",help="plan and generate; provider submission requires --confirm")
+    operations.add_argument("--status",action="store_true",help="read durable production status without provider calls")
+    operations.add_argument("--resume",action="store_true",help="continue an existing production without resubmitting durable tasks")
+    operations.add_argument("--verify",action="store_true",help="read-only verification of durable artifact integrity")
+    operations.add_argument("--repair-metadata",action="store_true",help="reconstruct metadata for one existing local scene artifact")
+    operations.add_argument("--cleanup",action="store_true",help="scan disposable runtime data; dry-run unless --confirm is supplied")
+    parser.add_argument("--input",type=Path,help="Episode JSON input for planning or generation")
+    parser.add_argument("--production-id",help="unique durable production identifier")
+    parser.add_argument("--provider",default="kling",help="generation provider for a new plan (default: kling)")
+    parser.add_argument("--scene-output-dir",type=Path,help="durable scene artifact directory")
+    parser.add_argument("--workspace",type=Path,help="disposable media workspace")
+    parser.add_argument("--output",type=Path,help="durable final video path")
     parser.add_argument("--transition",choices=("cut","fade","dissolve"),default="cut")
     parser.add_argument("--transition-duration",type=float); parser.add_argument("--interval",type=float,default=2)
     parser.add_argument("--timeout",type=float,default=900); parser.add_argument("--max-attempts",type=int)
-    parser.add_argument("--preflight",action="store_true"); parser.add_argument("--confirm",action="store_true")
-    parser.add_argument("--scene-id")
-    parser.add_argument("--older-than-hours",type=float)
+    parser.add_argument("--preflight",action="store_true",help="validate planning without writing request or production state")
+    parser.add_argument("--confirm",action="store_true",help="explicitly authorize generation cost or eligible cleanup deletion")
+    parser.add_argument("--scene-id",help="scene targeted by --repair-metadata")
+    parser.add_argument("--older-than-hours",type=float,help="minimum disposable-path age for cleanup; required for deletion")
     return parser
 
 

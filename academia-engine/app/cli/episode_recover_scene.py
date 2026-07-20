@@ -10,7 +10,8 @@ def build_reconciler() -> EpisodeProductionReconciler:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Recover one attached succeeded scene without processing other scenes.")
+    parser = argparse.ArgumentParser(description=("Administrative recovery: download one attached succeeded provider scene. "
+                                                  "This does not submit or render the episode."))
     parser.add_argument("--production-id", required=True)
     parser.add_argument("--scene-id", required=True)
     args = parser.parse_args()

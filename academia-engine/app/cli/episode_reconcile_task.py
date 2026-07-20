@@ -10,7 +10,8 @@ def build_reconciler() -> EpisodeProductionReconciler:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Attach one verified existing provider task to a production scene.")
+    parser = argparse.ArgumentParser(description=("Administrative recovery: query and attach one verified existing provider "
+                                                  "task. This does not submit a new task or consume new generation credits."))
     parser.add_argument("--production-id", required=True)
     parser.add_argument("--scene-id", required=True)
     parser.add_argument("--task-id", required=True)
