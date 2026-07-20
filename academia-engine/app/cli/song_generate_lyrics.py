@@ -2,13 +2,16 @@ import argparse
 from pathlib import Path
 
 from app.song import (EducationalSongBrief, LyricsGenerationError, LyricsGenerationService,
-                      LyricsGeneratorRegistry, LyricsGeneratorRegistryError, LyricsPersistenceError,
+                      LyricsGeneratorConfigurationError,LyricsGeneratorRegistry, LyricsGeneratorRegistryError,
+                      LyricsGeneratorUnavailableError,LyricsPersistenceError,UnsupportedLyricsGeneratorError,
                       persist_lyrics_atomic, resolve_lyrics)
+from app.config.environment import load_application_environment
 from .song_validate import SongInputError, configure_utf8_output, load_contract
 
 
 def main() -> int:
     configure_utf8_output()
+    load_application_environment()
     parser=argparse.ArgumentParser(description="Generate lyrics locally through a provider-neutral generator abstraction.")
     parser.add_argument("--brief",required=True,type=Path); parser.add_argument("--generator",default="deterministic")
     parser.add_argument("--output",required=True,type=Path); parser.add_argument("--overwrite",action="store_true")
@@ -26,8 +29,14 @@ def main() -> int:
     except SongInputError as error:
         for line in error.lines: print(line)
         return 1
-    except LyricsGeneratorRegistryError:
+    except UnsupportedLyricsGeneratorError:
         print("Lyrics generator is unsupported."); return 1
+    except LyricsGeneratorConfigurationError:
+        print("OpenAI lyrics provider configuration is missing."); return 1
+    except LyricsGeneratorUnavailableError:
+        print("OpenAI lyrics provider is unavailable."); return 1
+    except LyricsGeneratorRegistryError:
+        print("Lyrics generator could not be configured safely."); return 1
     except LyricsGenerationError:
         print("Lyrics generation failed at a safe provider-neutral boundary."); return 1
     except LyricsPersistenceError:

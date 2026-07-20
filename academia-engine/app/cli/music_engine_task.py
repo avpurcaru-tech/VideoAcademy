@@ -2,7 +2,8 @@ import argparse
 from pathlib import Path
 
 from app.music import (MusicEngine, MusicEngineError, MusicPollingPolicy, MusicProviderRegistry,
-                       MusicProviderRegistryError, MusicTaskRegistry)
+                       MusicProviderConfigurationError,MusicProviderRegistryError, MusicTaskRegistry)
+from app.config.environment import load_application_environment
 
 
 def build_music_engine(provider_name: str) -> MusicEngine:
@@ -11,6 +12,7 @@ def build_music_engine(provider_name: str) -> MusicEngine:
 
 
 def main() -> int:
+    load_application_environment()
     parser=argparse.ArgumentParser(description="Inspect or continue one durable provider-neutral music task.")
     parser.add_argument("--provider",required=True); parser.add_argument("--task-id",required=True)
     operations=parser.add_mutually_exclusive_group()
@@ -48,6 +50,8 @@ def main() -> int:
         elif args.download: record=engine.download(args.task_id,args.download)
         else: record=engine.refresh(args.task_id)
         if record.provider!=args.provider: raise MusicEngineError("Music task provider does not match.")
+    except MusicProviderConfigurationError:
+        print("Third-party music provider configuration is missing." if args.provider=="sunoapi_org" else "Music provider configuration is missing."); return 1
     except (MusicEngineError,MusicProviderRegistryError):
         print("Music engine task operation failed at a safe provider-neutral boundary."); return 1
     except Exception:

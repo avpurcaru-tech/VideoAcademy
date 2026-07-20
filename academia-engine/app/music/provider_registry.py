@@ -6,6 +6,7 @@ from .provider import MusicProvider
 
 
 class MusicProviderRegistryError(RuntimeError): pass
+class MusicProviderConfigurationError(MusicProviderRegistryError): pass
 
 
 @dataclass(frozen=True)
@@ -26,12 +27,14 @@ class MusicProviderRegistry:
 
     @staticmethod
     def _mureka():
-        from app.providers.mureka_music_provider import MurekaMusicProvider
-        provider=MurekaMusicProvider.from_environment()
+        from app.providers.mureka_music_provider import MurekaMusicConfigurationError,MurekaMusicProvider
+        try: provider=MurekaMusicProvider.from_environment()
+        except MurekaMusicConfigurationError as error: raise MusicProviderConfigurationError("Legacy music provider configuration is missing.") from error
         return MusicProviderRuntime(provider,AtomicAudioArtifactDownloader(provider.download_audio_bytes))
 
     @staticmethod
     def _sunoapi_org():
-        from app.providers.sunoapi_org_music_provider import SunoApiOrgMusicProvider
-        provider=SunoApiOrgMusicProvider.from_environment()
+        from app.providers.sunoapi_org_music_provider import SunoApiOrgConfigurationError,SunoApiOrgMusicProvider
+        try: provider=SunoApiOrgMusicProvider.from_environment()
+        except SunoApiOrgConfigurationError as error: raise MusicProviderConfigurationError("Third-party music provider configuration is missing.") from error
         return MusicProviderRuntime(provider,AtomicAudioArtifactDownloader(provider.download_audio_bytes))

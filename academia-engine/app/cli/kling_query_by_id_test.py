@@ -1,4 +1,5 @@
 import argparse
+from app.config.environment import load_application_environment
 
 from app.config import KlingGenerationConfigurationError
 from app.providers import (
@@ -16,6 +17,7 @@ from .kling_task_registry import sync_task_record
 
 
 def main() -> int:
+    load_application_environment()
     parser = argparse.ArgumentParser(description="Query one Kling task by its provider task ID.")
     parser.add_argument("--task-id", required=True, help="The Kling data.id returned by Create Task")
     args = parser.parse_args()

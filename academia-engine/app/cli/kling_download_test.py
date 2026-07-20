@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+from app.config.environment import load_application_environment
 
 from app.config import KlingGenerationConfigurationError
 from app.models import GenerationTaskStatus, VideoArtifact
@@ -24,6 +25,7 @@ from .kling_task_registry import sync_task_record
 
 
 def main() -> int:
+    load_application_environment()
     parser = argparse.ArgumentParser(description="Download one succeeded Kling video artifact.")
     parser.add_argument("--task-id", required=True, help="The Kling data.id returned by Create Task")
     parser.add_argument("--output", required=True, type=Path, help="Final local video file path")

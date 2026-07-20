@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+from app.config.environment import load_application_environment
 
 from app.media import FFprobeAdapter, SubprocessProcessRunner
 from app.production import (EpisodeProductionError, EpisodeProductionOrchestrator, EpisodeProductionRequest,
@@ -10,6 +11,7 @@ from app.timeline import FFmpegTimelineRenderer
 
 
 def build_orchestrator() -> EpisodeProductionOrchestrator:
+    load_application_environment()
     runner = SubprocessProcessRunner()
     probe = FFprobeAdapter(runner)
     engine = VideoEngine({"kling": KlingProvider()}, TaskRegistry(), KlingVideoArtifactDownloader())

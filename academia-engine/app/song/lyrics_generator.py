@@ -38,6 +38,8 @@ class DeterministicLyricsGenerator:
 
 class LyricsGeneratorRegistryError(RuntimeError): pass
 class UnsupportedLyricsGeneratorError(LyricsGeneratorRegistryError): pass
+class LyricsGeneratorConfigurationError(LyricsGeneratorRegistryError): pass
+class LyricsGeneratorUnavailableError(LyricsGeneratorRegistryError): pass
 
 
 class LyricsGeneratorRegistry:
@@ -49,10 +51,14 @@ class LyricsGeneratorRegistry:
         generator=self._generators.get(name)
         if generator is None and name=="openai" and self._default_registry:
             try:
-                from app.providers.openai_lyrics_provider import OpenAILyricsGenerator
+                from app.providers.openai_lyrics_provider import OpenAILyricsConfigurationError,OpenAILyricsGenerator
                 generator=OpenAILyricsGenerator()
+            except ImportError as error:
+                raise LyricsGeneratorUnavailableError("OpenAI lyrics provider is unavailable.") from error
+            except OpenAILyricsConfigurationError as error:
+                raise LyricsGeneratorConfigurationError("OpenAI lyrics provider configuration is missing.") from error
             except Exception as error:
-                raise LyricsGeneratorRegistryError("Lyrics generator could not be configured.") from error
+                raise LyricsGeneratorUnavailableError("OpenAI lyrics provider is unavailable.") from error
         if generator is None or not isinstance(generator,LyricsGenerator):
             raise UnsupportedLyricsGeneratorError("Lyrics generator is unsupported.")
         return generator

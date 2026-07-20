@@ -1,4 +1,5 @@
 import argparse
+from app.config.environment import load_application_environment
 from app.providers import KlingClientError, KlingHttpError, KlingProvider
 from app.services import TaskRegistryError
 
@@ -8,6 +9,7 @@ from .video_request_fixture import build_smoke_test_request
 
 
 def main() -> int:
+    load_application_environment()
     parser = argparse.ArgumentParser(description="Submit one billable Kling test task.")
     parser.add_argument("--confirm", action="store_true", help="Confirm that this consumes Kling credits")
     args = parser.parse_args()

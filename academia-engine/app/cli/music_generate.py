@@ -4,8 +4,9 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from app.cli.song_validate import SongInputError,configure_utf8_output,load_contract
+from app.config.environment import load_application_environment
 from app.music import (MusicEngine,MusicEngineError,MusicGenerationRequest,MusicPollingPolicy,MusicVariantSelectionRequiredError,
-                       MusicProviderRegistry,MusicProviderRegistryError,MusicTaskRegistry)
+                       MusicProviderConfigurationError,MusicProviderRegistry,MusicProviderRegistryError,MusicTaskRegistry)
 from app.song import LyricsPlan,MusicPlan
 
 
@@ -15,7 +16,7 @@ def build_music_engine(provider_name: str) -> MusicEngine:
 
 
 def main() -> int:
-    configure_utf8_output(); parser=argparse.ArgumentParser(description="Generate one song through a real music provider.")
+    configure_utf8_output(); load_application_environment(); parser=argparse.ArgumentParser(description="Generate one song through a real music provider.")
     parser.add_argument("--lyrics",required=True,type=Path); parser.add_argument("--music-plan",required=True,type=Path)
     parser.add_argument("--provider",required=True); parser.add_argument("--output",type=Path); parser.add_argument("--output-dir",type=Path)
     parser.add_argument("--download-all",action="store_true")
@@ -51,6 +52,9 @@ def main() -> int:
         print(f"Provider task ID: {error.provider_task_id}"); print("Status: succeeded")
         print(f"Music generation succeeded with {error.available_variants} variants.")
         print("Select a variant before download."); return 3
+    except MusicProviderConfigurationError:
+        print("Third-party music provider configuration is missing." if args.provider=="sunoapi_org" else "Music provider configuration is missing.")
+        return 1
     except (MusicEngineError,MusicProviderRegistryError):
         print("Music generation failed at a safe provider boundary.")
         if args.provider=="sunoapi_org":

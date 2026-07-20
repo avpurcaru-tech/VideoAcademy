@@ -320,6 +320,13 @@ The final artifact is published atomically at the configured `--output` path and
 
 ## Lyrics generation
 
+CLI entry points automatically load the shared `VideoAcademy/.env`, one level
+above the `academia-engine` code project. Resolution comes from the application
+module location and does not depend on the current working directory. Explicit
+operating-system environment variables take precedence. Copy
+`VideoAcademy/.env.example` to `VideoAcademy/.env`, fill only local credentials
+and settings, and never commit `.env`.
+
 The `deterministic` lyrics generator is local test/development logic and is not AI. It needs no external credentials and does not require confirmation.
 
 The `openai` generator performs real structured AI generation through the OpenAI Responses API. It requires `OPENAI_API_KEY`, optionally accepts a model through `OPENAI_LYRICS_MODEL`, requires explicit `--confirm`, and may incur API costs. Never place the key directly in commands or JSON files.

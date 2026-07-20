@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+from app.config.environment import load_application_environment
 
 from app.providers import KlingProvider, KlingVideoArtifactDownloader
 from app.services import (
@@ -14,6 +15,7 @@ from app.services import (
 
 def build_video_engine() -> VideoEngine:
     """Build the production orchestration graph without coupling VideoEngine to Kling."""
+    load_application_environment()
     return VideoEngine(
         providers={"kling": KlingProvider()},
         registry=TaskRegistry(),
