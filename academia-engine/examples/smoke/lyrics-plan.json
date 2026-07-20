@@ -1,0 +1,44 @@
+{
+  "song_id": "counting-1-to-5",
+  "title": "Numărăm în grădină",
+  "language": "ro",
+  "sections": [
+    {
+      "section_id": "verse-1",
+      "kind": "verse",
+      "order": 0,
+      "lines": [
+        {"line_id": "line-001", "text": "Un fluturaș dansează ușor,"},
+        {"line_id": "line-002", "text": "Două buburuze apar lângă-un nor."},
+        {"line_id": "line-003", "text": "Trei albinuțe zboară prin flori,"}
+      ]
+    },
+    {
+      "section_id": "chorus-1",
+      "kind": "chorus",
+      "order": 1,
+      "lines": [
+        {"line_id": "line-004", "text": "Unu, doi, trei, patru, cinci,"},
+        {"line_id": "line-005", "text": "Numărăm și suntem voinici!"}
+      ]
+    },
+    {
+      "section_id": "verse-2",
+      "kind": "verse",
+      "order": 2,
+      "lines": [
+        {"line_id": "line-006", "text": "Patru floricele cresc în soare,"},
+        {"line_id": "line-007", "text": "Cinci broscuțe saltă fiecare."}
+      ]
+    },
+    {
+      "section_id": "chorus-2",
+      "kind": "chorus",
+      "order": 3,
+      "lines": [
+        {"line_id": "line-008", "text": "Unu, doi, trei, patru, cinci,"},
+        {"line_id": "line-009", "text": "Numărăm și suntem voinici!"}
+      ]
+    }
+  ]
+}

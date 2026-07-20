@@ -1,0 +1,14 @@
+{
+  "song_id": "counting-1-to-5",
+  "topic": "Numărarea de la 1 la 5",
+  "learning_objectives": [
+    "Recunoașterea numerelor de la 1 la 5",
+    "Numărarea obiectelor de la 1 la 5"
+  ],
+  "language": "ro",
+  "target_age_min": 3,
+  "target_age_max": 5,
+  "target_duration_seconds": 75,
+  "tone": "vesel și încurajator",
+  "repetition_level": "ridicat"
+}
