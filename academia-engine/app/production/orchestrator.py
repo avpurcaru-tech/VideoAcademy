@@ -14,6 +14,7 @@ from .contracts import (EpisodeProductionRequest, EpisodeProductionResult, Episo
 from .registry import (ProductionRegistry, ProductionRegistryConflictError, ProductionRegistryError,
                        ProductionRegistryNotFoundError, utc_now)
 from .request_reference import GenerationRequestResolver, GenerationRequestResolverError
+from .integrity import ArtifactIntegrityState, ProductionIntegrityService
 
 
 class EpisodeProductionError(RuntimeError): pass
@@ -32,17 +33,22 @@ class EpisodeRenderPlanError(EpisodeProductionError): pass
 class EpisodeFinalRenderError(EpisodeProductionError): pass
 class EpisodeUnsupportedProductionStateError(EpisodeProductionError): pass
 class EpisodeGenerationRequestResolutionError(EpisodeProductionError): pass
+class ProductionArtifactIntegrityError(EpisodeProductionError): pass
+class ProductionFinalArtifactMissingError(ProductionArtifactIntegrityError): pass
+class ProductionSceneArtifactIntegrityError(ProductionArtifactIntegrityError): pass
 
 
 class EpisodeProductionOrchestrator:
     def __init__(self, video_engine, timeline_renderer, production_registry: ProductionRegistry, probe,
-                 request_resolver: GenerationRequestResolver, *, clock: Callable = utc_now) -> None:
+                 request_resolver: GenerationRequestResolver, *, clock: Callable = utc_now,
+                 integrity_service: ProductionIntegrityService | None = None) -> None:
         self._video_engine = video_engine
         self._renderer = timeline_renderer
         self._registry = production_registry
         self._validator = TimelineMediaValidator(probe)
         self._clock = clock
         self._request_resolver = request_resolver
+        self._integrity = integrity_service or ProductionIntegrityService()
 
     def produce(self, request: EpisodeProductionRequest, polling_policy: VideoPollingPolicy) -> EpisodeProductionResult:
         try:
@@ -83,12 +89,24 @@ class EpisodeProductionOrchestrator:
         except ProductionRegistryError as error:
             raise EpisodeProductionRegistryError("Episode production could not be loaded.") from error
         if record.status == EpisodeProductionStatus.SUCCEEDED:
+            if record.final_artifact is None:
+                raise ProductionFinalArtifactMissingError("Succeeded production final artifact metadata is missing.")
+            integrity=self._integrity.verify_artifact(record.final_artifact)
+            if integrity.state == ArtifactIntegrityState.MISSING:
+                raise ProductionFinalArtifactMissingError("Succeeded production final artifact is missing.")
+            if not integrity.valid:
+                raise ProductionArtifactIntegrityError("Succeeded production final artifact failed integrity verification.")
             return self._result(record)
         return self._execute(production_id, polling_policy)
 
     def _execute(self, production_id: str, policy: VideoPollingPolicy) -> EpisodeProductionResult:
         try:
-            record = self._set_status(self._registry.load(production_id), EpisodeProductionStatus.GENERATING)
+            record = self._registry.load(production_id)
+            for scene in record.scenes:
+                integrity=self._integrity.verify_scene(scene)
+                if not integrity.valid:
+                    raise ProductionSceneArtifactIntegrityError(f"Scene {scene.scene_id} artifact failed integrity verification.")
+            record = self._set_status(record, EpisodeProductionStatus.GENERATING)
             for index in range(len(record.scenes)):
                 scene = record.scenes[index]
                 if scene.local_path is not None:

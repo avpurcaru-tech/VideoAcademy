@@ -1,4 +1,5 @@
 import json
+import hashlib
 import tempfile
 import unittest
 from datetime import datetime, timezone
@@ -10,7 +11,8 @@ from app.production import (EpisodeProductionConflictError, EpisodeProductionOrc
                             EpisodeProductionRequest, EpisodeProductionStatus, EpisodeSceneArtifactMissingError,
                             EpisodeTransitionPolicy, ProductionRecord, ProductionRegistry,
                             ProductionRegistryError, GenerationRequestReference, GenerationRequestStore,
-                            GenerationRequestConflictError, GenerationRequestCorruptedError)
+                            GenerationRequestConflictError, GenerationRequestCorruptedError,
+                            ProductionSceneArtifactIntegrityError)
 from pydantic import ValidationError
 from app.services import ArtifactRecord, GenerationTaskRecord, VideoPollingPolicy
 from app.timeline import RenderedTimelineArtifact
@@ -68,7 +70,7 @@ class EpisodeProductionTests(unittest.TestCase):
         self.registry.create(ProductionRecord(production_id="episode-001", status="failed", provider="fake", scenes=scenes,
             scene_output_directory=self.root/"scenes", final_output_path=self.root/"final.mp4", media_workspace=self.root/"media",
             transition_policy={"kind":"cut"}, created_at=NOW, updated_at=NOW))
-        with self.assertRaises(EpisodeSceneArtifactMissingError): self.orchestrator.resume("episode-001", POLICY)
+        with self.assertRaises(ProductionSceneArtifactIntegrityError): self.orchestrator.resume("episode-001", POLICY)
         self.assertEqual(self.registry.load("episode-001").status, EpisodeProductionStatus.FAILED)
 
     def test_registry_rejects_path_traversal_and_serialization_is_deterministic(self):
@@ -138,8 +140,9 @@ class FakeRenderer:
     def __init__(self, path): self.path=path; self.plan=None
     def render(self, plan):
         self.plan=plan
+        content=b"final-data"; self.path.parent.mkdir(parents=True,exist_ok=True); self.path.write_bytes(content)
         media=MediaProbeResult(local_path=self.path, duration_seconds=plan.expected_duration_seconds, width=1280, height=720, frame_rate=30, video_codec="h264", has_audio=False, container_format="mp4")
-        return RenderedTimelineArtifact(timeline_id=plan.timeline_id, local_path=self.path, byte_size=10, sha256="f"*64, media_info=media, source_count=2, transition_count=len(plan.transitions))
+        return RenderedTimelineArtifact(timeline_id=plan.timeline_id, local_path=self.path, byte_size=len(content), sha256=hashlib.sha256(content).hexdigest(), media_info=media, source_count=2, transition_count=len(plan.transitions))
 
 
 class CountingResolver:

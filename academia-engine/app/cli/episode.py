@@ -9,6 +9,7 @@ from app.production import (
     EpisodeSceneDownloadError, EpisodeScenePollingError, EpisodeSceneSubmissionError,
     EpisodeTimelineValidationError, ProductionRegistry, ProductionRegistryError,
     ProductionRegistryNotFoundError,
+    ProductionIntegrityService, ProductionArtifactIntegrityError,
 )
 from app.services import VideoEngineTimeoutError, VideoPollingPolicy
 
@@ -22,6 +23,7 @@ def _parser() -> argparse.ArgumentParser:
     operations=parser.add_mutually_exclusive_group(required=True)
     operations.add_argument("--plan",action="store_true"); operations.add_argument("--generate",action="store_true")
     operations.add_argument("--status",action="store_true"); operations.add_argument("--resume",action="store_true")
+    operations.add_argument("--verify",action="store_true")
     parser.add_argument("--input",type=Path); parser.add_argument("--production-id")
     parser.add_argument("--provider",default="kling"); parser.add_argument("--scene-output-dir",type=Path)
     parser.add_argument("--workspace",type=Path); parser.add_argument("--output",type=Path)
@@ -35,6 +37,7 @@ def _parser() -> argparse.ArgumentParser:
 def main() -> int:
     parser=_parser(); args=parser.parse_args(); _validate_arguments(parser,args)
     if args.status: return _status(args.production_id)
+    if args.verify: return _verify(args.production_id)
     if args.resume: return _resume(args)
     if args.generate: return _generate(args)
     return _plan(args)
@@ -49,8 +52,8 @@ def _validate_arguments(parser,args) -> None:
     elif args.input is not None: parser.error("--input is only valid with --plan or --generate")
     if args.preflight and not planning: parser.error("--preflight is only valid with --plan or --generate")
     if args.confirm and not args.generate: parser.error("--confirm is only valid with --generate")
-    if args.status and any(value is not None for value in (args.scene_output_dir,args.workspace,args.output)):
-        parser.error("--status accepts only durable production identity")
+    if (args.status or args.verify) and any(value is not None for value in (args.scene_output_dir,args.workspace,args.output)):
+        parser.error("read-only operations accept only durable production identity")
 
 
 def _plan(args) -> int:
@@ -106,6 +109,21 @@ def _resume(args) -> int:
     _print_result("resume",result); return 0
 
 
+def _verify(production_id: str) -> int:
+    try:
+        record=ProductionRegistry().load(production_id)
+        report=ProductionIntegrityService().verify_production(record)
+    except ProductionRegistryNotFoundError:
+        print("Production not found."); return 1
+    except ProductionRegistryError:
+        print("Registry failure while verifying production."); return 1
+    print("Operation: verify"); print(f"Production ID: {report.production_id}"); print(f"Status: {report.status.value}")
+    for scene in report.scenes:
+        print(f"Scene: {scene.scene_id}"); print(f"Artifact integrity: {scene.artifact.state.value}")
+    print(f"Final artifact integrity: {report.final_artifact.state.value}")
+    return 0 if report.valid else 1
+
+
 def _print_result(operation,result) -> None:
     print(f"Operation: {operation}"); print(f"Production ID: {result.production_id}")
     print(f"Status: {result.status.value}"); print(f"Scenes: {len(result.scenes)}")
@@ -119,6 +137,7 @@ def _safe_error(production_id,error,operation) -> int:
         (VideoEngineTimeoutError,"Provider polling timeout."),(EpisodeScenePollingError,"Provider polling failure."),
         (EpisodeSceneDownloadError,"Scene download failure."),(EpisodeSceneArtifactMissingError,"Local artifact failure."),
         (EpisodeTimelineValidationError,"Timeline validation failure."),(EpisodeFinalRenderError,"Final render failure."),
+        (ProductionArtifactIntegrityError,"Artifact integrity failure."),
         (EpisodeProductionRegistryError,"Registry failure."),(EpisodeProductionPlanningError,"Planning failure."))
     print(next((message for kind,message in categories if isinstance(error,kind)),f"Safe {operation} failure."))
     try: exists=ProductionRegistry().exists(production_id)
