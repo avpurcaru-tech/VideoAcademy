@@ -336,10 +336,41 @@ Omit `--show` to keep full lyrics out of console output. The durable output cont
 
 ## Music provider status
 
-Suno's official API at `platform.suno.com` is the intended production music
-provider. Its complete technical contract is not publicly accessible, so no
-Suno adapter is implemented yet. See `docs/MUSIC_PROVIDER_SUNO.md` for the
-verified provider distinction and the contract items required before coding.
+The intended complete-song integration is the explicitly named third-party
+gateway `sunoapi_org`, documented by `docs.sunoapi.org`. It is not the official
+Suno Platform API. See `docs/MUSIC_PROVIDER_SUNO.md` for the exact distinction
+and contract.
+
+Configure `SUNOAPI_ORG_API_KEY`, `SUNOAPI_ORG_CALLBACK_URL`, and optionally
+`SUNOAPI_ORG_MODEL` (default `V4_5`) and `SUNOAPI_ORG_BASE_URL`. Generation
+requires confirmation and consumes gateway credits:
+
+```bat
+python -m app.cli.music_generate ^
+  --lyrics .runtime\songs\counting-1-to-5\lyrics-openai.json ^
+  --music-plan examples\smoke\music-plan.json ^
+  --provider sunoapi_org ^
+  --output .runtime\music\counting-1-to-5.mp3 ^
+  --interval 5 ^
+  --timeout 900 ^
+  --confirm
+```
+
+Each request produces two MP3 songs. Both are preserved in the provider task
+result, but the engine intentionally rejects automatic download because it
+requires one primary artifact. No automatic selection is made in this sprint.
+The durable task can be refreshed without resubmitting:
+
+```bat
+python -m app.cli.music_engine_task ^
+  --provider sunoapi_org ^
+  --task-id PROVIDER_TASK_ID ^
+  --refresh
+```
+
+Submission is never retried. If its outcome is ambiguous, check the gateway
+account history before another request; the provider may already have created
+a paid task.
 
 Mureka is retained as an isolated evaluation adapter and is not the intended
 production provider or an automatic fallback.

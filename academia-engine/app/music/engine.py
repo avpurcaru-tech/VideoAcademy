@@ -47,8 +47,6 @@ class MusicEngine:
 
     def submit(self,request: MusicGenerationRequest,provider: str|None=None) -> MusicGenerationTaskRecord:
         name=provider or self._default_provider; selected=self._provider(name)
-        if not isinstance(selected,MusicExternalIdProvider):
-            raise MusicExternalLookupUnsupportedError("Music provider does not support external ID lookup.")
         try: task=selected.submit_generation(request)
         except Exception as error: raise MusicProviderOperationError("Music generation submission failed.") from error
         task=_validated_task(task)
@@ -66,6 +64,8 @@ class MusicEngine:
 
     def get_task_by_external_id(self,external_correlation_id: str,provider: str|None=None) -> MusicGenerationTask:
         name=provider or self._default_provider; selected=self._provider(name)
+        if not isinstance(selected,MusicExternalIdProvider):
+            raise MusicExternalLookupUnsupportedError("Music provider does not support external ID lookup.")
         try: task=selected.get_task_by_external_id(external_correlation_id)
         except Exception as error: raise MusicProviderOperationError("Music provider external task query failed.") from error
         task=_validated_task(task)

@@ -4,6 +4,43 @@ Research date: 2026-07-21
 
 ## Decision
 
+The selected integration for complete-song generation is now the explicitly
+named **third-party** provider `sunoapi_org`, documented at
+`https://docs.sunoapi.org/`. It is not the official Suno Platform API. The
+official platform assessment below is retained so the two services cannot be
+confused.
+
+### Third-party gateway contract
+
+- Operator: the separate sunoapi.org gateway service
+- Authentication: `Authorization: Bearer`, configured only through
+  `SUNOAPI_ORG_API_KEY`
+- Base URL: `https://api.sunoapi.org` (`SUNOAPI_ORG_BASE_URL` may override it)
+- Submit: `POST /api/v1/generate`
+- Query: `GET /api/v1/generate/record-info?taskId=...`
+- Required callback: `SUNOAPI_ORG_CALLBACK_URL` (HTTPS)
+- Model: `SUNOAPI_ORG_MODEL`, default `V4_5`; accepted documented identifiers
+  are `V4`, `V4_5`, `V4_5PLUS`, `V4_5ALL`, `V5`, and `V5_5`
+- Custom supplied lyrics: `customMode=true`, `instrumental=false`, with the
+  flattened lyrics in `prompt`
+- Semantic direction: deterministic text in the documented `style` field
+- Statuses: `PENDING`; processing states `GENERATING`, `TEXT_SUCCESS`, and
+  `FIRST_SUCCESS`; `SUCCESS`; and documented failure states
+- Results: exactly two `response.sunoData` entries, each using `id` and
+  `audioUrl`; the documented examples are MP3 and map to `audio/mpeg`
+
+Both paid outputs are exposed as transient artifacts. The existing engine's
+single-primary-artifact invariant then raises an explicit cardinality error.
+Sprint 13.4.2 does not select or discard either song and does not download one
+automatically. The durable task ID and terminal status remain available for
+inspection and later explicit-selection work.
+
+Submission is never retried. After an ambiguous failure, inspect gateway
+account history before submitting again. Signed audio URLs, lyrics, style,
+payloads, and credentials are not persisted.
+
+## Official Suno Platform assessment
+
 The intended production integration is the API operated by **Suno, Inc.** at
 `https://platform.suno.com/`. The public landing page identifies the service as
 the Suno API, describes a REST API for generating songs, covers, and mashups,
@@ -51,8 +88,8 @@ must not be treated as Suno's official contract.
 That third-party gateway documents capabilities relevant to this project,
 including custom generation, supplied lyrics, vocals, asynchronous task IDs,
 callbacks/polling, and downloadable audio. Those facts describe the gateway's
-contract only. Integrating it would require an explicit decision to trust and
-contract with that third-party operator; it is not the selected production path.
+contract only. Sprint 13.4.2 explicitly selects this third-party contract; this
+does not make it an official Suno, Inc. API.
 
 ## Unofficial implementations
 
@@ -77,4 +114,4 @@ operator explicitly requests `--provider mureka`.
 5. Implement a provider-specific adapter without changing `MusicProvider` or
    `MusicEngine`.
 
-No real API calls were made during this investigation.
+No real API calls were made during this integration or its automated tests.

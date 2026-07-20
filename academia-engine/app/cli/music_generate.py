@@ -33,15 +33,25 @@ def main() -> int:
             field=".".join(str(part) for part in detail["loc"]) or "root"
             print(f"- {field}: {str(detail['type']).replace('_',' ')}")
         return 1
-    print("Real music generation may consume provider credits."); print(f"Provider: {args.provider}"); print(f"Song ID: {lyrics.song_id}")
+    warning=("Real third-party Suno-powered music generation may consume provider credits."
+             if args.provider=="sunoapi_org" else "Real music generation may consume provider credits.")
+    print(warning); print(f"Provider: {args.provider}"); print(f"Song ID: {lyrics.song_id}")
     if not args.confirm:
         print("No task was submitted. Re-run with --confirm to proceed."); return 2
     try:
         record=build_music_engine(args.provider).generate(request,args.output,policy,args.provider)
     except (MusicEngineError,MusicProviderRegistryError):
-        print("Music generation failed at a safe provider boundary. Do not automatically resubmit; inspect durable task state first."); return 1
+        print("Music generation failed at a safe provider boundary.")
+        if args.provider=="sunoapi_org":
+            print("The provider may have created a paid task. Do not submit again until provider account history is checked.")
+        else: print("Do not automatically resubmit; inspect durable task state first.")
+        return 1
     except Exception:
-        print("Music generation failed due to an unexpected local error. Do not automatically resubmit."); return 1
+        print("Music generation failed due to an unexpected local error.")
+        if args.provider=="sunoapi_org":
+            print("The provider may have created a paid task. Do not submit again until provider account history is checked.")
+        else: print("Do not automatically resubmit.")
+        return 1
     artifact=record.artifact
     print(f"Provider task ID: {record.provider_task_id}"); print(f"Status: {record.normalized_status.value}")
     print(f"Saved path: {artifact.local_path}"); print(f"Bytes: {artifact.byte_size}")
