@@ -11,6 +11,7 @@ from app.production import (
     ProductionRegistryNotFoundError,
     ProductionIntegrityService, ProductionArtifactIntegrityError,
     ProductionArtifactMetadataReconciler, ArtifactMetadataReconciliationError,
+    RuntimeCleanupService, RuntimeCleanupError, CleanupConfirmationError, CleanupCandidateSafetyError,
 )
 from app.services import VideoEngineTimeoutError, VideoPollingPolicy
 
@@ -26,6 +27,7 @@ def _parser() -> argparse.ArgumentParser:
     operations.add_argument("--status",action="store_true"); operations.add_argument("--resume",action="store_true")
     operations.add_argument("--verify",action="store_true")
     operations.add_argument("--repair-metadata",action="store_true")
+    operations.add_argument("--cleanup",action="store_true")
     parser.add_argument("--input",type=Path); parser.add_argument("--production-id")
     parser.add_argument("--provider",default="kling"); parser.add_argument("--scene-output-dir",type=Path)
     parser.add_argument("--workspace",type=Path); parser.add_argument("--output",type=Path)
@@ -34,11 +36,13 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--timeout",type=float,default=900); parser.add_argument("--max-attempts",type=int)
     parser.add_argument("--preflight",action="store_true"); parser.add_argument("--confirm",action="store_true")
     parser.add_argument("--scene-id")
+    parser.add_argument("--older-than-hours",type=float)
     return parser
 
 
 def main() -> int:
     parser=_parser(); args=parser.parse_args(); _validate_arguments(parser,args)
+    if args.cleanup: return _cleanup(args)
     if args.status: return _status(args.production_id)
     if args.verify: return _verify(args.production_id)
     if args.repair_metadata: return _repair_metadata(args.production_id,args.scene_id,parser)
@@ -48,14 +52,17 @@ def main() -> int:
 
 
 def _validate_arguments(parser,args) -> None:
-    if not args.production_id: parser.error("--production-id is required")
+    if not args.cleanup and not args.production_id: parser.error("--production-id is required")
     planning=args.plan or args.generate
     if planning:
         missing=[name for name,value in (("--input",args.input),("--scene-output-dir",args.scene_output_dir),("--workspace",args.workspace),("--output",args.output)) if value is None]
         if missing: parser.error(f"planning requires {', '.join(missing)}")
     elif args.input is not None: parser.error("--input is only valid with --plan or --generate")
     if args.preflight and not planning: parser.error("--preflight is only valid with --plan or --generate")
-    if args.confirm and not args.generate: parser.error("--confirm is only valid with --generate")
+    if args.confirm and not (args.generate or args.cleanup): parser.error("--confirm is only valid with --generate or --cleanup")
+    if args.older_than_hours is not None and not args.cleanup: parser.error("--older-than-hours is only valid with --cleanup")
+    if args.cleanup and any(value is not None for value in (args.input,args.scene_output_dir,args.workspace,args.output,args.scene_id)):
+        parser.error("--cleanup does not accept planning, artifact, or media paths")
     if (args.status or args.verify) and any(value is not None for value in (args.scene_output_dir,args.workspace,args.output)):
         parser.error("read-only operations accept only durable production identity")
     if args.repair_metadata and not args.scene_id: parser.error("--repair-metadata requires --scene-id")
@@ -140,6 +147,32 @@ def _repair_metadata(production_id: str, scene_id: str, parser) -> int:
     print(f"Artifact ID: {scene.artifact_id}"); print(f"Local artifact: {scene.local_path}")
     print(f"Bytes: {scene.byte_size}"); print(f"SHA-256: {scene.sha256}"); print("Metadata reconciliation: succeeded")
     return 0
+
+
+def _cleanup(args) -> int:
+    service=RuntimeCleanupService()
+    try:
+        seconds=None if args.older_than_hours is None else args.older_than_hours*3600
+        plan=service.scan(Path.cwd()/".runtime",seconds)
+        print("Operation: cleanup"); print(f"Mode: {'confirmed' if args.confirm else 'dry-run'}")
+        print(f"Candidates: {plan.candidate_count}"); print(f"Recoverable bytes: {plan.recoverable_bytes}")
+        for entry in plan.entries:
+            print(f"Candidate: {entry.path}"); print(f"Category: {entry.category.value}"); print(f"Reason: {entry.reason}")
+        if not args.confirm: return 0
+        if args.older_than_hours is None:
+            print("Cleanup confirmation requires an age threshold."); return 1
+        result=service.execute(plan)
+        print(f"Deleted: {result.deleted_count}"); print(f"Failed: {result.failed_count}")
+        print(f"Recovered bytes: {result.recovered_bytes}")
+        if result.failed_count:
+            print("Cleanup completed with one or more failures."); return 1
+        return 0
+    except CleanupConfirmationError:
+        print("Cleanup confirmation requires an age threshold."); return 1
+    except CleanupCandidateSafetyError:
+        print("Cleanup candidate is outside approved runtime roots."); return 1
+    except RuntimeCleanupError:
+        print("Cleanup root is invalid."); return 1
 
 
 def _print_result(operation,result) -> None:
