@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from app.cli.song_validate import SongInputError,configure_utf8_output,load_contract
-from app.music import (MusicEngine,MusicEngineError,MusicGenerationRequest,MusicPollingPolicy,
+from app.music import (MusicEngine,MusicEngineError,MusicGenerationRequest,MusicPollingPolicy,MusicVariantSelectionRequiredError,
                        MusicProviderRegistry,MusicProviderRegistryError,MusicTaskRegistry)
 from app.song import LyricsPlan,MusicPlan
 
@@ -40,6 +40,10 @@ def main() -> int:
         print("No task was submitted. Re-run with --confirm to proceed."); return 2
     try:
         record=build_music_engine(args.provider).generate(request,args.output,policy,args.provider)
+    except MusicVariantSelectionRequiredError as error:
+        print(f"Provider task ID: {error.provider_task_id}"); print("Status: succeeded")
+        print(f"Music generation succeeded with {error.available_variants} variants.")
+        print("Select a variant before download."); return 3
     except (MusicEngineError,MusicProviderRegistryError):
         print("Music generation failed at a safe provider boundary.")
         if args.provider=="sunoapi_org":

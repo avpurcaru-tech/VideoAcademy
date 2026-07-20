@@ -40,6 +40,13 @@ class GeneratedAudioArtifact(MusicContract):
     content_type: str = Field(min_length=1,max_length=100)
 
 
+class GeneratedMusicVariant(MusicContract):
+    """Safe one-based view of a transient generated artifact."""
+    variant_index: int = Field(gt=0)
+    artifact_id: str = Field(min_length=1,max_length=200)
+    content_type: str = Field(min_length=1,max_length=100)
+
+
 class MusicGenerationTask(MusicContract):
     provider: str = Field(min_length=1,max_length=100)
     provider_task_id: str = Field(pattern=r"^[A-Za-z0-9_-]+$")
@@ -86,4 +93,3 @@ class MusicGenerationTaskRecord(MusicContract):
     def timestamps_are_aware(cls,value):
         if value.tzinfo is None or value.utcoffset() is None: raise ValueError("Music task timestamps must be timezone-aware.")
         return value
-

@@ -29,11 +29,28 @@ confused.
 - Results: exactly two `response.sunoData` entries, each using `id` and
   `audioUrl`; the documented examples are MP3 and map to `audio/mpeg`
 
-Both paid outputs are exposed as transient artifacts. The existing engine's
-single-primary-artifact invariant then raises an explicit cardinality error.
-Sprint 13.4.2 does not select or discard either song and does not download one
-automatically. The durable task ID and terminal status remain available for
-inspection and later explicit-selection work.
+Both paid outputs are exposed as transient artifacts. The engine never chooses
+one automatically. After generation it reports a successful, durable task with
+selection required. Operators list safe one-based variants (`1`, `2`) and then
+explicitly download one. The selected artifact ID, local path, size, hash, and
+content type become durable; neither selected nor unselected signed URLs do.
+
+```bat
+python -m app.cli.music_engine_task ^
+  --provider sunoapi_org ^
+  --task-id PROVIDER_TASK_ID ^
+  --variants
+
+python -m app.cli.music_engine_task ^
+  --provider sunoapi_org ^
+  --task-id PROVIDER_TASK_ID ^
+  --select-variant 2 ^
+  --download .runtime\music\selected-song.mp3
+```
+
+The generic `download()` operation remains strict and rejects multiple outputs.
+Resume before selection reports that selection is required; resume after an
+explicit download returns the durable artifact without querying or submitting.
 
 Submission is never retried. After an ambiguous failure, inspect gateway
 account history before submitting again. Signed audio URLs, lyrics, style,

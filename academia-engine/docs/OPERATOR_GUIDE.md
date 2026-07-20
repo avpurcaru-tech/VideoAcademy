@@ -356,17 +356,31 @@ python -m app.cli.music_generate ^
   --confirm
 ```
 
-Each request produces two MP3 songs. Both are preserved in the provider task
-result, but the engine intentionally rejects automatic download because it
-requires one primary artifact. No automatic selection is made in this sprint.
-The durable task can be refreshed without resubmitting:
+Each request produces two MP3 songs. No automatic selection is made. Generation
+finishes with a durable successful task and asks the operator to select a safe,
+one-based variant. List them without exposing audio URLs:
 
 ```bat
 python -m app.cli.music_engine_task ^
   --provider sunoapi_org ^
   --task-id PROVIDER_TASK_ID ^
-  --refresh
+  --variants
 ```
+
+Then download exactly one explicit variant:
+
+```bat
+python -m app.cli.music_engine_task ^
+  --provider sunoapi_org ^
+  --task-id PROVIDER_TASK_ID ^
+  --select-variant 1 ^
+  --download .runtime\music\selected-song.mp3
+```
+
+Indices `0`, negative indices, and indices above the returned count are rejected.
+Before selection, resume reports that operator selection is required. After the
+selected artifact is durable, resume returns it immediately without provider
+submission or query.
 
 Submission is never retried. If its outcome is ambiguous, check the gateway
 account history before another request; the provider may already have created

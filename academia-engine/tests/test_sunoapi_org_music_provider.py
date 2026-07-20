@@ -6,8 +6,8 @@ from unittest.mock import Mock,patch
 
 from app.cli.music_generate import main as cli_main
 from app.models import GenerationTaskStatus
-from app.music import (AtomicAudioArtifactDownloader,MusicArtifactCardinalityError,MusicEngine,
-                       MusicPollingPolicy,MusicTaskRegistry)
+from app.music import (AtomicAudioArtifactDownloader,MusicEngine,MusicPollingPolicy,MusicTaskRegistry,
+                       MusicVariantSelectionRequiredError)
 from app.providers.sunoapi_org_music_provider import (SunoApiOrgContractError,SunoApiOrgMusicProvider,
     UrllibSunoApiOrgTransport,flatten_lyrics,map_request)
 from tests.test_music_generation_foundation import request
@@ -70,8 +70,9 @@ class SunoApiOrgProviderTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory); registry=MusicTaskRegistry(root/"tasks")
             engine=MusicEngine({"sunoapi_org":provider},registry,AtomicAudioArtifactDownloader(provider.download_audio_bytes),default_provider="sunoapi_org")
-            with self.assertRaises(MusicArtifactCardinalityError):
+            with self.assertRaises(MusicVariantSelectionRequiredError) as raised:
                 engine.generate(request(),root/"song.mp3",MusicPollingPolicy(interval_seconds=1,timeout_seconds=5))
+            self.assertEqual((raised.exception.provider_task_id,raised.exception.available_variants),("task-123",2))
             durable=(root/"tasks"/"task-123.json").read_text(encoding="utf-8")
             for forbidden in ("signed.invalid","audioUrl","lyrics","Numărăm","prompt"):
                 self.assertNotIn(forbidden,durable)
