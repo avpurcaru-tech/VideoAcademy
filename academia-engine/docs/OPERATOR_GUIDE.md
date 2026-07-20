@@ -334,6 +334,37 @@ python -m app.cli.song_generate_lyrics ^
 
 Omit `--show` to keep full lyrics out of console output. The durable output contains only the provider-neutral `LyricsPlan`, never request headers, provider responses, credentials, or internal instructions.
 
+## Real music generation (Mureka)
+
+The `mureka` adapter uses Mureka's official asynchronous v1 song API ([quickstart](https://platform.mureka.ai/docs/en/quickstart.html), [submit operation](https://platform.mureka.ai/docs/api/operations/post-v1-song-generate.html), [query operation](https://platform.mureka.ai/docs/api/operations/get-v1-song-query-%7Btask_id%7D.html)). Configure `MUREKA_API_KEY`; optionally set `MUREKA_MUSIC_MODEL` (default `auto`) and `MUREKA_TIMEOUT_SECONDS` (default `30`). Never put credentials in JSON or command arguments.
+
+```bat
+python -m app.cli.music_generate ^
+  --lyrics examples\smoke\lyrics-plan.json ^
+  --music-plan examples\smoke\music-plan.json ^
+  --provider mureka ^
+  --output .runtime\music\counting-1-to-5.wav ^
+  --interval 5 ^
+  --timeout 900 ^
+  --confirm
+```
+
+Generation can consume credits and requires `--confirm`. The adapter submits one song without submission retries, polls by provider task ID, and accepts only the officially documented `wav_url`. Signed URLs, lyrics, prompts, and credentials never enter the task registry. After an ambiguous submission failure, do not submit again; first inspect the provider console and durable task state.
+
+Sprint 13.4 supports WAV only. The generic song URL's encoding is not assumed, FLAC is outside the existing durable audio contract, and no transcoding is performed. Style, mood, instrumentation, vocal direction, tempo, and target duration are represented in Mureka's documented free-form `prompt`; Mureka does not expose those as separate v1 song fields. External-correlation lookup is unavailable because the official contract documents lookup by task ID only.
+
+Resume a known durable task without submitting:
+
+```bat
+python -m app.cli.music_engine_task ^
+  --provider mureka ^
+  --task-id PROVIDER_TASK_ID ^
+  --resume ^
+  --download .runtime\music\counting-1-to-5.wav ^
+  --interval 5 ^
+  --timeout 900
+```
+
 ## Version readiness checklist
 
 - [ ] Input preflight passes

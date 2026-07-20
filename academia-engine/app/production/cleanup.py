@@ -61,7 +61,7 @@ class CleanupResult:
 class RuntimeCleanupService:
     """Conservative cleanup for explicitly recognized disposable runtime paths."""
 
-    _PART_ROOTS = (("productions",), ("requests",), ("kling", "tasks"), ("media",))
+    _PART_ROOTS = (("productions",), ("requests",), ("kling", "tasks"), ("music", "tasks"), ("media",))
 
     def scan(self, runtime_root: Path, older_than_seconds: float | None = None) -> CleanupPlan:
         threshold = self._threshold(older_than_seconds)
