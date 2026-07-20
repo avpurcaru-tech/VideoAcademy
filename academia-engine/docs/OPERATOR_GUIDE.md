@@ -382,6 +382,26 @@ Before selection, resume reports that operator selection is required. After the
 selected artifact is durable, resume returns it immediately without provider
 submission or query.
 
+To preserve both paid variants instead of selecting one, generate and download
+the complete ordered set:
+
+```bat
+python -m app.cli.music_generate ^
+  --lyrics .runtime\songs\counting-1-to-5\lyrics-openai.json ^
+  --music-plan examples\smoke\music-plan.json ^
+  --provider sunoapi_org ^
+  --output-dir .runtime\music\counting-1-to-5 ^
+  --download-all ^
+  --interval 5 ^
+  --timeout 900 ^
+  --confirm
+```
+
+For an existing durable task, use `music_engine_task --download-all --output-dir
+PATH`. Completed variants are not downloaded again. A partial run retains each
+atomically completed file and its safe metadata, but the artifact set remains
+incomplete until every expected variant is durable.
+
 Submission is never retried. If its outcome is ambiguous, check the gateway
 account history before another request; the provider may already have created
 a paid task.

@@ -7,7 +7,8 @@ from typing import Callable
 from app.models import GenerationTaskStatus
 from pydantic import BaseModel,ConfigDict,Field,ValidationError
 
-from .contracts import GeneratedMusicVariant,MusicGenerationRequest,MusicGenerationTask,MusicGenerationTaskRecord,SUPPORTED_AUDIO_CONTENT_TYPES
+from .contracts import (DurableAudioArtifactSet,GeneratedMusicVariant,MusicGenerationRequest,MusicGenerationTask,
+                        MusicGenerationTaskRecord,SUPPORTED_AUDIO_CONTENT_TYPES)
 from .downloader import AudioArtifactDownloader
 from .provider import MusicExternalIdProvider,MusicProvider
 from .registry import MusicTaskRegistry,MusicTaskRegistryError,MusicTaskRegistryNotFoundError
@@ -31,6 +32,7 @@ class MusicArtifactCardinalityError(MusicEngineError):
     def __init__(self,message: str,available_variants: int|None=None):
         super().__init__(message); self.available_variants=available_variants
 class MusicVariantIndexError(MusicEngineError): pass
+class MusicArtifactSetConflictError(MusicEngineError): pass
 class MusicVariantSelectionRequiredError(MusicEngineError):
     def __init__(self,provider_task_id: str,available_variants: int):
         super().__init__(f"Music variant selection is required. Available variants: {available_variants}")
@@ -107,6 +109,43 @@ class MusicEngine:
         if variant_index>len(task.artifacts): raise MusicVariantIndexError("Music variant index exceeds available variants.")
         return self._download_artifact(refreshed,task.artifacts[variant_index-1],destination)
 
+    def download_all_variants(self,provider_task_id: str,destination_directory: Path) -> MusicGenerationTaskRecord:
+        existing=self._load(provider_task_id)
+        if existing.artifact_set is not None and existing.artifact_set.complete: return existing
+        task=self._query(existing.provider,provider_task_id)
+        refreshed=self._persist(existing.model_copy(update={"normalized_status":task.normalized_status,
+            "external_correlation_id":task.external_correlation_id,"updated_at":task.updated_at or _now()}))
+        if task.normalized_status!=GenerationTaskStatus.SUCCEEDED: raise MusicTaskNotSucceededError("Music task has not succeeded.")
+        if not task.artifacts: raise MusicArtifactCardinalityError("Music task contains no audio artifacts.",0)
+        for artifact in task.artifacts:
+            if artifact.content_type.lower() not in SUPPORTED_AUDIO_CONTENT_TYPES:
+                raise UnsupportedAudioContentTypeError("Music artifact content type is unsupported.")
+        current=refreshed.artifact_set
+        if current is not None and current.expected_artifact_count!=len(task.artifacts):
+            raise MusicArtifactSetConflictError("Durable music variant count conflicts with provider output.")
+        completed={artifact.variant_index:artifact for artifact in (current.artifacts if current else ())}
+        for index,artifact in enumerate(task.artifacts,start=1):
+            durable=completed.get(index)
+            if durable is not None and durable.artifact_id!=artifact.artifact_id:
+                raise MusicArtifactSetConflictError("Durable music variant identity conflicts with provider output.")
+        artifact_set=DurableAudioArtifactSet(provider_task_id=provider_task_id,
+            artifacts=tuple(completed[index] for index in sorted(completed)),expected_artifact_count=len(task.artifacts),complete=False)
+        refreshed=self._persist(refreshed.model_copy(update={"artifact_set":artifact_set}))
+        directory=Path(destination_directory)
+        for index,artifact in enumerate(task.artifacts,start=1):
+            if index in completed: continue
+            suffix=SUPPORTED_AUDIO_CONTENT_TYPES[artifact.content_type.lower()]
+            destination=directory/f"variant-{index:02d}{suffix}"
+            try: durable=self._downloader.download_audio_artifact(artifact,destination)
+            except Exception as error: raise MusicEngineDownloadError("Music variant could not be downloaded safely.") from error
+            completed[index]=durable.model_copy(update={"variant_index":index})
+            partial=DurableAudioArtifactSet(provider_task_id=provider_task_id,
+                artifacts=tuple(completed[value] for value in sorted(completed)),expected_artifact_count=len(task.artifacts),complete=False)
+            refreshed=self._persist(refreshed.model_copy(update={"artifact_set":partial}))
+        complete=DurableAudioArtifactSet(provider_task_id=provider_task_id,
+            artifacts=tuple(completed[value] for value in sorted(completed)),expected_artifact_count=len(task.artifacts),complete=True)
+        return self._persist(refreshed.model_copy(update={"artifact_set":complete}))
+
     def _download_artifact(self,refreshed,artifact,destination):
         if artifact.content_type.lower() not in SUPPORTED_AUDIO_CONTENT_TYPES:
             raise UnsupportedAudioContentTypeError("Music artifact content type is unsupported.")
@@ -138,6 +177,11 @@ class MusicEngine:
             if error.available_variants and error.available_variants>1:
                 raise MusicVariantSelectionRequiredError(submitted.provider_task_id,error.available_variants) from None
             raise
+
+    def generate_all_variants(self,request,destination_directory,policy,provider=None):
+        submitted=self.submit(request,provider); terminal=self.wait_until_terminal(submitted.provider_task_id,policy)
+        if terminal.normalized_status==GenerationTaskStatus.FAILED: raise MusicEngineTaskFailedError("Music task failed.")
+        return self.download_all_variants(submitted.provider_task_id,destination_directory)
 
     def resume(self,provider_task_id,destination,policy):
         existing=self._load(provider_task_id)

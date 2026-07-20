@@ -52,6 +52,31 @@ The generic `download()` operation remains strict and rejects multiple outputs.
 Resume before selection reports that selection is required; resume after an
 explicit download returns the durable artifact without querying or submitting.
 
+For workflows that need every generated song, use provider-neutral multi-
+artifact download. Files are named deterministically in provider order. Each is
+published atomically and persisted immediately; the durable set is marked
+complete only after all variants succeed. Repeating the command after a partial
+failure downloads only missing variants, while repeating it after completion
+performs no provider query or download.
+
+```bat
+python -m app.cli.music_generate ^
+  --lyrics .runtime\songs\counting-1-to-5\lyrics-openai.json ^
+  --music-plan examples\smoke\music-plan.json ^
+  --provider sunoapi_org ^
+  --output-dir .runtime\music\counting-1-to-5 ^
+  --download-all ^
+  --interval 5 ^
+  --timeout 900 ^
+  --confirm
+
+python -m app.cli.music_engine_task ^
+  --provider sunoapi_org ^
+  --task-id PROVIDER_TASK_ID ^
+  --download-all ^
+  --output-dir .runtime\music\counting-1-to-5
+```
+
 Submission is never retried. After an ambiguous failure, inspect gateway
 account history before submitting again. Signed audio URLs, lyrics, style,
 payloads, and credentials are not persisted.

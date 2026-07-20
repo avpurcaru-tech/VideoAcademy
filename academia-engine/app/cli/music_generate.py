@@ -17,9 +17,14 @@ def build_music_engine(provider_name: str) -> MusicEngine:
 def main() -> int:
     configure_utf8_output(); parser=argparse.ArgumentParser(description="Generate one song through a real music provider.")
     parser.add_argument("--lyrics",required=True,type=Path); parser.add_argument("--music-plan",required=True,type=Path)
-    parser.add_argument("--provider",required=True); parser.add_argument("--output",required=True,type=Path)
+    parser.add_argument("--provider",required=True); parser.add_argument("--output",type=Path); parser.add_argument("--output-dir",type=Path)
+    parser.add_argument("--download-all",action="store_true")
     parser.add_argument("--interval",type=float,default=5); parser.add_argument("--timeout",type=float,default=900)
     parser.add_argument("--max-attempts",type=int); parser.add_argument("--confirm",action="store_true"); args=parser.parse_args()
+    if args.download_all and args.output_dir is None: parser.error("--download-all requires --output-dir")
+    if not args.download_all and args.output is None: parser.error("single-artifact generation requires --output")
+    if args.download_all and args.output is not None: parser.error("--output cannot be combined with --download-all")
+    if not args.download_all and args.output_dir is not None: parser.error("--output-dir requires --download-all")
     try:
         lyrics=load_contract(args.lyrics,LyricsPlan,"Lyrics plan"); plan=load_contract(args.music_plan,MusicPlan,"Music plan")
         request=MusicGenerationRequest(song_id=lyrics.song_id,title=lyrics.title,lyrics=lyrics,music_plan=plan)
@@ -39,7 +44,9 @@ def main() -> int:
     if not args.confirm:
         print("No task was submitted. Re-run with --confirm to proceed."); return 2
     try:
-        record=build_music_engine(args.provider).generate(request,args.output,policy,args.provider)
+        engine=build_music_engine(args.provider)
+        record=(engine.generate_all_variants(request,args.output_dir,policy,args.provider) if args.download_all
+                else engine.generate(request,args.output,policy,args.provider))
     except MusicVariantSelectionRequiredError as error:
         print(f"Provider task ID: {error.provider_task_id}"); print("Status: succeeded")
         print(f"Music generation succeeded with {error.available_variants} variants.")
@@ -56,6 +63,14 @@ def main() -> int:
             print("The provider may have created a paid task. Do not submit again until provider account history is checked.")
         else: print("Do not automatically resubmit.")
         return 1
+    if args.download_all:
+        print(f"Provider task ID: {record.provider_task_id}"); print(f"Status: {record.normalized_status.value}")
+        print(f"Variants downloaded: {len(record.artifact_set.artifacts)}")
+        for durable in record.artifact_set.artifacts:
+            print(f"Variant: {durable.variant_index}"); print(f"Artifact ID: {durable.artifact_id}")
+            print(f"Saved path: {durable.local_path}"); print(f"Bytes: {durable.byte_size}")
+            print(f"SHA-256: {durable.sha256}"); print(f"Content type: {durable.content_type}")
+        return 0
     artifact=record.artifact
     print(f"Provider task ID: {record.provider_task_id}"); print(f"Status: {record.normalized_status.value}")
     print(f"Saved path: {artifact.local_path}"); print(f"Bytes: {artifact.byte_size}")

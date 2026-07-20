@@ -70,6 +70,7 @@ class DurableAudioArtifact(MusicContract):
     byte_size: int = Field(gt=0)
     sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     content_type: str
+    variant_index: int | None = Field(default=None,gt=0)
 
     @field_validator("content_type")
     @classmethod
@@ -77,6 +78,22 @@ class DurableAudioArtifact(MusicContract):
         normalized=value.lower()
         if normalized not in SUPPORTED_AUDIO_CONTENT_TYPES: raise ValueError("Audio content type is unsupported.")
         return normalized
+
+
+class DurableAudioArtifactSet(MusicContract):
+    provider_task_id: str = Field(pattern=r"^[A-Za-z0-9_-]+$")
+    artifacts: tuple[DurableAudioArtifact,...]=()
+    expected_artifact_count: int = Field(gt=0)
+    complete: bool=False
+
+    @model_validator(mode="after")
+    def validate_order_and_completion(self):
+        indices=[artifact.variant_index for artifact in self.artifacts]
+        if any(index is None for index in indices): raise ValueError("Variant index is required in an artifact set.")
+        if indices!=sorted(indices) or len(indices)!=len(set(indices)): raise ValueError("Artifact variant indices must be unique and ordered.")
+        if any(index>self.expected_artifact_count for index in indices): raise ValueError("Artifact variant index exceeds expected count.")
+        if self.complete and len(self.artifacts)!=self.expected_artifact_count: raise ValueError("Complete artifact set has missing variants.")
+        return self
 
 
 class MusicGenerationTaskRecord(MusicContract):
@@ -87,6 +104,7 @@ class MusicGenerationTaskRecord(MusicContract):
     created_at: datetime
     updated_at: datetime
     artifact: DurableAudioArtifact | None=None
+    artifact_set: DurableAudioArtifactSet | None=None
 
     @field_validator("created_at","updated_at")
     @classmethod
