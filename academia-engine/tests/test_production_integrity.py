@@ -7,10 +7,12 @@ from unittest.mock import Mock, patch
 
 from app.cli.episode import main as episode_main
 from app.media import MediaProbeResult
+from app.models import GenerationTaskStatus
 from app.production import (ArtifactIntegrityState, EpisodeProductionOrchestrator, EpisodeProductionStatus,
                             EpisodeSceneStatus, GenerationRequestStore, ProductionArtifactIntegrityError,
                             ProductionFinalArtifactMissingError, ProductionIntegrityService, ProductionRegistry,
-                            ProductionSceneArtifactIntegrityError)
+                            ProductionSceneArtifactIntegrityError, ProductionArtifactMetadataReconciler,
+                            ArtifactMetadataLocalFileError)
 from app.services import VideoPollingPolicy
 from app.timeline import RenderedTimelineArtifact
 from tests.test_episode_production import FakeProbe
@@ -72,6 +74,43 @@ class ProductionIntegrityTests(unittest.TestCase):
             registry.return_value.load.return_value=production; self.assertEqual(episode_main(),1)
         provider.assert_not_called(); output=" ".join(str(c.args[0]) for c in emit.call_args_list)
         self.assertIn("Artifact integrity: missing",output); self.assertNotIn("prompt",output)
+
+    def test_explicit_metadata_reconciliation_preserves_provider_identity_and_makes_legacy_scene_valid(self):
+        registry=ProductionRegistry(self.root/"productions-repair"); production=record(self.root)
+        path=self.root/"legacy.mp4"; path.write_bytes(b"legacy-video")
+        scene=production.scenes[0].model_copy(update={"provider_task_id":"provider-task","external_correlation_id":"correlation",
+            "normalized_status":GenerationTaskStatus.SUCCEEDED,"production_status":EpisodeSceneStatus.READY,"local_path":path,"artifact_id":"provider-artifact",
+            "byte_size":None,"sha256":None,"content_type":None})
+        registry.create(production.model_copy(update={"scenes":(scene,production.scenes[1])}))
+        self.assertEqual(self.service.verify_scene(registry.load("episode-001").scenes[0]).state,ArtifactIntegrityState.METADATA_MISSING)
+        repaired=ProductionArtifactMetadataReconciler(registry,clock=lambda:NOW).reconcile_scene("episode-001","scene-0001").scenes[0]
+        self.assertEqual(repaired.artifact_id,"provider-artifact"); self.assertEqual(repaired.provider_task_id,"provider-task")
+        self.assertEqual(repaired.external_correlation_id,"correlation"); self.assertEqual(repaired.generation_request_reference,scene.generation_request_reference)
+        self.assertEqual(repaired.byte_size,len(b"legacy-video")); self.assertEqual(repaired.content_type,"video/mp4")
+        self.assertEqual(self.service.verify_scene(repaired).state,ArtifactIntegrityState.VALID)
+
+    def test_metadata_reconciliation_local_id_fallback_and_failure_is_non_mutating(self):
+        registry=ProductionRegistry(self.root/"productions-fallback"); production=record(self.root)
+        path=self.root/"local.mp4"; path.write_bytes(b"local")
+        scene=production.scenes[0].model_copy(update={"production_status":EpisodeSceneStatus.READY,"local_path":path,"artifact_id":None,"byte_size":None,"sha256":None})
+        registry.create(production.model_copy(update={"scenes":(scene,production.scenes[1])}))
+        repaired=ProductionArtifactMetadataReconciler(registry).reconcile_scene("episode-001","scene-0001").scenes[0]
+        self.assertTrue(repaired.artifact_id.startswith("local:"))
+        original=registry.load("episode-001"); missing=original.scenes[1].model_copy(update={"production_status":EpisodeSceneStatus.READY,"local_path":self.root/"missing.mp4"})
+        registry.update(original.model_copy(update={"scenes":(original.scenes[0],missing)})); before=registry.load("episode-001")
+        with self.assertRaises(ArtifactMetadataLocalFileError): ProductionArtifactMetadataReconciler(registry).reconcile_scene("episode-001","scene-0002")
+        self.assertEqual(registry.load("episode-001"),before)
+
+    def test_repair_metadata_cli_is_sanitized_and_uses_no_provider(self):
+        production=record(self.root); path=self.root/"repair.mp4"; path.write_bytes(b"repair")
+        scene=production.scenes[0].model_copy(update={"production_status":EpisodeSceneStatus.READY,"local_path":path,"artifact_id":"artifact","byte_size":6,"sha256":hashlib.sha256(b"repair").hexdigest()})
+        production=production.model_copy(update={"scenes":(scene,production.scenes[1])})
+        with patch("sys.argv",["episode","--repair-metadata","--production-id","episode-001","--scene-id","scene-0001"]), \
+             patch("app.cli.episode.ProductionArtifactMetadataReconciler") as reconciler,patch("app.cli.episode.build_orchestrator") as provider,patch("builtins.print") as emit:
+            reconciler.return_value.reconcile_scene.return_value=production; self.assertEqual(episode_main(),0)
+        provider.assert_not_called(); output=" ".join(str(c.args[0]) for c in emit.call_args_list)
+        self.assertIn("Metadata reconciliation: succeeded",output)
+        for forbidden in ("prompt","signed","Authorization","credential"): self.assertNotIn(forbidden,output)
 
     def _final(self,content,name="final.mp4"):
         path=self.root/name; path.write_bytes(content); digest=hashlib.sha256(content).hexdigest()

@@ -1,4 +1,5 @@
 import tempfile
+import hashlib
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +16,7 @@ from app.production import (
     ProductionRegistry,
 )
 from app.services import ArtifactRecord, GenerationTaskRecord
+from app.production import ProductionIntegrityService, ArtifactIntegrityState
 
 
 NOW = datetime(2026, 1, 1, tzinfo=timezone.utc)
@@ -71,6 +73,9 @@ class EpisodeReconciliationTests(unittest.TestCase):
         self.assertEqual(self.engine.download_calls, [("task-one", self.root / "scenes/scene-0001.mp4")])
         self.assertEqual(self.engine.submit_calls, 0)
         self.assertEqual(updated.scenes[0].local_path, self.root / "scenes/scene-0001.mp4")
+        self.assertEqual(updated.scenes[0].byte_size, 3)
+        self.assertEqual(updated.scenes[0].content_type, "video/mp4")
+        self.assertEqual(ProductionIntegrityService().verify_scene(updated.scenes[0]).state, ArtifactIntegrityState.VALID)
         self.assertIsNone(updated.scenes[1].provider_task_id)
 
     def test_reconciliation_cli_prints_only_sanitized_durable_fields(self):
@@ -94,7 +99,7 @@ class FakeReconciliationEngine:
     def submit(self, *args, **kwargs): self.submit_calls += 1; raise AssertionError("submit must never be called")
     def download(self, task_id, destination):
         self.download_calls.append((task_id, destination)); destination.parent.mkdir(parents=True, exist_ok=True); destination.write_bytes(b"mp4")
-        artifact = ArtifactRecord(artifact_id="artifact-one", local_path=destination, byte_size=3, sha256="a"*64, content_type="video/mp4")
+        artifact = ArtifactRecord(artifact_id="artifact-one", local_path=destination, byte_size=3, sha256=hashlib.sha256(b"mp4").hexdigest(), content_type="video/mp4")
         return GenerationTaskRecord(provider="kling", provider_task_id=task_id, external_correlation_id="correlation-safe",
             normalized_status="succeeded", created_at=NOW, updated_at=NOW, artifact=artifact)
 

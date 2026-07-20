@@ -10,6 +10,7 @@ from app.production import (
     EpisodeTimelineValidationError, ProductionRegistry, ProductionRegistryError,
     ProductionRegistryNotFoundError,
     ProductionIntegrityService, ProductionArtifactIntegrityError,
+    ProductionArtifactMetadataReconciler, ArtifactMetadataReconciliationError,
 )
 from app.services import VideoEngineTimeoutError, VideoPollingPolicy
 
@@ -24,6 +25,7 @@ def _parser() -> argparse.ArgumentParser:
     operations.add_argument("--plan",action="store_true"); operations.add_argument("--generate",action="store_true")
     operations.add_argument("--status",action="store_true"); operations.add_argument("--resume",action="store_true")
     operations.add_argument("--verify",action="store_true")
+    operations.add_argument("--repair-metadata",action="store_true")
     parser.add_argument("--input",type=Path); parser.add_argument("--production-id")
     parser.add_argument("--provider",default="kling"); parser.add_argument("--scene-output-dir",type=Path)
     parser.add_argument("--workspace",type=Path); parser.add_argument("--output",type=Path)
@@ -31,6 +33,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--transition-duration",type=float); parser.add_argument("--interval",type=float,default=2)
     parser.add_argument("--timeout",type=float,default=900); parser.add_argument("--max-attempts",type=int)
     parser.add_argument("--preflight",action="store_true"); parser.add_argument("--confirm",action="store_true")
+    parser.add_argument("--scene-id")
     return parser
 
 
@@ -38,6 +41,7 @@ def main() -> int:
     parser=_parser(); args=parser.parse_args(); _validate_arguments(parser,args)
     if args.status: return _status(args.production_id)
     if args.verify: return _verify(args.production_id)
+    if args.repair_metadata: return _repair_metadata(args.production_id,args.scene_id,parser)
     if args.resume: return _resume(args)
     if args.generate: return _generate(args)
     return _plan(args)
@@ -54,6 +58,8 @@ def _validate_arguments(parser,args) -> None:
     if args.confirm and not args.generate: parser.error("--confirm is only valid with --generate")
     if (args.status or args.verify) and any(value is not None for value in (args.scene_output_dir,args.workspace,args.output)):
         parser.error("read-only operations accept only durable production identity")
+    if args.repair_metadata and not args.scene_id: parser.error("--repair-metadata requires --scene-id")
+    if args.scene_id and not args.repair_metadata: parser.error("--scene-id is only valid with --repair-metadata")
 
 
 def _plan(args) -> int:
@@ -122,6 +128,18 @@ def _verify(production_id: str) -> int:
         print(f"Scene: {scene.scene_id}"); print(f"Artifact integrity: {scene.artifact.state.value}")
     print(f"Final artifact integrity: {report.final_artifact.state.value}")
     return 0 if report.valid else 1
+
+
+def _repair_metadata(production_id: str, scene_id: str, parser) -> int:
+    try:
+        record=ProductionArtifactMetadataReconciler(ProductionRegistry()).reconcile_scene(production_id,scene_id)
+        scene=next(scene for scene in record.scenes if scene.scene_id==scene_id)
+    except ArtifactMetadataReconciliationError:
+        print("Artifact metadata reconciliation failed at a safe local boundary."); return 1
+    print("Operation: repair-metadata"); print(f"Production ID: {record.production_id}"); print(f"Scene: {scene.scene_id}")
+    print(f"Artifact ID: {scene.artifact_id}"); print(f"Local artifact: {scene.local_path}")
+    print(f"Bytes: {scene.byte_size}"); print(f"SHA-256: {scene.sha256}"); print("Metadata reconciliation: succeeded")
+    return 0
 
 
 def _print_result(operation,result) -> None:
