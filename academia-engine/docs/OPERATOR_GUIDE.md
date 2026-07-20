@@ -413,6 +413,12 @@ Submission is never retried. If its outcome is ambiguous, check the gateway
 account history before another request; the provider may already have created
 a paid task.
 
+Use `music_generate --preflight` with the normal input, provider, output-dir,
+and `--download-all` arguments to validate the API key, HTTPS callback URL,
+explicit model, lyrics, and music plan without making HTTP calls. Submit
+diagnostics show only safe phase/status identifiers. A returned task ID is
+persisted immediately even if a later submit boundary fails.
+
 Mureka is retained as an isolated evaluation adapter and is not the intended
 production provider or an automatic fallback.
 

@@ -81,6 +81,36 @@ Submission is never retried. After an ambiguous failure, inspect gateway
 account history before submitting again. Signed audio URLs, lyrics, style,
 payloads, and credentials are not persisted.
 
+### Safe submit diagnostics
+
+`music_generate` distinguishes configuration failure, definitive connection
+failure before a response, HTTP rejection, provider application error,
+ambiguous transport failure, and response parsing failure after HTTP success.
+Only safe status/code/message, task ID, request/trace ID, and Retry-After fields
+are eligible for console output. Raw bodies and semantic request fields are
+discarded.
+
+If an error response contains a valid documented `taskId`, `MusicEngine`
+immediately writes the minimal submitted task record before returning the
+failure. Resume or query that ID; never resubmit it. Without a known task ID,
+the gateway offers no documented account-history API suitable for automatic
+orphan discovery, and the application does not scrape its dashboard.
+
+Configuration can be checked without HTTP or credit consumption:
+
+```bat
+python -m app.cli.music_generate ^
+  --lyrics .runtime\songs\counting-1-to-5\lyrics-openai.json ^
+  --music-plan examples\smoke\music-plan.json ^
+  --provider sunoapi_org ^
+  --output-dir .runtime\music\counting-1-to-5 ^
+  --download-all ^
+  --preflight
+```
+
+The documented gateway API does not provide a clearly non-billable connectivity
+probe, so no connectivity diagnostic endpoint is called or invented.
+
 ## Official Suno Platform assessment
 
 The intended production integration is the API operated by **Suno, Inc.** at

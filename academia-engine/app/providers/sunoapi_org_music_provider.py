@@ -15,12 +15,21 @@ from app.models import GenerationTaskStatus
 from app.music.contracts import GeneratedAudioArtifact,MusicGenerationRequest,MusicGenerationTask
 
 
-class SunoApiOrgError(RuntimeError): pass
+class SunoApiOrgError(RuntimeError):
+    def __init__(self,message: str,*,phase: str|None=None,http_status: int|None=None,
+                 provider_code: int|str|None=None,provider_message: str|None=None,
+                 provider_task_id: str|None=None,provider_request_id: str|None=None,
+                 retry_after: str|None=None):
+        super().__init__(message); self.phase=phase; self.http_status=http_status
+        self.provider_code=provider_code; self.provider_message=provider_message
+        self.provider_task_id=provider_task_id; self.provider_request_id=provider_request_id
+        self.retry_after=retry_after
 class SunoApiOrgConfigurationError(SunoApiOrgError): pass
 class SunoApiOrgAuthenticationError(SunoApiOrgError): pass
 class SunoApiOrgRateLimitError(SunoApiOrgError): pass
 class SunoApiOrgTimeoutError(SunoApiOrgError): pass
 class SunoApiOrgNetworkError(SunoApiOrgError): pass
+class SunoApiOrgAmbiguousTransportError(SunoApiOrgNetworkError): pass
 class SunoApiOrgApiError(SunoApiOrgError): pass
 class SunoApiOrgContractError(SunoApiOrgError): pass
 
@@ -58,8 +67,10 @@ class UrllibSunoApiOrgTransport:
             "Authorization":f"Bearer {self._key}","Content-Type":"application/json","Accept":"application/json"})
         raw=self._open(request)
         try: result=json.loads(raw.decode("utf-8"))
-        except (UnicodeDecodeError,json.JSONDecodeError): raise SunoApiOrgContractError("sunoapi.org returned malformed JSON.") from None
-        if not isinstance(result,dict): raise SunoApiOrgContractError("sunoapi.org returned an invalid response shape.")
+        except (UnicodeDecodeError,json.JSONDecodeError): raise SunoApiOrgContractError(
+            "sunoapi.org returned malformed JSON.",phase="response_parsing") from None
+        if not isinstance(result,dict): raise SunoApiOrgContractError(
+            "sunoapi.org returned an invalid response shape.",phase="response_parsing")
         return result
 
     def download(self,url):
@@ -70,11 +81,49 @@ class UrllibSunoApiOrgTransport:
         try:
             with urllib.request.urlopen(request,timeout=self._timeout) as response: return response.read()
         except urllib.error.HTTPError as error:
-            if error.code in (401,403): raise SunoApiOrgAuthenticationError("sunoapi.org authentication failed.") from None
-            if error.code in (405,429,430): raise SunoApiOrgRateLimitError(f"sunoapi.org request was rejected with status {error.code}.") from None
-            raise SunoApiOrgApiError(f"sunoapi.org request failed with HTTP status {error.code}.") from None
-        except (TimeoutError,socket.timeout): raise SunoApiOrgTimeoutError("sunoapi.org request timed out.") from None
-        except (urllib.error.URLError,OSError): raise SunoApiOrgNetworkError("sunoapi.org request failed at the network boundary.") from None
+            details=_safe_error_details(error); kwargs=dict(phase="http_failure",http_status=error.code,
+                retry_after=_safe_header(error.headers,"Retry-After"),**details)
+            if error.code in (401,403): raise SunoApiOrgAuthenticationError("sunoapi.org authentication failed.",**kwargs) from None
+            if error.code in (405,429,430): raise SunoApiOrgRateLimitError("sunoapi.org request was rate or credit limited.",**kwargs) from None
+            raise SunoApiOrgApiError("sunoapi.org HTTP request failed.",**kwargs) from None
+        except (TimeoutError,socket.timeout): raise SunoApiOrgTimeoutError(
+            "sunoapi.org submit outcome is ambiguous.",phase="ambiguous_transport") from None
+        except urllib.error.URLError as error:
+            reason=getattr(error,"reason",None)
+            if isinstance(reason,(socket.gaierror,ConnectionRefusedError)):
+                raise SunoApiOrgNetworkError("sunoapi.org connection failed before a response.",phase="network_before_response") from None
+            raise SunoApiOrgAmbiguousTransportError("sunoapi.org transport outcome is ambiguous.",phase="ambiguous_transport") from None
+        except OSError: raise SunoApiOrgAmbiguousTransportError(
+            "sunoapi.org transport outcome is ambiguous.",phase="ambiguous_transport") from None
+
+
+def _safe_header(headers,name):
+    value=headers.get(name) if headers is not None else None
+    return str(value)[:100] if value is not None else None
+
+
+def _safe_message(value):
+    if not isinstance(value,str): return None
+    text=" ".join(value.split())[:200]; lowered=text.casefold()
+    if any(marker in lowered for marker in ("http://","https://","authorization","bearer","api_key","prompt","lyrics","callback")):
+        return None
+    return text or None
+
+
+def _safe_error_details(error):
+    try: raw=error.read(65536)
+    except Exception: raw=b""
+    try: payload=json.loads(raw.decode("utf-8"))
+    except Exception: payload={}
+    if not isinstance(payload,dict): payload={}
+    data=payload.get("data") if isinstance(payload.get("data"),dict) else {}
+    task_id=data.get("taskId") if isinstance(data.get("taskId"),str) else None
+    if task_id and not task_id.replace("_","").replace("-","").isalnum(): task_id=None
+    request_id=payload.get("requestId") or payload.get("traceId")
+    if not isinstance(request_id,str) or not request_id.replace("_","").replace("-","").isalnum(): request_id=None
+    code=payload.get("code") if isinstance(payload.get("code"),(int,str)) else None
+    return {"provider_code":code,"provider_message":_safe_message(payload.get("msg")),
+            "provider_task_id":task_id,"provider_request_id":request_id}
 
 
 class _SubmitData(BaseModel):
@@ -101,9 +150,14 @@ class _QueryData(BaseModel):
 
 
 def _envelope(payload,contract):
-    if payload.get("code")!=200: raise SunoApiOrgApiError(f"sunoapi.org returned provider code {payload.get('code')}.")
+    if payload.get("code")!=200:
+        data=payload.get("data") if isinstance(payload.get("data"),dict) else {}
+        task_id=data.get("taskId") if isinstance(data.get("taskId"),str) else None
+        raise SunoApiOrgApiError("sunoapi.org returned an application error.",phase="provider_application",
+            provider_code=payload.get("code"),provider_message=_safe_message(payload.get("msg")),provider_task_id=task_id)
     try: return contract.model_validate(payload.get("data"))
-    except ValidationError: raise SunoApiOrgContractError("sunoapi.org returned an invalid response contract.") from None
+    except ValidationError: raise SunoApiOrgContractError(
+        "sunoapi.org returned an invalid response contract.",phase="response_parsing") from None
 
 
 def flatten_lyrics(request: MusicGenerationRequest) -> str:
@@ -113,7 +167,7 @@ def flatten_lyrics(request: MusicGenerationRequest) -> str:
 
 def map_request(request: MusicGenerationRequest,*,model: str,callback_url: str) -> dict[str,Any]:
     if model not in MODELS: raise SunoApiOrgConfigurationError("sunoapi.org model is unsupported.")
-    if not callback_url.startswith("https://"): raise SunoApiOrgConfigurationError("sunoapi.org callback URL must use HTTPS.")
+    if not _valid_https_url(callback_url): raise SunoApiOrgConfigurationError("sunoapi.org callback URL must be a valid HTTPS URL.")
     lyrics=flatten_lyrics(request); prompt_limit=3000 if model=="V4" else 5000
     title_limit=80 if model in {"V4","V4_5ALL"} else 100; style_limit=200 if model=="V4" else 1000
     plan=request.music_plan
@@ -130,16 +184,18 @@ class SunoApiOrgMusicProvider:
     provider_name="sunoapi_org"
     def __init__(self,transport: SunoApiOrgTransport,*,model: str="V4_5",callback_url: str) -> None:
         if model not in MODELS: raise SunoApiOrgConfigurationError("sunoapi.org model is unsupported.")
-        if not callback_url.startswith("https://"): raise SunoApiOrgConfigurationError("sunoapi.org callback URL must use HTTPS.")
+        if not _valid_https_url(callback_url): raise SunoApiOrgConfigurationError("sunoapi.org callback URL must be a valid HTTPS URL.")
         self._transport=transport; self._model=model; self._callback=callback_url
 
     @classmethod
-    def from_environment(cls):
+    def from_environment(cls,*,require_explicit_model: bool=False):
         try: timeout=float(os.getenv("SUNOAPI_ORG_TIMEOUT_SECONDS","30"))
         except ValueError: raise SunoApiOrgConfigurationError("sunoapi.org HTTP timeout is invalid.") from None
         transport=UrllibSunoApiOrgTransport(os.getenv("SUNOAPI_ORG_API_KEY",""),
             base_url=os.getenv("SUNOAPI_ORG_BASE_URL","https://api.sunoapi.org"),timeout_seconds=timeout)
-        return cls(transport,model=os.getenv("SUNOAPI_ORG_MODEL","V4_5"),
+        model=os.getenv("SUNOAPI_ORG_MODEL")
+        if require_explicit_model and not model: raise SunoApiOrgConfigurationError("sunoapi.org model is not configured.")
+        return cls(transport,model=model or "V4_5",
                    callback_url=os.getenv("SUNOAPI_ORG_CALLBACK_URL",""))
 
     def submit_generation(self,request):
@@ -165,3 +221,9 @@ class SunoApiOrgMusicProvider:
                                    external_correlation_id=None,normalized_status=status,artifacts=artifacts)
 
     def download_audio_bytes(self,artifact): return self._transport.download(artifact.download_url)
+
+
+def _valid_https_url(value: str) -> bool:
+    try: parsed=urllib.parse.urlparse(value)
+    except (TypeError,ValueError): return False
+    return parsed.scheme=="https" and bool(parsed.netloc) and not parsed.username and not parsed.password

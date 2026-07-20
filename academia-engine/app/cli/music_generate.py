@@ -20,6 +20,7 @@ def main() -> int:
     parser.add_argument("--lyrics",required=True,type=Path); parser.add_argument("--music-plan",required=True,type=Path)
     parser.add_argument("--provider",required=True); parser.add_argument("--output",type=Path); parser.add_argument("--output-dir",type=Path)
     parser.add_argument("--download-all",action="store_true")
+    parser.add_argument("--preflight",action="store_true")
     parser.add_argument("--interval",type=float,default=5); parser.add_argument("--timeout",type=float,default=900)
     parser.add_argument("--max-attempts",type=int); parser.add_argument("--confirm",action="store_true"); args=parser.parse_args()
     if args.download_all and args.output_dir is None: parser.error("--download-all requires --output-dir")
@@ -41,6 +42,17 @@ def main() -> int:
         return 1
     warning=("Real third-party Suno-powered music generation may consume provider credits."
              if args.provider=="sunoapi_org" else "Real music generation may consume provider credits.")
+    if args.preflight:
+        try:
+            if args.provider=="sunoapi_org":
+                from app.providers.sunoapi_org_music_provider import SunoApiOrgMusicProvider
+                SunoApiOrgMusicProvider.from_environment(require_explicit_model=True)
+            else: MusicProviderRegistry().resolve(args.provider)
+        except Exception:
+            print("Third-party music provider configuration is missing." if args.provider=="sunoapi_org" else "Music provider configuration is missing.")
+            return 1
+        print("Music generation preflight passed."); print(f"Provider: {args.provider}"); print(f"Song ID: {lyrics.song_id}")
+        return 0
     print(warning); print(f"Provider: {args.provider}"); print(f"Song ID: {lyrics.song_id}")
     if not args.confirm:
         print("No task was submitted. Re-run with --confirm to proceed."); return 2
@@ -55,10 +67,10 @@ def main() -> int:
     except MusicProviderConfigurationError:
         print("Third-party music provider configuration is missing." if args.provider=="sunoapi_org" else "Music provider configuration is missing.")
         return 1
-    except (MusicEngineError,MusicProviderRegistryError):
+    except (MusicEngineError,MusicProviderRegistryError) as error:
         print("Music generation failed at a safe provider boundary.")
         if args.provider=="sunoapi_org":
-            print("The provider may have created a paid task. Do not submit again until provider account history is checked.")
+            _print_sunoapi_org_diagnostic(error)
         else: print("Do not automatically resubmit; inspect durable task state first.")
         return 1
     except Exception:
@@ -79,6 +91,34 @@ def main() -> int:
     print(f"Provider task ID: {record.provider_task_id}"); print(f"Status: {record.normalized_status.value}")
     print(f"Saved path: {artifact.local_path}"); print(f"Bytes: {artifact.byte_size}")
     print(f"SHA-256: {artifact.sha256}"); print(f"Content type: {artifact.content_type}"); return 0
+
+
+def _print_sunoapi_org_diagnostic(error) -> None:
+    from app.providers.sunoapi_org_music_provider import SunoApiOrgError
+    current=error; diagnostic=None
+    while current is not None:
+        if isinstance(current,SunoApiOrgError): diagnostic=current; break
+        current=getattr(current,"__cause__",None)
+    if diagnostic is None:
+        print("The provider may have created a paid task. Do not submit again until provider account history is checked.")
+        return
+    labels={"network_before_response":"network failure before response","ambiguous_transport":"ambiguous transport failure",
+            "http_failure":"HTTP failure","provider_application":"provider application error",
+            "response_parsing":"response parsing failure after HTTP success"}
+    print(f"Submit phase: {labels.get(diagnostic.phase,'provider boundary failure')}")
+    if diagnostic.http_status is not None: print(f"HTTP status: {diagnostic.http_status}")
+    if diagnostic.provider_code is not None: print(f"Provider code: {diagnostic.provider_code}")
+    if diagnostic.provider_message: print(f"Provider message: {diagnostic.provider_message}")
+    task_id=getattr(error,"provider_task_id",None) or diagnostic.provider_task_id
+    if task_id: print(f"Provider task ID: {task_id}")
+    if diagnostic.provider_request_id: print(f"Provider request ID: {diagnostic.provider_request_id}")
+    if diagnostic.retry_after: print(f"Retry-After: {diagnostic.retry_after}")
+    if task_id:
+        print("Provider task ID was preserved durably. Resume or query it; do not resubmit.")
+    elif diagnostic.phase in {"network_before_response","http_failure","provider_application"}:
+        print("No provider task ID was returned. No durable task was created.")
+    else:
+        print("The provider may have created a paid task. Do not submit again until provider account history is checked.")
 
 
 if __name__=="__main__": raise SystemExit(main())

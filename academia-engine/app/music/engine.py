@@ -57,7 +57,18 @@ class MusicEngine:
     def submit(self,request: MusicGenerationRequest,provider: str|None=None) -> MusicGenerationTaskRecord:
         name=provider or self._default_provider; selected=self._provider(name)
         try: task=selected.submit_generation(request)
-        except Exception as error: raise MusicProviderOperationError("Music generation submission failed.") from error
+        except Exception as error:
+            task_id=getattr(error,"provider_task_id",None)
+            if isinstance(task_id,str) and task_id and task_id.replace("_","").replace("-","").isalnum():
+                now=_now(); orphan=MusicGenerationTaskRecord(provider=name,provider_task_id=task_id,
+                    normalized_status=GenerationTaskStatus.SUBMITTED,created_at=now,updated_at=now)
+                try:
+                    if not self._registry.exists(task_id): self._registry.create(orphan)
+                except MusicTaskRegistryError as registry_error:
+                    raise MusicEngineRegistryError("Provider task ID was returned but could not be stored.") from registry_error
+            operation=MusicProviderOperationError("Music generation submission failed.")
+            operation.provider_task_id=task_id
+            raise operation from error
         task=_validated_task(task)
         if task.provider!=name: raise MusicEngineContractError("Music provider identity is inconsistent.")
         now=_now(); record=MusicGenerationTaskRecord(provider=name,provider_task_id=task.provider_task_id,
