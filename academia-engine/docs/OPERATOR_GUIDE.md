@@ -419,6 +419,16 @@ explicit model, lyrics, and music plan without making HTTP calls. Submit
 diagnostics show only safe phase/status identifiers. A returned task ID is
 persisted immediately even if a later submit boundary fails.
 
+Before a billable submit, validate the third-party gateway key and view credits
+through its documented read-only endpoint:
+
+```bat
+python -m app.cli.sunoapi_org_account_check
+```
+
+This performs exactly one `GET /api/v1/generate/credit` request. It does not
+create music or call the generation endpoint.
+
 Mureka is retained as an isolated evaluation adapter and is not the intended
 production provider or an automatic fallback.
 

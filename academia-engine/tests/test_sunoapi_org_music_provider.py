@@ -8,8 +8,8 @@ from app.cli.music_generate import main as cli_main
 from app.models import GenerationTaskStatus
 from app.music import (AtomicAudioArtifactDownloader,MusicEngine,MusicPollingPolicy,MusicTaskRegistry,
                        MusicVariantSelectionRequiredError)
-from app.providers.sunoapi_org_music_provider import (SunoApiOrgContractError,SunoApiOrgMusicProvider,
-    UrllibSunoApiOrgTransport,flatten_lyrics,map_request)
+from app.providers.sunoapi_org_music_provider import (RequestsSunoApiOrgTransport,SunoApiOrgContractError,
+    SunoApiOrgMusicProvider,UrllibSunoApiOrgTransport,flatten_lyrics,map_request)
 from tests.test_music_generation_foundation import request
 
 
@@ -29,6 +29,16 @@ SONGS=[{"id":"song-one","audioUrl":"https://signed.invalid/one.mp3"},
 
 
 class SunoApiOrgProviderTests(unittest.TestCase):
+    def test_production_requests_transport_matches_working_post_approach(self):
+        response=Mock(status_code=200,headers={}); response.json.return_value={"code":200,"msg":"success","data":{"taskId":"task-123"}}
+        payload={"customMode":True,"instrumental":False,"model":"V4_5"}
+        with patch("app.providers.sunoapi_org_music_provider.requests.post",return_value=response) as post, \
+             patch("app.providers.sunoapi_org_music_provider.urllib.request.urlopen") as urllib_open:
+            result=RequestsSunoApiOrgTransport("masked-key").request_json("POST","/api/v1/generate",payload)
+        self.assertEqual(result["data"]["taskId"],"task-123"); urllib_open.assert_not_called(); post.assert_called_once_with(
+            "https://api.sunoapi.org/api/v1/generate",json=payload,
+            headers={"Authorization":"Bearer masked-key","Content-Type":"application/json"},timeout=30)
+
     def test_exact_custom_submit_mapping_preserves_lyrics_title_style_and_unicode(self):
         transport=FakeTransport({"code":200,"msg":"success","data":{"taskId":"task-123"}})
         provider=SunoApiOrgMusicProvider(transport,model="V4_5",callback_url="https://callback.invalid/music")

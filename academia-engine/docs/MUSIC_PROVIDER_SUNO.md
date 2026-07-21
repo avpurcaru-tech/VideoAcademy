@@ -29,6 +29,12 @@ confused.
 - Results: exactly two `response.sunoData` entries, each using `id` and
   `audioUrl`; the documented examples are MP3 and map to `audio/mpeg`
 
+The production HTTP adapter uses `requests.post(..., json=payload)` with Bearer
+authorization, `Content-Type: application/json`, an explicit timeout, and no
+automatic submit retry. This matches the gateway's documented Python request
+style. Vocal generation still uses `instrumental=false`; optional persona and
+weight controls are not sent by the provider-neutral mapping.
+
 Both paid outputs are exposed as transient artifacts. The engine never chooses
 one automatically. After generation it reports a successful, durable task with
 selection required. Operators list safe one-based variants (`1`, `2`) and then
@@ -110,6 +116,20 @@ python -m app.cli.music_generate ^
 
 The documented gateway API does not provide a clearly non-billable connectivity
 probe, so no connectivity diagnostic endpoint is called or invented.
+
+The gateway does document one read-only account endpoint:
+`GET /api/v1/generate/credit`. It validates the Bearer credential and returns
+the integer credit balance without creating music or consuming generation
+credits. Run:
+
+```bat
+python -m app.cli.sunoapi_org_account_check
+```
+
+Successful output contains only `Authentication: valid` and the remaining
+credit count. Failures contain a sanitized category and, when available, HTTP
+status, provider code, and Retry-After. The command never prints the key,
+Authorization header, response body, cookies, or account identity data.
 
 ## Official Suno Platform assessment
 
