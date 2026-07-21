@@ -270,6 +270,15 @@ Failure class: the provider accepted a task and may have consumed credits, but t
 
    This queries the provider and updates the production manifest; it does not submit a new task.
 
+   For the `counting-1-to-5-auto-002` failure, use:
+
+   ```bat
+   python -m app.cli.episode_reconcile_task ^
+     --production-id counting-1-to-5-auto-002-video ^
+     --scene-id scene-0001 ^
+     --task-id TASK_ID
+   ```
+
 4. Inspect with `python -m app.cli.episode --status --production-id example-001`.
 5. If the attached task succeeded but its artifact is absent locally, download only that scene:
 

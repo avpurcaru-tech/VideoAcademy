@@ -143,6 +143,14 @@ class ProductionRecord(BaseModel):
     failure_stage: ProductionFailureStage | None = None
     failure_category: str | None = Field(default=None, max_length=100)
     safe_message: str | None = Field(default=None, max_length=500)
+    submit_http_status: int | None = None
+    submit_provider_code: int | None = None
+    submit_provider_task_id: str | None = Field(default=None, pattern=r"^[A-Za-z0-9_-]+$")
+    submit_response_shape: tuple[str, ...] = ()
+    query_http_status: int | None = None
+    query_provider_code: int | None = None
+    query_provider_task_id: str | None = Field(default=None, pattern=r"^[A-Za-z0-9_-]+$")
+    query_response_shape: tuple[str, ...] = ()
     created_at: datetime
     updated_at: datetime
 

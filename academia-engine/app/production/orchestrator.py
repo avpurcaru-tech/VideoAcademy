@@ -145,9 +145,10 @@ class EpisodeProductionOrchestrator:
                         if isinstance(task_id,str) and task_id:
                             scene=scene.model_copy(update={"provider_task_id":task_id,"production_status":EpisodeSceneStatus.GENERATING})
                             record=self._replace_scene(record,index,scene)
+                            record=self._attach_submit_diagnostic(record,getattr(error,"submit_diagnostic",None),task_id)
                         raise EpisodeProductionRegistryError(f"Scene {scene.scene_id} task registry persistence failed.") from error
                     except VideoEngineError as error:
-                        cause=error.__cause__
+                        cause=getattr(error,"submit_diagnostic",None) or error.__cause__
                         if isinstance(cause,KlingUnsupportedConfigurationError):
                             raise EpisodeGenerationSettingsMismatchError(
                                 f"Scene {scene.scene_id} request is incompatible with provider generation settings.") from error
@@ -159,6 +160,7 @@ class EpisodeProductionOrchestrator:
                             if isinstance(task_id,str) and task_id:
                                 scene=scene.model_copy(update={"provider_task_id":task_id,"production_status":EpisodeSceneStatus.GENERATING})
                                 record=self._replace_scene(record,index,scene)
+                            record=self._attach_submit_diagnostic(record,cause,task_id)
                             raise EpisodeSubmitResponseParsingError(f"Scene {scene.scene_id} submit response could not be parsed.") from error
                         raise EpisodeSubmitRejectedError(f"Scene {scene.scene_id} submit was rejected before a task ID was returned.") from error
                     scene = scene.model_copy(update={"provider_task_id": task.provider_task_id, "normalized_status": task.normalized_status})
@@ -172,6 +174,9 @@ class EpisodeProductionOrchestrator:
                     self._replace_scene(record, index, failed)
                     raise EpisodeProviderSceneFailedError(f"Scene {scene.scene_id} failed.") from error
                 except VideoEngineError as error:
+                    diagnostic=getattr(error,"query_diagnostic",None)
+                    if diagnostic is not None:
+                        record=self._attach_query_diagnostic(record,diagnostic,scene.provider_task_id)
                     raise EpisodeScenePollingError(f"Scene {scene.scene_id} could not complete.") from error
                 if completed.artifact is None:
                     raise EpisodeSceneDownloadError(f"Scene {scene.scene_id} has no downloaded artifact.")
@@ -213,6 +218,24 @@ class EpisodeProductionOrchestrator:
             except ProductionRegistryError:
                 pass
             raise
+
+    def _attach_submit_diagnostic(self,record,error,task_id):
+        if error is None:
+            return record
+        updated=record.model_copy(update={"submit_http_status":getattr(error,"http_status",None),
+            "submit_provider_code":getattr(error,"provider_code",None),
+            "submit_provider_task_id":task_id if isinstance(task_id,str) else None,
+            "submit_response_shape":tuple(getattr(error,"response_shape",()))})
+        self._registry.update(updated)
+        return updated
+
+    def _attach_query_diagnostic(self,record,error,task_id):
+        updated=record.model_copy(update={"query_http_status":getattr(error,"http_status",None),
+            "query_provider_code":getattr(error,"provider_code",None),
+            "query_provider_task_id":task_id,
+            "query_response_shape":tuple(getattr(error,"response_shape",()))})
+        self._registry.update(updated)
+        return updated
 
     @staticmethod
     def _scene_id(error):

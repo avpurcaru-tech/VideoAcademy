@@ -115,7 +115,24 @@ class VideoEngine:
         try:
             task = selected.submit_generation(request)
         except Exception as error:
-            raise VideoProviderOperationError("Video generation submission failed.") from error
+            task_id = getattr(error, "provider_task_id", None)
+            if isinstance(task_id, str) and task_id and task_id.replace("_", "").replace("-", "").isalnum():
+                now = _now()
+                adopted = GenerationTaskRecord(provider=provider_name, provider_task_id=task_id,
+                    external_correlation_id=getattr(error, "external_correlation_id", None),
+                    normalized_status=GenerationTaskStatus.SUBMITTED, created_at=now, updated_at=now)
+                try:
+                    if not self._registry.exists(task_id):
+                        self._registry.create(adopted)
+                except TaskRegistryError as registry_error:
+                    failure = VideoEngineRegistryError("Provider task ID was returned but could not be stored.")
+                    failure.provider_task_id = task_id
+                    failure.submit_diagnostic = error
+                    raise failure from registry_error
+            failure = VideoProviderOperationError("Video generation submission failed.")
+            failure.provider_task_id = task_id
+            failure.submit_diagnostic = error
+            raise failure from error
         if task.provider_name != provider_name:
             raise VideoProviderOperationError("The provider returned an inconsistent provider name.")
         now = _now()
@@ -287,7 +304,10 @@ class VideoEngine:
         try:
             task = provider.get_task_by_id(provider_task_id)
         except Exception as error:
-            raise VideoProviderOperationError("The video provider task query failed.") from error
+            failure = VideoProviderOperationError("The video provider task query failed.")
+            failure.provider_task_id = provider_task_id
+            failure.query_diagnostic = error
+            raise failure from error
         if task.external_task_id != provider_task_id:
             raise ProviderTaskIdMismatchError("The provider returned a different task ID.")
         return task

@@ -82,8 +82,9 @@ class ProjectGenerationService:
         except Exception as error:
             try:
                 stage,category,message,scene_id=self._failure_details(error,record)
+                diagnostic=self._video_submit_diagnostic(record)
                 self._update(record,status=ProjectStatus.FAILED,failure_stage=stage,
-                    failure_category=category,safe_message=message,failed_scene_id=scene_id)
+                    failure_category=category,safe_message=message,failed_scene_id=scene_id,**diagnostic)
             except Exception: pass
             raise
 
@@ -113,6 +114,21 @@ class ProjectGenerationService:
     def _failed_scene(record):
         try: return ProductionRegistry().load(record.video_production_id).failed_scene_id
         except Exception: return None
+
+    @staticmethod
+    def _video_submit_diagnostic(record):
+        try:
+            production=ProductionRegistry().load(record.video_production_id)
+            return {"submit_http_status":production.submit_http_status,
+                "submit_provider_code":production.submit_provider_code,
+                "submit_provider_task_id":production.submit_provider_task_id,
+                "submit_response_shape":production.submit_response_shape,
+                "query_http_status":production.query_http_status,
+                "query_provider_code":production.query_provider_code,
+                "query_provider_task_id":production.query_provider_task_id,
+                "query_response_shape":production.query_response_shape}
+        except Exception:
+            return {}
 
     def _new_record(self,episode_id,project_id,root):
         now=datetime.now(timezone.utc)

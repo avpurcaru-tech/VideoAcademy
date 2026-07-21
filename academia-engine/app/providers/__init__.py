@@ -5,6 +5,7 @@ from .kling_client import (
     KlingClientError,
     KlingHttpClient,
     KlingHttpError,
+    KlingMalformedJsonError,
     KlingTimeoutError,
 )
 from .kling_dtos import (
@@ -31,6 +32,7 @@ __all__ = [
     "KlingCreateTaskResponse",
     "KlingHttpClient",
     "KlingHttpError",
+    "KlingMalformedJsonError",
     "KlingVideoArtifactDownloader",
     "KlingMalformedResponseError",
     "KlingProviderApiError",

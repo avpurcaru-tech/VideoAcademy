@@ -17,6 +17,14 @@ class KlingClientError(RuntimeError):
     """Base error for Kling HTTP connectivity failures."""
 
 
+class KlingMalformedJsonError(KlingClientError):
+    def __init__(self, http_status: int) -> None:
+        super().__init__("Kling returned malformed JSON in a successful HTTP response.")
+        self.http_status = http_status
+        self.response_shape = ("root: malformed JSON",)
+        self.provider_task_id = None
+
+
 class KlingAuthenticationError(KlingClientError):
     """Raised when Kling rejects the configured credentials."""
 
@@ -172,7 +180,13 @@ class KlingHttpClient:
                 )
 
             response_body = response.read().decode("utf-8")
-            return json.loads(response_body) if response_body else {}
+            try:
+                payload = json.loads(response_body) if response_body else {}
+            except (UnicodeDecodeError, json.JSONDecodeError) as error:
+                raise KlingMalformedJsonError(status_code) from error
+            if isinstance(payload, dict):
+                payload = KlingJsonResponse(payload, http_status=status_code)
+            return payload
         finally:
             response.close()
 
@@ -231,3 +245,9 @@ class KlingHttpClient:
             delay_seconds,
         )
         self._sleeper(delay_seconds)
+
+
+class KlingJsonResponse(dict[str, Any]):
+    def __init__(self, payload: dict[str, Any], *, http_status: int) -> None:
+        super().__init__(payload)
+        self.http_status = http_status

@@ -164,8 +164,8 @@ class KlingQueryTests(unittest.TestCase):
         task = KlingProvider(client=FakeKlingClient(fixture)).get_task_by_external_id("external-01")
 
         self.assertEqual(len(task.artifacts), 1)
-        self.assertEqual(task.provider_metadata["non_video_outputs"], [non_video_output])
-        self.assertEqual(task.provider_metadata["billing"], [{"item": "raw-billing-entry"}])
+        self.assertEqual(task.provider_metadata["non_video_outputs"], [{"type": "image", "id": "image-01"}])
+        self.assertNotIn("billing", task.provider_metadata)
 
     def test_malformed_video_output_raises(self) -> None:
         fixture = self._succeeded_fixture()
@@ -201,7 +201,7 @@ class KlingQueryTests(unittest.TestCase):
         self.assertNotIn("external_task_ids", client.params)
 
     def test_query_by_id_zero_exact_matches_raises_not_found(self) -> None:
-        with self.assertRaises(KlingTaskNotFoundError):
+        with self.assertRaises(KlingProviderContractError):
             KlingProvider(client=FakeKlingClient(OFFICIAL_QUERY_TASK_FIXTURE)).get_task_by_id(
                 "different-task"
             )

@@ -51,6 +51,18 @@ def _failure(record):
     print(f"Project failure category: {record.failure_category or 'unavailable'}")
     print(f"Failed scene: {record.failed_scene_id or 'unavailable'}")
     print(f"Safe message: {record.safe_message or 'No durable diagnostic is available for this legacy failure.'}")
+    if record.submit_http_status is not None: print(f"HTTP status: {record.submit_http_status}")
+    if record.submit_provider_code is not None: print(f"Kling code: {record.submit_provider_code}")
+    if record.submit_provider_task_id: print(f"Provider task ID: {record.submit_provider_task_id}")
+    if record.submit_response_shape:
+        print("Response shape:")
+        for entry in record.submit_response_shape: print(f"- {entry}")
+    if record.query_http_status is not None: print(f"HTTP status: {record.query_http_status}")
+    if record.query_provider_code is not None: print(f"Kling code: {record.query_provider_code}")
+    if record.query_provider_task_id: print(f"Provider task ID: {record.query_provider_task_id}")
+    if record.query_response_shape:
+        print("Response shape:")
+        for entry in record.query_response_shape: print(f"- {entry}")
 
 
 if __name__=="__main__": raise SystemExit(main())

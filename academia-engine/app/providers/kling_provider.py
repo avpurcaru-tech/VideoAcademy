@@ -31,7 +31,7 @@ from .kling_dtos import (
     KlingVideoOutput,
 )
 from .kling_mapper import KlingTextToVideoMapper
-from .kling_schema_diagnostics import shape_summary, validation_details
+from .kling_schema_diagnostics import query_shape_summary, shape_summary, validation_details
 
 
 class KlingSubmissionDisabledError(KlingClientError):
@@ -78,19 +78,24 @@ class KlingProvider:
     def submit_generation(self, request: VideoGenerationRequest) -> GenerationTask:
         correlation_id = uuid4().hex
         provider_request = self._mapper.map(request, external_task_id=correlation_id)
-        response = KlingCreateTaskResponse.parse(
-            self._client.post_json("/text-to-video/kling-3.0", provider_request.to_payload())
-        )
+        payload = self._client.post_json("/text-to-video/kling-3.0", provider_request.to_payload())
+        response = KlingCreateTaskResponse.parse(payload)
         data = response.data
         if data is None:
             raise KlingMalformedResponseError("Kling Create Task success response is missing data.")
-        return self._to_generation_task(
-            task_data=data,
-            provider_request_id=response.request_id,
-            provider_code=response.code,
-            provider_message=response.message,
-            internal_request_id=request.request_id,
-        )
+        try:
+            return self._to_generation_task(task_data=data, provider_request_id=response.request_id,
+                provider_code=response.code, provider_message=response.message,
+                internal_request_id=request.request_id)
+        except (KlingMalformedResponseError, KlingProviderContractError) as error:
+            error.provider_task_id = data.id
+            error.external_correlation_id = data.external_id
+            error.http_status = getattr(payload, "http_status", None)
+            error.provider_code = response.code
+            if not getattr(error, "response_shape", ()):
+                from .kling_schema_diagnostics import submit_shape_summary
+                error.response_shape = submit_shape_summary(payload)
+            raise
 
     def get_task(self, external_task_id: str) -> GenerationTask:
         raise NotImplementedError("Kling task retrieval is not implemented yet.")
@@ -118,11 +123,18 @@ class KlingProvider:
         identifier_name: str,
         matches: Callable[[KlingTaskData], bool],
     ) -> GenerationTask:
-        response = KlingQueryTasksResponse.parse(
-            self._client.get_json("/tasks", params={query_parameter: requested_value})
-        )
+        payload = self._client.get_json("/tasks", params={query_parameter: requested_value})
+        response = KlingQueryTasksResponse.parse(payload)
         exact_matches = [task for task in response.data if matches(task)]
         if not exact_matches:
+            if identifier_name == "task ID" and len(response.data) == 1:
+                error = KlingProviderContractError("Kling Query Task returned a different task ID.")
+                error.provider_task_id = response.data[0].id
+                error.requested_task_id = requested_value
+                error.http_status = getattr(payload, "http_status", None)
+                error.provider_code = response.code
+                error.response_shape = query_shape_summary(payload)
+                raise error
             raise KlingTaskNotFoundError(
                 f"Kling task was not found for {identifier_name} {requested_value!r}."
             )
@@ -130,13 +142,16 @@ class KlingProvider:
             raise KlingProviderContractError(
                 f"Kling Query Task returned multiple tasks for {identifier_name} {requested_value!r}."
             )
-        return self._to_generation_task(
-            task_data=exact_matches[0],
-            provider_request_id=response.request_id,
-            provider_code=response.code,
-            provider_message=response.message,
-            internal_request_id=None,
-        )
+        data = exact_matches[0]
+        try:
+            return self._to_generation_task(task_data=data, provider_request_id=response.request_id,
+                provider_code=response.code, provider_message=response.message, internal_request_id=None)
+        except (KlingMalformedResponseError, KlingProviderContractError) as error:
+            error.provider_task_id = data.id
+            error.http_status = getattr(payload, "http_status", None)
+            error.provider_code = response.code
+            error.response_shape = query_shape_summary(payload)
+            raise
 
     def _to_generation_task(
         self,
@@ -167,7 +182,7 @@ class KlingProvider:
             provider_message=provider_message,
             external_correlation_id=data.external_id,
             error_message=(
-                getattr(data, "message", provider_message)
+                (getattr(data, "message", None) or provider_message)
                 if normalized_status == GenerationTaskStatus.FAILED
                 else None
             ),
@@ -176,10 +191,9 @@ class KlingProvider:
                 "kling_request_id": provider_request_id,
                 "kling_task_id": data.id,
                 "external_id": data.external_id,
-                "task_message": getattr(data, "message", provider_message),
+                "task_message": getattr(data, "message", None) or provider_message,
                 "update_time": data.update_time,
                 "non_video_outputs": non_video_outputs,
-                "billing": billing,
                 "retention_note": _RETENTION_NOTE,
             },
             submitted_at=created_at,
@@ -191,14 +205,14 @@ class KlingProvider:
     def _artifacts_and_metadata(
         data: KlingCreateTaskData | KlingTaskData,
     ) -> tuple[list[VideoArtifact], list[dict[str, object]], list[dict[str, object]]]:
-        outputs = getattr(data, "outputs", [])
-        billing = getattr(data, "billing", [])
+        outputs = getattr(data, "outputs", None) or []
+        billing = getattr(data, "billing", None) or []
         artifacts: list[VideoArtifact] = []
         non_video_outputs: list[dict[str, object]] = []
         for output_index, output in enumerate(outputs):
             if output.get("type") != "video":
                 logger.debug("Kling non-video output preserved without video artifact mapping.")
-                non_video_outputs.append(output)
+                non_video_outputs.append({key: output[key] for key in ("type", "id") if key in output})
                 continue
             try:
                 video_output = KlingVideoOutput.model_validate(output)

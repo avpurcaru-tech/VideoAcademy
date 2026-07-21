@@ -1,0 +1,132 @@
+{
+  "id": "counting-1-to-5-auto-001",
+  "title": "Bibi numără în grădină",
+  "lyrics": "Unu, unu, un soare auriu,\nÎl arătăm și spunem: unu!\n\nDoi, doi, doi norișori ușori,\nÎi numărăm: unu, doi!\n\nTrei, trei, trei lalele vesele,\nLe numărăm: unu, doi, trei!\n\nPatru, patru, fluturi colorați,\nUnu, doi, trei, patru — toți sunt minunați!\n\nCinci, cinci, cinci steluțe din flori,\nUnu, doi, trei, patru, cinci — suntem numărători!\n\nDe la unu pân’ la cinci,\nNumărăm voioși aici!",
+  "metadata": {
+    "topic": "recunoașterea și numărarea numerelor de la 1 la 5",
+    "language": "ro",
+    "target_age_min": 3,
+    "target_age_max": 5,
+    "tags": [
+      "preschool",
+      "educational",
+      "original"
+    ]
+  },
+  "characters": [
+    {
+      "id": "counting-1-to-5-auto-001-guide",
+      "name": "Bibi",
+      "role": "Ghid prietenos pentru recunoașterea și numărarea numerelor",
+      "description": "O buburuză originală, veselă și răbdătoare, care îi invită pe copii să observe cifrele și să numere obiecte.",
+      "appearance": "Buburuză mică și rotunjită, cu carapace roșie cu buline mov, ochi mari căprui, antene scurte și un mic rucsac galben."
+    }
+  ],
+  "scenes": [
+    {
+      "number": 1,
+      "narration": "Bibi cântă: „Unu, unu, un soare auriu, îl arătăm și spunem: unu!” Apoi întreabă: „Ce număr este?” și răspunde încurajator: „Este 1!”",
+      "visual_description": "În grădina luminoasă, Bibi zboară lângă un singur soare zâmbitor. Cifra mare 1 apare clar, galbenă, pe o pancartă. Soarele sclipește o dată, iar Bibi ridică un degețel.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "counting-1-to-5-auto-001-guide"
+      ],
+      "location": {
+        "name": "Poarta grădinii colorate",
+        "description": "O intrare veselă, cu gard alb, iarbă verde și flori viu colorate.",
+        "time_of_day": "Dimineață senină"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "zoom",
+        "description": "Cadru larg al grădinii, urmat de o apropiere lentă spre cifra 1 și singurul soare."
+      },
+      "music": null
+    },
+    {
+      "number": 2,
+      "narration": "Bibi cântă: „Doi, doi, doi norișori ușori, îi numărăm: unu, doi!” Ea arată cifra și spune: „Acesta este numărul 2. Numără cu mine!”",
+      "visual_description": "Bibi înaintează pe alee. Deasupra ei plutesc exact doi norișori albi. Fiecare nor se luminează pe rând în timpul numărării. Cifra mare 2 apare pe un indicator albastru.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "counting-1-to-5-auto-001-guide"
+      ],
+      "location": {
+        "name": "Aleea norilor pufoși",
+        "description": "O alee curbată printre flori, deasupra căreia plutesc nori mici și moi.",
+        "time_of_day": "Dimineață senină"
+      },
+      "camera": {
+        "shot_type": "medium",
+        "angle": "eye_level",
+        "movement": "pan",
+        "description": "Camera urmărește de la cifra 2 către cei doi nori, oprindu-se pe fiecare în timpul numărării."
+      },
+      "music": null
+    },
+    {
+      "number": 3,
+      "narration": "Bibi cântă: „Trei, trei, trei lalele vesele, le numărăm: unu, doi, trei!” Apoi spune: „Cifra 3 înseamnă trei lalele. Bravo!”",
+      "visual_description": "Pe aceeași alee apar exact trei lalele: una roșie, una galbenă și una roz. Bibi le atinge ușor cu antena, pe rând. Lângă ele se ridică cifra mare 3, verde și clară.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "counting-1-to-5-auto-001-guide"
+      ],
+      "location": {
+        "name": "Rondul lalelelor",
+        "description": "Un rond rotund cu pământ moale, frunze verzi și lalele colorate.",
+        "time_of_day": "Dimineață luminoasă"
+      },
+      "camera": {
+        "shot_type": "medium",
+        "angle": "eye_level",
+        "movement": "tracking",
+        "description": "Camera se deplasează alături de Bibi de la prima la a treia lalea, apoi încadrează cifra 3."
+      },
+      "music": null
+    },
+    {
+      "number": 4,
+      "narration": "Bibi cântă: „Patru, patru, fluturi colorați, unu, doi, trei, patru — toți sunt minunați!” Ea adaugă: „Privește cifra 4 și numără încă o dată!”",
+      "visual_description": "Exact patru fluturi blânzi, în culori diferite, se așază pe patru flori. Deasupra lor apare cifra mare 4, portocalie. Fiecare fluture își deschide aripile când este numărat.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "counting-1-to-5-auto-001-guide"
+      ],
+      "location": {
+        "name": "Colțul fluturilor",
+        "description": "O zonă însorită a grădinii, plină cu margarete și flori albastre.",
+        "time_of_day": "Dimineață luminoasă"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "pan",
+        "description": "Camera panoramează lent peste cei patru fluturi de la stânga la dreapta, apoi se oprește la cifra 4."
+      },
+      "music": null
+    },
+    {
+      "number": 5,
+      "narration": "Bibi cântă: „Cinci, cinci, cinci steluțe din flori, unu, doi, trei, patru, cinci — suntem numărători! De la unu pân’ la cinci, numărăm voioși aici!” Ea încheie: „Minunat! Ai recunoscut și ai numărat de la 1 la 5!”",
+      "visual_description": "Bibi ajunge în centrul grădinii, unde exact cinci floricele albe formează o stea. Cifra mare 5 apare mov. La final, pancartele cu 1, 2, 3, 4 și 5 se aliniază în ordine, iar Bibi le indică pe rând.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "counting-1-to-5-auto-001-guide"
+      ],
+      "location": {
+        "name": "Piațeta numerelor",
+        "description": "Centrul strălucitor al grădinii, decorat cu flori albe și panglici colorate.",
+        "time_of_day": "Dimineață luminoasă"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "high",
+        "movement": "zoom",
+        "description": "Cadru de sus pentru cele cinci flori, urmat de o retragere lentă care arată toate cifrele în ordine și pe Bibi salutând."
+      },
+      "music": null
+    }
+  ]
+}

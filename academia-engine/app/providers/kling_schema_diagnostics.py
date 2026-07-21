@@ -64,6 +64,59 @@ def shape_summary(payload: object, root_path: str = "root") -> tuple[str, ...]:
     return tuple(entries[: _MAX_ENTRIES + 1])
 
 
+def submit_shape_summary(payload: object) -> tuple[str, ...]:
+    """Return the fixed, value-free allowlist for Create Task diagnostics."""
+    entries = [f"root: {_json_type(payload)}"]
+    if not isinstance(payload, dict):
+        return tuple(entries)
+    for field in ("code", "message", "request_id", "data"):
+        entries.append(f"{field}: {_json_type(payload[field]) if field in payload else 'missing'}")
+    data = payload.get("data")
+    if isinstance(data, dict):
+        for field in ("id", "status", "external_id", "create_time", "update_time"):
+            entries.append(f"data.{field}: {_json_type(data[field]) if field in data else 'missing'}")
+    elif isinstance(data, list):
+        entries.append(f"data item count: {len(data)}")
+        if data and isinstance(data[0], dict):
+            for field in sorted(data[0]):
+                if field.lower() in {"authorization", "billing", "prompt"}:
+                    continue
+                entries.append(f"data[0].{field}: {_json_type(data[0][field])}")
+        elif data:
+            entries.append(f"data[0]: {_json_type(data[0])}")
+    return tuple(entries)
+
+
+def query_shape_summary(payload: object) -> tuple[str, ...]:
+    """Describe only allowlisted Query Task fields, never bodies, URLs, or billing."""
+    entries = [f"root: {_json_type(payload)}"]
+    if not isinstance(payload, dict):
+        return tuple(entries)
+    for field in ("code", "message", "request_id", "data"):
+        entries.append(f"{field}: {_json_type(payload[field]) if field in payload else 'missing'}")
+    data = payload.get("data")
+    if isinstance(data, dict):
+        _query_task_fields(entries, data, "data")
+    elif isinstance(data, list):
+        entries.append(f"data item count: {len(data)}")
+        if data and isinstance(data[0], dict):
+            _query_task_fields(entries, data[0], "data[0]")
+    return tuple(entries)
+
+
+def _query_task_fields(entries: list[str], task: dict[object, object], prefix: str) -> None:
+    for field in ("id", "status", "message", "external_id", "create_time", "update_time", "outputs"):
+        entries.append(f"{prefix}.{field}: {_json_type(task[field]) if field in task else 'missing'}")
+    outputs = task.get("outputs")
+    if isinstance(outputs, list):
+        entries.append(f"{prefix}.outputs item count: {len(outputs)}")
+        if outputs and isinstance(outputs[0], dict):
+            for field in ("type", "id", "duration"):
+                entries.append(
+                    f"{prefix}.outputs[0].{field}: {_json_type(outputs[0][field]) if field in outputs[0] else 'missing'}"
+                )
+
+
 def _format_path(location: Iterable[str | int]) -> str:
     return ".".join(str(part) for part in location) or "root"
 
