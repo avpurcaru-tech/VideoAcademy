@@ -505,6 +505,42 @@ are rejected unless `--overwrite` is explicit.
 
 ## Full project workflow
 
+### Creative brief to two final videos
+
+Generate only an Episode (CMD.EXE):
+
+```bat
+python -m app.cli.episode_generate_creative ^
+  --brief examples\smoke\creative-brief.json ^
+  --generator openai ^
+  --output .runtime\creative\counting-1-to-5\episode.json ^
+  --confirm
+```
+
+Generate the complete project (CMD.EXE):
+
+```bat
+python -m app.cli.project_generate_from_brief ^
+  --brief examples\smoke\creative-brief.json ^
+  --project-id counting-1-to-5-auto-001 ^
+  --episode-generator openai ^
+  --video-provider kling ^
+  --lyrics-provider openai ^
+  --music-provider sunoapi_org ^
+  --output .runtime\projects\counting-1-to-5-auto-001 ^
+  --confirm
+```
+
+PowerShell uses the same arguments with backticks instead of carets. Without
+`--confirm`, external providers are not constructed and no durable state is
+written. A confirmed run may consume OpenAI Episode and lyrics credits, Kling
+video credits, and Suno gateway music credits.
+
+Once the generated Episode enters `input/episode.json`, normal project resume
+requires only `project_id` and never regenerates that Episode. Both final MP4
+variants are retained; there is no automatic best-variant selection and
+publication remains manual.
+
 One project record coordinates the existing production services:
 
 ```bat

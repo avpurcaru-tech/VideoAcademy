@@ -45,3 +45,23 @@ python -m app.cli.project_resume --project-id counting-1-to-5
 
 Without `--confirm`, `project_generate` performs planning/preflight only and
 makes no provider submission.
+
+## Creative brief workflow
+
+A validated educational creative brief can generate the provider-neutral
+Episode and then enter the same durable project pipeline:
+
+```powershell
+python -m app.cli.project_generate_from_brief `
+  --brief examples\smoke\creative-brief.json `
+  --project-id counting-1-to-5-auto-001 `
+  --episode-generator openai `
+  --video-provider kling `
+  --lyrics-provider openai `
+  --music-provider sunoapi_org `
+  --output .runtime\projects\counting-1-to-5-auto-001 `
+  --confirm
+```
+
+The command preserves both final music/video variants. Selection and
+publication remain manual.

@@ -1,0 +1,18 @@
+{
+  "brief_id": "counting-1-to-5-auto-001",
+  "topic": "recunoașterea și numărarea numerelor de la 1 la 5",
+  "learning_objectives": [
+    "recunoașterea numerelor de la 1 la 5",
+    "numărarea obiectelor de la 1 la 5"
+  ],
+  "language": "ro",
+  "target_age_min": 3,
+  "target_age_max": 5,
+  "target_duration_seconds": 75,
+  "tone": "vesel și încurajator",
+  "visual_style": "animație 3D luminoasă pentru preșcolari",
+  "main_character_hint": "o buburuză prietenoasă și originală",
+  "location_hint": "o grădină colorată și luminoasă",
+  "scene_count": 3,
+  "song_required": true
+}
