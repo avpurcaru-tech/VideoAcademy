@@ -9,6 +9,7 @@ from app.models import Episode,GenerationTaskStatus
 from app.music import DurableAudioArtifact,DurableAudioArtifactSet,MusicGenerationTaskRecord
 from app.project import (ProjectGenerationService,ProjectRecord,ProjectRegistry,ProjectRegistryError,
                          ProjectResumeService,ProjectServices,ProjectStatus)
+from app.production import EpisodeProviderConfigurationError
 from app.song import EducationalSongBrief,LyricsPlan,MusicPlan
 
 
@@ -121,6 +122,15 @@ class ProjectOrchestratorTests(unittest.TestCase):
         with self.assertRaises(RuntimeError): self._generate()
         record=self.registry.load("counting-1-to-5")
         self.assertEqual(record.music_task_id,"recoverable-task"); self.assertEqual(record.status,ProjectStatus.FAILED)
+
+    def test_video_failure_stage_and_safe_category_are_persisted(self):
+        self.video.plan_and_produce.side_effect=EpisodeProviderConfigurationError(
+            "Scene scene-0001 provider configuration is missing or invalid.")
+        with self.assertRaises(EpisodeProviderConfigurationError): self._generate()
+        record=self.registry.load("counting-1-to-5")
+        self.assertEqual(record.failure_stage.value,"video_provider_configuration")
+        self.assertEqual(record.failure_category,"video_provider_configuration_missing")
+        self.assertNotIn("API_KEY",(self.root/"project.json").read_text(encoding="utf-8"))
 
     def test_generate_cli_without_confirm_is_preflight_only_and_safe(self):
         episode_path=Path(__file__).resolve().parents[1]/"examples"/"smoke"/"episode-input.json"

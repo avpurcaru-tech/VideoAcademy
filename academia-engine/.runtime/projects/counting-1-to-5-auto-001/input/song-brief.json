@@ -1,0 +1,13 @@
+{
+  "song_id": "counting-1-to-5-auto-001",
+  "topic": "recunoașterea și numărarea numerelor de la 1 la 5",
+  "learning_objectives": [
+    "recunoașterea și numărarea numerelor de la 1 la 5"
+  ],
+  "language": "ro",
+  "target_age_min": 3,
+  "target_age_max": 5,
+  "target_duration_seconds": 75.0,
+  "tone": "cheerful and educational",
+  "repetition_level": "high"
+}

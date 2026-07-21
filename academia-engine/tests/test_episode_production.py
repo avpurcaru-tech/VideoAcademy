@@ -15,6 +15,7 @@ from app.production import (EpisodeProductionConflictError, EpisodeProductionOrc
                             ProductionSceneArtifactIntegrityError)
 from pydantic import ValidationError
 from app.services import ArtifactRecord, GenerationTaskRecord, VideoPollingPolicy
+from app.services import VideoProviderOperationError, UnknownVideoProviderError, VideoEngineRegistryError
 from app.timeline import RenderedTimelineArtifact
 
 
@@ -105,6 +106,44 @@ class EpisodeProductionTests(unittest.TestCase):
         self.assertEqual(new_engine.resume_calls[0], "existing-task")
         self.assertEqual(counting.calls, ["ref-2"])
 
+    def test_missing_and_corrupted_request_failures_are_durable_and_safe(self):
+        request=self.request("cut",None)
+        scenes=tuple({"scene_id":f"scene-{i:04d}","order":i-1,
+            "generation_request_reference":{"reference_id":f"missing-{i}"}} for i in (1,2))
+        self.registry.create(ProductionRecord(production_id="missing",status="failed",provider="fake",scenes=scenes,
+            scene_output_directory=request.scene_output_directory,final_output_path=request.final_output_path,
+            media_workspace=request.media_workspace,transition_policy=request.transition_policy,created_at=NOW,updated_at=NOW))
+        with self.assertRaises(Exception): self.orchestrator.resume("missing",POLICY)
+        failed=self.registry.load("missing")
+        self.assertEqual(failed.failure_category,"request_reference_missing"); self.assertEqual(failed.failed_scene_id,"scene-0001")
+        reference=GenerationRequestReference(reference_id="broken-1")
+        (self.root/"requests").mkdir(exist_ok=True); (self.root/"requests/broken-1.json").write_text("{secret",encoding="utf-8")
+        scenes=list(scenes); scenes[0]["generation_request_reference"]={"reference_id":"broken-1"}
+        self.registry.create(ProductionRecord(production_id="corrupt",status="failed",provider="fake",scenes=tuple(scenes),
+            scene_output_directory=request.scene_output_directory,final_output_path=request.final_output_path,
+            media_workspace=request.media_workspace,transition_policy=request.transition_policy,created_at=NOW,updated_at=NOW))
+        with self.assertRaises(Exception): self.orchestrator.resume("corrupt",POLICY)
+        manifest=(self.root/"productions/corrupt.json").read_text(encoding="utf-8")
+        self.assertEqual(self.registry.load("corrupt").failure_category,"request_record_corrupted"); self.assertNotIn("secret",manifest)
+
+    def test_failed_pending_scene_resumes_and_submits_exactly_once_after_fix(self):
+        request=self.request("cut",None); failing=FailingSubmitEngine()
+        orchestrator=EpisodeProductionOrchestrator(failing,self.renderer,self.registry,FakeProbe(),self.store,clock=lambda:NOW)
+        with self.assertRaises(Exception): orchestrator.produce(request,POLICY)
+        failed=self.registry.load("episode-001")
+        self.assertEqual(failed.failure_category,"provider_configuration_missing"); self.assertIsNone(failed.scenes[0].provider_task_id)
+        repaired=EpisodeProductionOrchestrator(self.engine,self.renderer,self.registry,FakeProbe(),self.store,clock=lambda:NOW)
+        repaired.resume("episode-001",POLICY)
+        self.assertEqual(self.engine.submits,["request-1","request-2"])
+
+    def test_task_id_is_preserved_when_task_registry_persistence_fails(self):
+        request=self.request("cut",None); engine=RegistryFailureEngine()
+        orchestrator=EpisodeProductionOrchestrator(engine,self.renderer,self.registry,FakeProbe(),self.store,clock=lambda:NOW)
+        with self.assertRaises(Exception): orchestrator.produce(request,POLICY)
+        failed=self.registry.load("episode-001")
+        self.assertEqual(failed.scenes[0].provider_task_id,"paid-task-1")
+        self.assertEqual(failed.failure_category,"registry_persistence_failed")
+
     def request(self, kind, duration):
         requests=(generation("request-1", 1), generation("request-2", 2))
         references=(GenerationRequestReference(reference_id="ref-1"), GenerationRequestReference(reference_id="ref-2"))
@@ -130,6 +169,17 @@ class FakeEngine:
         self.resume_calls.append(task); self.destinations.append(destination); destination.parent.mkdir(parents=True, exist_ok=True); destination.write_bytes(b"mp4")
         artifact=ArtifactRecord(artifact_id=f"artifact-{task}", local_path=destination, byte_size=3, sha256="a"*64, content_type="video/mp4")
         return GenerationTaskRecord(provider="fake", provider_task_id=task, normalized_status="succeeded", created_at=NOW, updated_at=NOW, artifact=artifact)
+
+
+class FailingSubmitEngine(FakeEngine):
+    def submit(self,request,provider=None):
+        try: raise ValueError("API_KEY=secret")
+        except ValueError as cause: raise VideoProviderOperationError("safe") from cause
+
+
+class RegistryFailureEngine(FakeEngine):
+    def submit(self,request,provider=None):
+        error=VideoEngineRegistryError("safe"); error.provider_task_id="paid-task-1"; raise error
 
 
 class FakeProbe:

@@ -14,6 +14,19 @@ class ProjectStatus(str,Enum):
     FAILED="failed"
 
 
+class ProjectFailureStage(str,Enum):
+    EPISODE_GENERATION="episode_generation"
+    VIDEO_PLANNING="video_planning"
+    VIDEO_REQUEST_RESOLUTION="video_request_resolution"
+    VIDEO_PROVIDER_CONFIGURATION="video_provider_configuration"
+    VIDEO_SUBMISSION="video_submission"
+    VIDEO_POLLING="video_polling"
+    VIDEO_DOWNLOAD="video_download"
+    LYRICS_GENERATION="lyrics_generation"
+    MUSIC_GENERATION="music_generation"
+    COMPOSITION="composition"
+
+
 class ProjectRecord(BaseModel):
     """Prompt-free durable coordination state; provider payloads and URLs are forbidden."""
     model_config=ConfigDict(extra="forbid",frozen=True)
@@ -26,6 +39,10 @@ class ProjectRecord(BaseModel):
     music_directory: Path
     video_directory: Path
     final_directory: Path
+    failure_stage: ProjectFailureStage|None=None
+    failure_category: str|None=Field(default=None,max_length=100)
+    safe_message: str|None=Field(default=None,max_length=500)
+    failed_scene_id: str|None=None
     created_at: datetime
     updated_at: datetime
 

@@ -1,0 +1,90 @@
+{
+  "id": "counting-1-to-5-auto-001",
+  "title": "Lili numără în grădină",
+  "lyrics": "Unu, un soare strălucește,\nDoi, doi norișori plutesc ușor.\nTrei lalele se leagănă,\nLe numărăm cu mult spor!\n\nPatru fluturi dau din aripi,\nCinci steluțe s-au aprins.\nUnu, doi, trei, patru, cinci,\nAm numărat și am învins!\n\nUnu, doi, trei, patru, cinci,\nNumerele-s dragi aici!\nArătăm și numărăm,\nVeseli împreună învățăm!",
+  "metadata": {
+    "topic": "recunoașterea și numărarea numerelor de la 1 la 5",
+    "language": "ro",
+    "target_age_min": 3,
+    "target_age_max": 5,
+    "tags": [
+      "preschool",
+      "educational",
+      "original"
+    ]
+  },
+  "characters": [
+    {
+      "id": "counting-1-to-5-auto-001-guide",
+      "name": "Lili",
+      "role": "Ghid prietenos pentru recunoașterea numerelor și numărarea obiectelor",
+      "description": "O buburuză originală, veselă și răbdătoare, care îi invită pe copii să observe, să arate și să numere.",
+      "appearance": "Buburuză mică, rotunjoară, cu carapace roșie cu buline mov, ochi mari și blânzi, antene scurte și o gentuță galbenă în formă de frunză."
+    }
+  ],
+  "scenes": [
+    {
+      "number": 1,
+      "narration": "Lili: „Bun venit în grădina numerelor! Acesta este numărul 1. Vedem un soare. Unu!” Apoi apare cifra 2. „Acesta este numărul 2. Să numărăm norișorii: unu, doi!” Lili cântă: „Unu, un soare strălucește! Doi, doi norișori plutesc ușor!”",
+      "visual_description": "Lili aterizează pe o frunză. În stânga apare o cifră 1 mare, galbenă, lângă un singur soare zâmbitor. Apoi apare o cifră 2 mare, albastră, lângă exact doi norișori albi. Fiecare obiect luminează pe rând în timp ce este numărat.",
+      "duration_seconds": 25,
+      "character_ids": [
+        "counting-1-to-5-auto-001-guide"
+      ],
+      "location": {
+        "name": "Poienița însorită",
+        "description": "O zonă deschisă a grădinii, cu iarbă verde, flori pastelate și cer senin.",
+        "time_of_day": "Dimineață luminoasă"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "pan",
+        "description": "Cadru clar care urmărește ușor trecerea de la cifra 1 și soare la cifra 2 și cei doi norișori."
+      },
+      "music": null
+    },
+    {
+      "number": 2,
+      "narration": "Lili: „Priviți! Acesta este numărul 3. Câte lalele sunt?” Lili indică fiecare floare: „Unu, doi, trei! Sunt trei lalele.” Ea cântă: „Trei lalele se leagănă, le numărăm cu mult spor!” Copiii sunt invitați să spună încă o dată: „Trei!”",
+      "visual_description": "În centrul imaginii apare cifra 3, mare și verde. Lângă ea cresc exact trei lalele: una roz, una galbenă și una mov. Lili atinge ușor fiecare lalea cu o baghetă din fir de iarbă, iar deasupra florilor apar pe rând punctele unu, doi și trei.",
+      "duration_seconds": 25,
+      "character_ids": [
+        "counting-1-to-5-auto-001-guide"
+      ],
+      "location": {
+        "name": "Aleea lalelelor",
+        "description": "O alee colorată din aceeași grădină, mărginită de frunze rotunde și lalele viu colorate.",
+        "time_of_day": "Dimineață luminoasă"
+      },
+      "camera": {
+        "shot_type": "medium",
+        "angle": "eye_level",
+        "movement": "tracking",
+        "description": "Camera o urmărește pe Lili de-a lungul celor trei lalele, păstrând cifra 3 vizibilă."
+      },
+      "music": null
+    },
+    {
+      "number": 3,
+      "narration": "Lili: „Acesta este numărul 4. Numărăm fluturii: unu, doi, trei, patru!” Pe cer apare cifra 5. „Acesta este numărul 5. Numărăm steluțele: unu, doi, trei, patru, cinci!” Lili cântă: „Patru fluturi dau din aripi, cinci steluțe s-au aprins. Unu, doi, trei, patru, cinci, numerele-s dragi aici!” La final spune: „Minunat! Am recunoscut și am numărat de la 1 la 5!”",
+      "visual_description": "Cifra 4, portocalie, apare lângă exact patru fluturi colorați așezați pe patru flori. Apoi, deasupra grădinii apare cifra 5, mov, alături de exact cinci steluțe luminoase decorative. În încheiere, cifrele 1, 2, 3, 4 și 5 se aliniază în ordine, iar Lili zboară veselă pe lângă ele.",
+      "duration_seconds": 25,
+      "character_ids": [
+        "counting-1-to-5-auto-001-guide"
+      ],
+      "location": {
+        "name": "Colțul fluturilor",
+        "description": "Un colț luminos al aceleiași grădini, cu flori mari, fluturi blânzi și decorațiuni strălucitoare.",
+        "time_of_day": "Dimineață luminoasă"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "pan",
+        "description": "Camera se deplasează lent de la cei patru fluturi la cele cinci steluțe, apoi cuprinde șirul complet al cifrelor de la 1 la 5."
+      },
+      "music": null
+    }
+  ]
+}

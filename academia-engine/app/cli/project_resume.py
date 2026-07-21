@@ -18,8 +18,18 @@ def main() -> int:
             VideoPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),
             MusicPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout))
     except Exception:
-        print("Project resume failed at a safe orchestration boundary."); return 1
+        print("Project resume failed at a safe orchestration boundary.")
+        try: _failure(ProjectRegistry().load(args.project_id))
+        except Exception: pass
+        return 1
     _success(record); return 0
+
+
+def _failure(record):
+    print(f"Project failure stage: {record.failure_stage.value if record.failure_stage else 'unavailable'}")
+    print(f"Project failure category: {record.failure_category or 'unavailable'}")
+    print(f"Failed scene: {record.failed_scene_id or 'unavailable'}")
+    print(f"Safe message: {record.safe_message or 'No durable diagnostic is available for this legacy failure.'}")
 
 
 if __name__=="__main__": raise SystemExit(main())

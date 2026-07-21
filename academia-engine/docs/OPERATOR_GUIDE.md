@@ -566,6 +566,20 @@ each existing final variant independently. Known music task IDs are continued;
 they are never resubmitted. Project coordination state contains no prompts,
 provider payloads, credentials, or signed URLs.
 
+Before resuming a failed project at the video boundary, run the read-only check:
+
+```bat
+python -m app.cli.project_video_preflight ^
+  --project-id counting-1-to-5-auto-001
+```
+
+This resolves and validates every durable video request and checks local Kling
+configuration. It constructs no provider submission and makes no HTTP request.
+Failed project manifests retain only a safe stage, category, message, and scene
+identifier. After correcting the reported issue, `project_resume` may submit a
+pending scene with no task ID once. Scenes with durable task IDs are resumed and
+are never resubmitted.
+
 ```text
 .runtime/projects/<project-id>/
   project.json

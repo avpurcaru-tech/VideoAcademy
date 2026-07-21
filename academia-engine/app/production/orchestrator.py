@@ -5,15 +5,18 @@ from pydantic import ValidationError
 
 from app.models import GenerationTaskStatus, VideoGenerationRequest
 from app.services import VideoEngineError, VideoEngineTaskFailedError, VideoPollingPolicy
+from app.services import UnknownVideoProviderError, VideoEngineRegistryError, VideoProviderOperationError
 from app.timeline import (TimelineMediaValidationError, TimelineMediaValidator, TimelineOutput,
                           TimelineRendererError, TimelineScene, TimelineTransition, VideoTimeline,
                           build_render_plan)
 
 from .contracts import (EpisodeProductionRequest, EpisodeProductionResult, EpisodeProductionStatus,
                         EpisodeSceneResult, EpisodeSceneStatus, ProductionRecord)
+from .contracts import ProductionFailureStage
 from .registry import (ProductionRegistry, ProductionRegistryConflictError, ProductionRegistryError,
                        ProductionRegistryNotFoundError, utc_now)
-from .request_reference import GenerationRequestResolver, GenerationRequestResolverError
+from .request_reference import (GenerationRequestResolver, GenerationRequestResolverError,
+                                GenerationRequestNotFoundError, GenerationRequestCorruptedError)
 from .integrity import ArtifactIntegrityState, ProductionIntegrityService
 
 
@@ -33,6 +36,12 @@ class EpisodeRenderPlanError(EpisodeProductionError): pass
 class EpisodeFinalRenderError(EpisodeProductionError): pass
 class EpisodeUnsupportedProductionStateError(EpisodeProductionError): pass
 class EpisodeGenerationRequestResolutionError(EpisodeProductionError): pass
+class EpisodeGenerationRequestMissingError(EpisodeGenerationRequestResolutionError): pass
+class EpisodeGenerationRequestCorruptedError(EpisodeGenerationRequestResolutionError): pass
+class EpisodeProviderUnavailableError(EpisodeProductionError): pass
+class EpisodeProviderConfigurationError(EpisodeProductionError): pass
+class EpisodeSubmitRejectedError(EpisodeSceneSubmissionError): pass
+class EpisodeSubmitResponseParsingError(EpisodeSceneSubmissionError): pass
 class ProductionArtifactIntegrityError(EpisodeProductionError): pass
 class ProductionFinalArtifactMissingError(ProductionArtifactIntegrityError): pass
 class ProductionSceneArtifactIntegrityError(ProductionArtifactIntegrityError): pass
@@ -119,12 +128,34 @@ class EpisodeProductionOrchestrator:
                         generation_request = self._request_resolver.resolve(scene.generation_request_reference)
                         if not isinstance(generation_request, VideoGenerationRequest):
                             raise TypeError("Resolver returned the wrong request type.")
-                    except Exception as error:
-                        raise EpisodeGenerationRequestResolutionError(f"Scene {scene.scene_id} request could not be resolved.") from error
+                    except GenerationRequestNotFoundError as error:
+                        raise EpisodeGenerationRequestMissingError(f"Scene {scene.scene_id} request reference is missing.") from error
+                    except GenerationRequestCorruptedError as error:
+                        raise EpisodeGenerationRequestCorruptedError(f"Scene {scene.scene_id} request record is corrupted.") from error
+                    except (GenerationRequestResolverError, ValidationError, TypeError) as error:
+                        raise EpisodeGenerationRequestResolutionError(f"Scene {scene.scene_id} request is invalid.") from error
                     try:
                         task = self._video_engine.submit(generation_request, provider=record.provider)
+                    except UnknownVideoProviderError as error:
+                        raise EpisodeProviderUnavailableError(f"Scene {scene.scene_id} provider is unavailable.") from error
+                    except VideoEngineRegistryError as error:
+                        task_id=getattr(error,"provider_task_id",None)
+                        if isinstance(task_id,str) and task_id:
+                            scene=scene.model_copy(update={"provider_task_id":task_id,"production_status":EpisodeSceneStatus.GENERATING})
+                            record=self._replace_scene(record,index,scene)
+                        raise EpisodeProductionRegistryError(f"Scene {scene.scene_id} task registry persistence failed.") from error
                     except VideoEngineError as error:
-                        raise EpisodeSceneSubmissionError(f"Scene {scene.scene_id} submission failed.") from error
+                        cause=error.__cause__
+                        if isinstance(cause,(ValueError,KeyError)):
+                            raise EpisodeProviderConfigurationError(f"Scene {scene.scene_id} provider configuration is missing or invalid.") from error
+                        category=type(cause).__name__.lower() if cause is not None else ""
+                        if "malformed" in category or "parse" in category or "contract" in category:
+                            task_id=getattr(cause,"provider_task_id",None)
+                            if isinstance(task_id,str) and task_id:
+                                scene=scene.model_copy(update={"provider_task_id":task_id,"production_status":EpisodeSceneStatus.GENERATING})
+                                record=self._replace_scene(record,index,scene)
+                            raise EpisodeSubmitResponseParsingError(f"Scene {scene.scene_id} submit response could not be parsed.") from error
+                        raise EpisodeSubmitRejectedError(f"Scene {scene.scene_id} submit was rejected before a task ID was returned.") from error
                     scene = scene.model_copy(update={"provider_task_id": task.provider_task_id, "normalized_status": task.normalized_status})
                     scene = scene.model_copy(update={"production_status": EpisodeSceneStatus.GENERATING})
                     record = self._replace_scene(record, index, scene)
@@ -164,14 +195,44 @@ class EpisodeProductionOrchestrator:
             self._registry.update(record)
             record = self._set_status(record, EpisodeProductionStatus.SUCCEEDED)
             return self._result(record)
-        except EpisodeProductionError:
+        except EpisodeProductionError as error:
             try:
                 current = self._registry.load(production_id)
                 if current.status != EpisodeProductionStatus.SUCCEEDED:
-                    self._set_status(current, EpisodeProductionStatus.FAILED)
+                    stage,category=self._failure_details(error)
+                    scene_id=self._scene_id(error)
+                    failed=current.model_copy(update={"status":EpisodeProductionStatus.FAILED,
+                        "failed_scene_id":scene_id,"failure_stage":stage,"failure_category":category,
+                        "safe_message":str(error),"updated_at":self._clock()})
+                    self._registry.update(failed)
             except ProductionRegistryError:
                 pass
             raise
+
+    @staticmethod
+    def _scene_id(error):
+        message=str(error)
+        for token in message.split():
+            if token.startswith("scene-"): return token.rstrip(".:,")
+        return None
+
+    @staticmethod
+    def _failure_details(error):
+        mapping=(
+            (EpisodeGenerationRequestMissingError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_reference_missing")),
+            (EpisodeGenerationRequestCorruptedError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_record_corrupted")),
+            (EpisodeGenerationRequestResolutionError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_validation_failed")),
+            (EpisodeProviderConfigurationError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_configuration_missing")),
+            (EpisodeProviderUnavailableError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_unavailable")),
+            (EpisodeSubmitResponseParsingError,(ProductionFailureStage.VIDEO_SUBMISSION,"submit_response_parsing_failed")),
+            (EpisodeSubmitRejectedError,(ProductionFailureStage.VIDEO_SUBMISSION,"submit_rejected_before_task_creation")),
+            (EpisodeScenePollingError,(ProductionFailureStage.VIDEO_POLLING,"provider_polling_failed")),
+            (EpisodeSceneDownloadError,(ProductionFailureStage.VIDEO_DOWNLOAD,"artifact_download_failed")),
+            (EpisodeProductionRegistryError,(ProductionFailureStage.REGISTRY_PERSISTENCE,"registry_persistence_failed")),
+        )
+        for kind,value in mapping:
+            if isinstance(error,kind): return value
+        return ProductionFailureStage.VIDEO_ASSEMBLY,"video_stage_failed"
 
     def _timeline(self, record: ProductionRecord) -> VideoTimeline:
         try:

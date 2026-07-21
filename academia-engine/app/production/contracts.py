@@ -25,6 +25,16 @@ class EpisodeSceneStatus(str, Enum):
     FAILED = "failed"
 
 
+class ProductionFailureStage(str, Enum):
+    VIDEO_REQUEST_RESOLUTION = "video_request_resolution"
+    VIDEO_PROVIDER_CONFIGURATION = "video_provider_configuration"
+    VIDEO_SUBMISSION = "video_submission"
+    VIDEO_POLLING = "video_polling"
+    VIDEO_DOWNLOAD = "video_download"
+    VIDEO_ASSEMBLY = "video_assembly"
+    REGISTRY_PERSISTENCE = "registry_persistence"
+
+
 class EpisodeTransitionPolicy(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
     kind: TimelineTransitionKind
@@ -129,6 +139,10 @@ class ProductionRecord(BaseModel):
     media_workspace: Path
     transition_policy: EpisodeTransitionPolicy
     final_artifact: RenderedTimelineArtifact | None = None
+    failed_scene_id: str | None = None
+    failure_stage: ProductionFailureStage | None = None
+    failure_category: str | None = Field(default=None, max_length=100)
+    safe_message: str | None = Field(default=None, max_length=500)
     created_at: datetime
     updated_at: datetime
 

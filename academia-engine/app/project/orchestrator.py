@@ -5,9 +5,12 @@ from pathlib import Path
 from app.media import AudioVideoDurationPolicy
 from app.music import MusicGenerationRequest
 from app.production import EpisodeTransitionPolicy
+from app.production import (EpisodeGenerationRequestResolutionError,EpisodeProviderConfigurationError,
+                            EpisodeProviderUnavailableError,EpisodeSceneSubmissionError,EpisodeScenePollingError,
+                            EpisodeSceneDownloadError,EpisodeProductionRegistryError,ProductionRegistry)
 from app.song import EducationalSongBrief,LyricsPlan,MusicPlan,persist_lyrics_atomic
 
-from .contracts import ProjectRecord,ProjectStatus
+from .contracts import ProjectFailureStage,ProjectRecord,ProjectStatus
 from .registry import ProjectRegistry
 
 
@@ -76,10 +79,40 @@ class ProjectGenerationService:
                 self._services.audio_variant_video_composer.compose_variants(master,[audio],record.final_directory,
                     record.final_directory/"workspace",AudioVideoDurationPolicy.EXTEND_VIDEO_TO_AUDIO,start_index=index)
             return self._status(record,ProjectStatus.COMPLETED)
-        except Exception:
-            try: self._status(record,ProjectStatus.FAILED)
+        except Exception as error:
+            try:
+                stage,category,message,scene_id=self._failure_details(error,record)
+                self._update(record,status=ProjectStatus.FAILED,failure_stage=stage,
+                    failure_category=category,safe_message=message,failed_scene_id=scene_id)
             except Exception: pass
             raise
+
+    @staticmethod
+    def _failure_details(error,record):
+        mappings=(
+            (EpisodeGenerationRequestResolutionError,ProjectFailureStage.VIDEO_REQUEST_RESOLUTION,"video_request_resolution_failed"),
+            (EpisodeProviderConfigurationError,ProjectFailureStage.VIDEO_PROVIDER_CONFIGURATION,"video_provider_configuration_missing"),
+            (EpisodeProviderUnavailableError,ProjectFailureStage.VIDEO_PROVIDER_CONFIGURATION,"video_provider_unavailable"),
+            (EpisodeSceneSubmissionError,ProjectFailureStage.VIDEO_SUBMISSION,"video_submission_failed"),
+            (EpisodeScenePollingError,ProjectFailureStage.VIDEO_POLLING,"video_polling_failed"),
+            (EpisodeSceneDownloadError,ProjectFailureStage.VIDEO_DOWNLOAD,"video_download_failed"),
+            (EpisodeProductionRegistryError,ProjectFailureStage.VIDEO_SUBMISSION,"video_registry_persistence_failed"),
+        )
+        for kind,stage,category in mappings:
+            if isinstance(error,kind): return stage,category,str(error),ProjectGenerationService._failed_scene(record)
+        if record.status==ProjectStatus.VIDEO_GENERATING:
+            return ProjectFailureStage.VIDEO_PLANNING,"video_stage_failed","Video generation failed at a safe boundary.",ProjectGenerationService._failed_scene(record)
+        if record.status==ProjectStatus.MUSIC_GENERATING:
+            stage=ProjectFailureStage.LYRICS_GENERATION if not record.lyrics_path.is_file() else ProjectFailureStage.MUSIC_GENERATION
+            return stage,"generation_failed",("Lyrics generation failed at a safe boundary." if stage==ProjectFailureStage.LYRICS_GENERATION else "Music generation failed at a safe boundary."),None
+        if record.status==ProjectStatus.COMPOSING:
+            return ProjectFailureStage.COMPOSITION,"composition_failed","Composition failed at a safe boundary.",None
+        return ProjectFailureStage.EPISODE_GENERATION,"project_generation_failed","Project generation failed at a safe boundary.",None
+
+    @staticmethod
+    def _failed_scene(record):
+        try: return ProductionRegistry().load(record.video_production_id).failed_scene_id
+        except Exception: return None
 
     def _new_record(self,episode_id,project_id,root):
         now=datetime.now(timezone.utc)

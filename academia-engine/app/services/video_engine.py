@@ -131,7 +131,9 @@ class VideoEngine:
             self._registry.create(record)
             return self._registry.load(record.provider_task_id)
         except TaskRegistryError as error:
-            raise VideoEngineRegistryError("The submitted task could not be stored safely.") from error
+            failure=VideoEngineRegistryError("The submitted task could not be stored safely.")
+            failure.provider_task_id=record.provider_task_id
+            raise failure from error
 
     def refresh(self, provider_task_id: str) -> GenerationTaskRecord:
         existing = self._load(provider_task_id)
