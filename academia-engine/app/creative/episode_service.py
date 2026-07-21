@@ -21,6 +21,9 @@ class EpisodeGenerationService:
         self._generator=generator
         self._duration_policy=duration_policy
     def generate(self,brief):
+        from app.storyboard import CreativeStoryboard, EpisodeService
+        if isinstance(brief,(Episode,CreativeStoryboard)):
+            return EpisodeService().resolve(brief)
         try: brief=EducationalCreativeBrief.model_validate(_payload(brief))
         except ValidationError as error: raise InvalidGeneratedEpisodeError("Creative brief is invalid.") from error
         planned_brief=brief
