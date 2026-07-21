@@ -14,6 +14,10 @@ from .executor import (
     CompositionSourceValidationError,
 )
 from .resolver import resolve_manifest, to_assembly_request
+from .music_timeline import (ExistingTimelineVideoRenderer,MusicTimelineComposer,
+    MusicTimelineCompositionConflictError,MusicTimelineCompositionError,
+    MusicTimelineCompositionRequest,MusicTimelineCompositionResult,
+    MusicTimelineClipMismatchError,StoryboardVideoClip)
 
 __all__ = [
     "ResolvedVideoComposition",
@@ -29,4 +33,12 @@ __all__ = [
     "VideoCompositionScene",
     "resolve_manifest",
     "to_assembly_request",
+    "ExistingTimelineVideoRenderer",
+    "MusicTimelineComposer",
+    "MusicTimelineCompositionConflictError",
+    "MusicTimelineCompositionError",
+    "MusicTimelineCompositionRequest",
+    "MusicTimelineCompositionResult",
+    "MusicTimelineClipMismatchError",
+    "StoryboardVideoClip",
 ]
