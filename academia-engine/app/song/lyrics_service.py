@@ -18,6 +18,9 @@ class LyricsGenerationService:
         self._generator=generator
 
     def generate(self, brief: EducationalSongBrief) -> LyricsPlan:
+        from app.storyboard import CreativeStoryboard, StoryboardLyricsAdapter
+        if isinstance(brief,CreativeStoryboard):
+            return StoryboardLyricsAdapter().adapt(brief)
         try: validated_brief=EducationalSongBrief.model_validate(_payload(brief))
         except ValidationError as error: raise InvalidGeneratedLyricsError("Educational song brief is invalid.") from error
         try: generated=self._generator.generate_lyrics(validated_brief)
@@ -33,4 +36,3 @@ class LyricsGenerationService:
 
 def _payload(value):
     return value.model_dump(mode="python") if isinstance(value,BaseModel) else value
-
