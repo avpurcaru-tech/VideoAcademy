@@ -62,6 +62,7 @@ class OpenAIStoryboardGenerator:
 def _input(brief):
     return [{"role": "system", "content": (
         "Create an original provider-neutral educational creative storyboard. Return only durable creative semantics. "
+        "Include original musical style, mood, tempo, vocal direction, and instrumentation in music_direction. "
         "Do not include API payloads, provider names, model settings, URLs, credentials, rendering commands, or implementation details. "
         "Use contiguous section orders starting at one, unique IDs, positive durations, and section durations that exactly total the target.")},
         {"role": "user", "content": (

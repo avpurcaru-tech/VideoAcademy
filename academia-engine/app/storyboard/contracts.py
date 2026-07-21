@@ -13,6 +13,29 @@ class StoryboardAudience(BaseModel):
         return self
 
 
+class StoryboardMusicDirection(BaseModel):
+    """Provider-neutral durable musical creative direction."""
+    model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
+    style: str = Field(min_length=1, max_length=200)
+    mood: str = Field(min_length=1, max_length=200)
+    tempo_bpm: float = Field(gt=0)
+    vocals: str = Field(min_length=1, max_length=200)
+    instrumentation: tuple[str, ...] = Field(min_length=1)
+
+    @field_validator("style", "mood", "vocals")
+    @classmethod
+    def safe_text(cls, value):
+        if not value.strip() or "\0" in value: raise ValueError("Storyboard music text must be non-blank and safe.")
+        return value
+
+    @field_validator("instrumentation")
+    @classmethod
+    def safe_instrumentation(cls, values):
+        if any(not value.strip() or "\0" in value for value in values):
+            raise ValueError("Storyboard instrumentation must be non-blank and safe.")
+        return values
+
+
 class StoryboardSection(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
     section_id: str = Field(min_length=1, max_length=200, pattern=r"^[a-z0-9][a-z0-9_-]*$")
@@ -53,6 +76,9 @@ class CreativeStoryboard(BaseModel):
     language: str = Field(min_length=1, max_length=100)
     audience: StoryboardAudience
     educational_goal: str = Field(min_length=1, max_length=2000)
+    music_direction: StoryboardMusicDirection = Field(default_factory=lambda: StoryboardMusicDirection(
+        style="original educational song", mood="cheerful", tempo_bpm=110,
+        vocals="clear child-friendly vocals", instrumentation=("ukulele", "xylophone", "light percussion")))
     target_duration_seconds: float = Field(gt=0)
     sections: tuple[StoryboardSection, ...] = Field(min_length=1)
 

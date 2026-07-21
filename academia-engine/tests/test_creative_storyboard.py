@@ -73,7 +73,7 @@ class CreativeStoryboardTests(unittest.TestCase):
         schema = json.dumps(CreativeStoryboard.model_json_schema()).lower()
         fields = set(CreativeStoryboard.model_fields)
         self.assertEqual(fields, {"storyboard_id", "title", "language", "audience", "educational_goal",
-                                  "target_duration_seconds", "sections"})
+                                  "music_direction", "target_duration_seconds", "sections"})
         for provider in ("kling", "suno", "openai", "prompt", "payload", "model"):
             self.assertNotIn(provider, schema)
 
