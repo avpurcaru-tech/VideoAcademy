@@ -36,9 +36,9 @@ class OpenAIStoryboardGenerator:
         except Exception as error:
             raise OpenAIStoryboardConfigurationError("OpenAI storyboard client could not be configured.") from error
 
-    def generate_storyboard(self, brief):
+    def generate_storyboard(self, brief, series_bible=None, character_profiles=()):
         try:
-            response = self._client.responses.parse(model=self._model, input=_input(brief), text_format=CreativeStoryboard)
+            response = self._client.responses.parse(model=self._model, input=_input(brief, series_bible, character_profiles), text_format=CreativeStoryboard)
         except ValidationError as error:
             raise OpenAIStoryboardStructuredOutputError("OpenAI storyboard output is malformed.") from error
         except AuthenticationError as error:
@@ -59,15 +59,27 @@ class OpenAIStoryboardGenerator:
         return storyboard
 
 
-def _input(brief):
+def _input(brief, series_bible=None, character_profiles=()):
+    continuity = ""
+    if series_bible is not None:
+        characters = []
+        for value in character_profiles:
+            characters.append(f"{value.character_id} | exact name: {value.name} | canonical description: {value.canonical_description} | "
+                f"behavior: {'; '.join(value.behavior_rules)} | negative rules: {'; '.join(value.negative_rules)}")
+        continuity = (f"\nSeries ID: {series_bible.series_id}\nCanonical visual style: {series_bible.visual_style}\n"
+            f"Canonical recurring characters:\n" + "\n".join(characters) + "\nContinuity rules: " +
+            "; ".join(series_bible.continuity_rules))
     return [{"role": "system", "content": (
         "Create an original provider-neutral educational creative storyboard. Return only durable creative semantics. "
         "Include original musical style, mood, tempo, vocal direction, and instrumentation in music_direction. "
         "Do not include API payloads, provider names, model settings, URLs, credentials, rendering commands, or implementation details. "
-        "Use contiguous section orders starting at one, unique IDs, positive durations, and section durations that exactly total the target.")},
+        "Use contiguous section orders starting at one, unique IDs, positive durations, and section durations that exactly total the target. "
+        "When series context is supplied, reference every recurring character by stable ID in every section and do not emit alternate appearance fields. "
+        "Never rename characters, alter appearance or clothing, or violate behavior or negative rules. Locations, backgrounds, props, and weather may vary freely. "
+        "Do not imitate copyrighted characters or franchises.")},
         {"role": "user", "content": (
             f"Storyboard ID: {brief.brief_id}\nTopic: {brief.topic}\nEducational goals: {'; '.join(brief.learning_objectives)}\n"
             f"Language: {brief.language}\nAudience ages: {brief.target_age_min}-{brief.target_age_max}\n"
             f"Target duration seconds: {brief.target_duration_seconds:g}\nSections: {brief.scene_count}\nTone: {brief.tone}\n"
             f"Visual style: {brief.visual_style}\nCharacter hint: {brief.main_character_hint or 'original friendly guide'}\n"
-            f"Environment hint: {brief.location_hint or 'safe cheerful learning environment'}") }]
+            f"Environment hint: {brief.location_hint or 'safe cheerful learning environment'}{continuity}") }]

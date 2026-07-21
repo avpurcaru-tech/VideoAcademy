@@ -20,6 +20,7 @@ class EducationalCreativeBrief(BaseModel):
     location_hint: str|None=Field(default=None,max_length=500)
     scene_count: int=Field(ge=MIN_SCENE_COUNT,le=MAX_SCENE_COUNT)
     song_required: bool
+    series_id: str|None=Field(default=None,max_length=200,pattern=r"^[a-z0-9][a-z0-9_-]*$")
 
     @field_validator("topic","language","tone","visual_style","main_character_hint","location_hint")
     @classmethod

@@ -32,6 +32,7 @@ class ProjectRecord(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     project_id: str=Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
     episode_id: str=Field(min_length=1,max_length=200)
+    series_id: str|None=Field(default=None,pattern=r"^[a-z0-9][a-z0-9_-]*$")
     status: ProjectStatus
     video_production_id: str=Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
     music_task_id: str|None=Field(default=None,pattern=r"^[A-Za-z0-9_-]+$")

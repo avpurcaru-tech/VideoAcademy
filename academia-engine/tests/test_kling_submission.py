@@ -229,12 +229,13 @@ class KlingSubmissionTests(unittest.TestCase):
         with self.assertRaises(KlingProviderContractError):
             KlingProvider(client=FakeKlingClient(fixture)).submit_scene(self._request())
 
-    def test_invalid_timestamp_is_malformed(self) -> None:
+    def test_invalid_optional_timestamp_is_omitted_after_valid_identity(self) -> None:
         fixture = deepcopy(OFFICIAL_CREATE_TASK_SUCCESS_FIXTURE)
         fixture["data"]["create_time"] = "not-a-millisecond-timestamp"
 
-        with self.assertRaises(KlingMalformedResponseError):
-            KlingProvider(client=FakeKlingClient(fixture)).submit_scene(self._request())
+        task = KlingProvider(client=FakeKlingClient(fixture)).submit_scene(self._request())
+        self.assertEqual(task.external_task_id, "string")
+        self.assertIsNone(task.submitted_at)
 
     @staticmethod
     def _request(duration_seconds: int = 15) -> VideoGenerationRequest:

@@ -1,0 +1,16 @@
+{
+  "brief_id": "luca-si-max-colors-001",
+  "topic": "Luca învață culorile",
+  "learning_objectives": ["red", "yellow", "green", "blue"],
+  "language": "ro",
+  "target_age_min": 3,
+  "target_age_max": 6,
+  "target_duration_seconds": 60,
+  "tone": "cheerful, playful, patient",
+  "visual_style": "Warm, colorful, original preschool animation with soft rounded shapes and clear educational visuals.",
+  "main_character_hint": null,
+  "location_hint": "A sunny park where Max discovers a red ball, yellow flower, green leaf, and blue kite; Luca names each color, the chorus repeats all four, and they finish with a color-finding game.",
+  "scene_count": 4,
+  "song_required": true,
+  "series_id": "luca-si-max"
+}

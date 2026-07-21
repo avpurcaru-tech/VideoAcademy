@@ -12,17 +12,23 @@ class StoryboardVideoPlanningError(RuntimeError): pass
 
 class StoryboardVideoPlanner:
     """Deterministic storyboard-only projection into provider-neutral video requests."""
-    def __init__(self, duration_policy: SceneDurationPolicy | None = None):
+    def __init__(self, duration_policy: SceneDurationPolicy | None = None,character_registry=None,series_registry=None):
         self._duration_policy = duration_policy or SceneDurationPolicy(15)
+        self._character_registry=character_registry; self._series_registry=series_registry
 
     def build(self, storyboard: CreativeStoryboard, production_id: str) -> tuple[VideoGenerationRequest, ...]:
         try:
             storyboard = CreativeStoryboard.model_validate(storyboard)
+            canonical = {value.character_id: value for value in storyboard.canonical_characters}
+            profiles={}
+            if storyboard.series_id and not canonical:
+                from app.characters import CharacterRegistry
+                from app.series import SeriesRegistry
+                bible=(self._series_registry or SeriesRegistry()).load(storyboard.series_id)
+                profiles={value.character_id:value for value in (self._character_registry or CharacterRegistry()).require_many(bible.resolved_character_ids)}
             requests = []
             for scene_number, section in enumerate(storyboard.sections, start=1):
-                characters = [VideoCharacter(id=self._character_id(storyboard.storyboard_id, name),
-                    name=name, role="storyboard character", appearance=section.visual_goal[:1000])
-                    for name in section.characters]
+                characters = [self._video_character(storyboard, reference, canonical,profiles) for reference in section.characters]
                 objects = ", ".join(section.objects) if section.objects else "none specified"
                 semantic_description = (
                     f"{section.environment}\nVisual goal: {section.visual_goal}\nObjects: {objects}"
@@ -46,6 +52,24 @@ class StoryboardVideoPlanner:
             if isinstance(error, StoryboardVideoPlanningError):
                 raise
             raise StoryboardVideoPlanningError("Storyboard could not be projected to video requests.") from error
+
+    @staticmethod
+    def _video_character(storyboard, reference, canonical,profiles):
+        if reference in canonical:
+            value = canonical[reference]
+            description = "; ".join(filter(None, (value.age_description, value.appearance,
+                "clothing: " + ", ".join(value.clothing) if value.clothing else "",
+                "recurring accessories: " + ", ".join(value.recurring_accessories) if value.recurring_accessories else "")))
+            return VideoCharacter(id=value.character_id, name=value.name, role=value.character_type,
+                appearance=description[:1000])
+        if reference in profiles:
+            value=profiles[reference]
+            block=(f"Canonical character {value.name}:\n{value.canonical_description}\nBehavior rules: "
+                f"{' '.join(value.behavior_rules)}\nContinuity constraints: {' '.join(value.negative_rules)}")
+            return VideoCharacter(id=value.character_id,name=value.name,role=value.character_type or "recurring character",
+                appearance=block[:1000])
+        return VideoCharacter(id=StoryboardVideoPlanner._character_id(storyboard.storyboard_id, reference),
+            name=reference, role="storyboard character", appearance="Original character as established by the storyboard.")
 
     @staticmethod
     def _character_id(storyboard_id: str, name: str) -> str:

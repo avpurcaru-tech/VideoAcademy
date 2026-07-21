@@ -2,16 +2,16 @@ from typing import Protocol, runtime_checkable
 
 from app.creative import EducationalCreativeBrief
 
-from .contracts import CreativeStoryboard, StoryboardAudience, StoryboardMusicDirection, StoryboardSection
+from .contracts import CreativeStoryboard, StoryboardAudience, StoryboardCharacter, StoryboardMusicDirection, StoryboardSection
 
 
 @runtime_checkable
 class StoryboardGenerator(Protocol):
-    def generate_storyboard(self, brief: EducationalCreativeBrief) -> CreativeStoryboard: ...
+    def generate_storyboard(self, brief: EducationalCreativeBrief, series_bible=None, character_profiles=()) -> CreativeStoryboard: ...
 
 
 class DeterministicStoryboardGenerator:
-    def generate_storyboard(self, brief):
+    def generate_storyboard(self, brief, series_bible=None, character_profiles=()):
         base = brief.target_duration_seconds / brief.scene_count
         sections = []
         for index in range(1, brief.scene_count + 1):
@@ -22,11 +22,13 @@ class DeterministicStoryboardGenerator:
                 educational_goal=objective, learning_focus=objective,
                 visual_goal=f"Show {objective} clearly in an original age-appropriate visual sequence.",
                 lyrics=f"An original short educational line about {objective}.",
-                characters=(brief.main_character_hint or "friendly original guide",), objects=(),
+                characters=(series_bible.resolved_character_ids if series_bible else
+                    (brief.main_character_hint or "friendly original guide",)), objects=(),
                 environment=brief.location_hint or f"A safe cheerful setting in {brief.visual_style} style.",
                 camera_direction="A stable eye-level view with gentle movement.", emotion=brief.tone,
                 estimated_duration_seconds=duration))
-        return CreativeStoryboard(storyboard_id=brief.brief_id, title=f"Learning {brief.topic}",
+        return CreativeStoryboard(storyboard_id=brief.brief_id, series_id=series_bible.series_id if series_bible else None,
+            canonical_characters=(), title=f"Learning {brief.topic}",
             language=brief.language, audience=StoryboardAudience(target_age_min=brief.target_age_min,
                 target_age_max=brief.target_age_max), educational_goal="; ".join(brief.learning_objectives),
             music_direction=StoryboardMusicDirection(style="original educational song", mood=brief.tone,

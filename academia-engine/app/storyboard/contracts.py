@@ -68,10 +68,24 @@ class StoryboardSection(BaseModel):
         return values
 
 
+class StoryboardCharacter(BaseModel):
+    """Canonical durable character reference copied from a Series Bible."""
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    character_id: str = Field(min_length=1, max_length=200, pattern=r"^[a-z0-9][a-z0-9_-]*$")
+    name: str = Field(min_length=1, max_length=100)
+    character_type: str = Field(min_length=1, max_length=100)
+    age_description: str = Field(min_length=1, max_length=200)
+    appearance: str = Field(min_length=1, max_length=1000)
+    clothing: tuple[str, ...] = ()
+    behavior_rules: tuple[str, ...] = Field(min_length=1)
+    recurring_accessories: tuple[str, ...] = ()
+
+
 class CreativeStoryboard(BaseModel):
     """Authoritative provider-neutral durable creative document."""
     model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
     storyboard_id: str = Field(min_length=1, max_length=200, pattern=r"^[a-z0-9][a-z0-9_-]*$")
+    series_id: str | None = Field(default=None, max_length=200, pattern=r"^[a-z0-9][a-z0-9_-]*$")
     title: str = Field(min_length=1, max_length=500)
     language: str = Field(min_length=1, max_length=100)
     audience: StoryboardAudience
@@ -80,6 +94,7 @@ class CreativeStoryboard(BaseModel):
         style="original educational song", mood="cheerful", tempo_bpm=110,
         vocals="clear child-friendly vocals", instrumentation=("ukulele", "xylophone", "light percussion")))
     target_duration_seconds: float = Field(gt=0)
+    canonical_characters: tuple[StoryboardCharacter, ...] = ()
     sections: tuple[StoryboardSection, ...] = Field(min_length=1)
 
     @field_validator("title", "language", "educational_goal")
@@ -100,4 +115,11 @@ class CreativeStoryboard(BaseModel):
         estimated = sum(section.estimated_duration_seconds for section in self.sections)
         if abs(estimated - self.target_duration_seconds) > 0.01:
             raise ValueError("Storyboard section durations must match the target duration.")
+        canonical_ids = [value.character_id for value in self.canonical_characters]
+        if len(canonical_ids) != len(set(canonical_ids)):
+            raise ValueError("Storyboard canonical character IDs must be unique.")
+        if self.series_id is not None and canonical_ids:
+            known = set(canonical_ids)
+            if any(not set(section.characters) <= known for section in self.sections):
+                raise ValueError("Storyboard section references an invalid recurring character.")
         return self

@@ -1,0 +1,121 @@
+{
+  "id": "luca-si-max-colors-001",
+  "title": "Luca și Max învață culorile",
+  "lyrics": "Luca: Uite, Max, o minge! E roșie, ce frumos!\nRoșu, roșu, roșu — o spunem bucuros!\nLângă drum e-o floare, ca soarele de sus:\nGalben, galben, galben — acum și tu ai spus!\n\nMax vede-o frunză legănată ușor.\nLuca: Mulțumesc, Max! Ce verde e decor!\nVerde este frunza, verde-i iarba mea,\nVerde, verde, verde — hai să spunem: da!\n\nSus pe cer dansează un zmeu albastru lin.\nLuca: Albastru este zmeul! Max, privește-l cum îl țin!\nCor: Roșu, galben, verde, albastru,\nPatru culori în cântecul nostru!\nRoșu, galben, verde, albastru,\nLe știm pe toate în parcul nostru!\n\nLuca: Găsești ceva roșu? Mingea — minunat!\nCe este galben? Floarea — ai aflat!\nArată verde! Frunza se ridică.\nȘi ce-i albastru? Zmeul fără frică!\nCor: Roșu, galben, verde, albastru,\nBravo! Culorile-s jocul nostru!",
+  "metadata": {
+    "topic": "Recunoașterea și numirea culorilor roșu, galben, verde și albastru prin obiecte familiare și un joc simplu de identificare.",
+    "language": "ro",
+    "target_age_min": 3,
+    "target_age_max": 6,
+    "tags": [
+      "educational",
+      "storyboard-derived"
+    ]
+  },
+  "characters": [
+    {
+      "id": "luca",
+      "name": "Luca",
+      "role": "human child",
+      "description": "Luca speaks politely and names educational concepts clearly.",
+      "appearance": "approximately 4–5 years old; boy with blond hair and blue eyes; clothing: blue T-shirt, beige shorts, white sneakers"
+    },
+    {
+      "id": "max",
+      "name": "Max",
+      "role": "German Shepherd puppy",
+      "description": "Max does not speak.; Max communicates through expressions, gestures, and movement.",
+      "appearance": "approximately 6 months old; German Shepherd puppy with black and tan fur; recurring accessories: red collar"
+    }
+  ],
+  "scenes": [
+    {
+      "number": 1,
+      "narration": "Luca: Uite, Max, o minge! E roșie, ce frumos!\nRoșu, roșu, roșu — o spunem bucuros!\nLângă drum e-o floare, ca soarele de sus:\nGalben, galben, galben — acum și tu ai spus!",
+      "visual_description": "Mingea roșie și floarea galbenă apar separat, mari și clare, pe un fundal simplu de parc.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "luca",
+        "max"
+      ],
+      "location": {
+        "name": "Parc însorit, cu alei line, iarbă moale și forme rotunjite; Max găsește mingea roșie, apoi indică floarea galbenă cu lăbuța.",
+        "description": "Parc însorit, cu alei line, iarbă moale și forme rotunjite; Max găsește mingea roșie, apoi indică floarea galbenă cu lăbuța.",
+        "time_of_day": "unspecified"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "static",
+        "description": "Cadru larg de prezentare, apoi prim-planuri curate pe fiecare obiect; tranziție lină de la mingea roșie la floarea galbenă."
+      },
+      "music": null
+    },
+    {
+      "number": 2,
+      "narration": "Max vede-o frunză legănată ușor.\nLuca: Mulțumesc, Max! Ce verde e decor!\nVerde este frunza, verde-i iarba mea,\nVerde, verde, verde — hai să spunem: da!",
+      "visual_description": "O frunză verde este evidențiată clar, iar culoarea ei este comparată cu iarba din jur.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "luca",
+        "max"
+      ],
+      "location": {
+        "name": "Sub un copac rotunjit din parcul însorit, Max urmărește o frunză care coboară lent, iar Luca o ridică atent.",
+        "description": "Sub un copac rotunjit din parcul însorit, Max urmărește o frunză care coboară lent, iar Luca o ridică atent.",
+        "time_of_day": "unspecified"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "static",
+        "description": "Urmărire blândă a frunzei în coborâre, prim-plan pe frunza verde și retragere lentă pentru a arăta iarba de aceeași culoare."
+      },
+      "music": null
+    },
+    {
+      "number": 3,
+      "narration": "Sus pe cer dansează un zmeu albastru lin.\nLuca: Albastru este zmeul! Max, privește-l cum îl țin!\nCor: Roșu, galben, verde, albastru,\nPatru culori în cântecul nostru!\nRoșu, galben, verde, albastru,\nLe știm pe toate în parcul nostru!",
+      "visual_description": "Zmeul albastru este prezentat pe cer, apoi cele patru obiecte colorate apar împreună într-un aranjament clar.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "luca",
+        "max"
+      ],
+      "location": {
+        "name": "Poiană deschisă din parcul însorit, unde Luca ține sfoara unui zmeu albastru, iar Max aleargă vesel alături fără să vorbească.",
+        "description": "Poiană deschisă din parcul însorit, unde Luca ține sfoara unui zmeu albastru, iar Max aleargă vesel alături fără să vorbească.",
+        "time_of_day": "unspecified"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "static",
+        "description": "Mișcare ascendentă de la Luca și Max către zmeul albastru; revenire la un cadru frontal cu toate cele patru obiecte aliniate."
+      },
+      "music": null
+    },
+    {
+      "number": 4,
+      "narration": "Luca: Găsești ceva roșu? Mingea — minunat!\nCe este galben? Floarea — ai aflat!\nArată verde! Frunza se ridică.\nȘi ce-i albastru? Zmeul fără frică!\nCor: Roșu, galben, verde, albastru,\nBravo! Culorile-s jocul nostru!",
+      "visual_description": "Cele patru obiecte sunt așezate vizibil și bine distanțate; fiecare răspuns corect primește o evidențiere blândă.",
+      "duration_seconds": 15,
+      "character_ids": [
+        "luca",
+        "max"
+      ],
+      "location": {
+        "name": "O zonă luminoasă a parcului, unde obiectele descoperite sunt așezate într-un semicerc; Max indică pe rând răspunsurile prin privire, lăbuță și mișcare",
+        "description": "O zonă luminoasă a parcului, unde obiectele descoperite sunt așezate într-un semicerc; Max indică pe rând răspunsurile prin privire, lăbuță și mișcare.",
+        "time_of_day": "unspecified"
+      },
+      "camera": {
+        "shot_type": "wide",
+        "angle": "eye_level",
+        "movement": "static",
+        "description": "Cadru frontal interactiv, cu scurte pauze după fiecare întrebare; apropiere pe obiectul corect și final într-un cadru larg cu Luca și Max."
+      },
+      "music": null
+    }
+  ]
+}

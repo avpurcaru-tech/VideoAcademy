@@ -13,6 +13,9 @@ from app.music import MusicPollingPolicy
 from app.project import CreativeProjectGenerationService,ProjectGenerationService,ProjectRegistry
 from app.services import VideoPollingPolicy
 from app.production import SceneDurationPolicy
+from app.series import SeriesRegistry
+from app.characters import CharacterRegistry
+from app.storyboard import StoryboardGenerationService,StoryboardGeneratorRegistry,StoryboardRepository
 
 
 def main():
@@ -31,13 +34,15 @@ def main():
         if not args.confirm:
             local_episode=EpisodeGenerationService(DeterministicEpisodeGenerator(),duration_policy)
             project=ProjectGenerationService(build_services(preflight=True),registry)
-            CreativeProjectGenerationService(local_episode,project,registry).preflight(brief,args.project_id,args.output,args.video_provider)
+            storyboards=StoryboardGenerationService(StoryboardGeneratorRegistry().resolve("deterministic"),SeriesRegistry(),CharacterRegistry())
+            CreativeProjectGenerationService(local_episode,project,registry,storyboards).preflight(brief,args.project_id,args.output,args.video_provider)
             print("Creative project preflight passed."); print("No external provider was constructed or called.")
             print("Use --confirm to authorize Episode, video, lyrics, and music generation costs."); return 2
         episode_service=EpisodeGenerationService(EpisodeGeneratorRegistry().resolve(args.episode_generator),duration_policy)
         project=ProjectGenerationService(build_services(args.video_provider,args.lyrics_provider,args.music_provider),registry)
+        storyboards=StoryboardGenerationService(StoryboardGeneratorRegistry().resolve(args.episode_generator),SeriesRegistry(),CharacterRegistry())
         print("Episode..."); print("Video..."); print("Lyrics..."); print("Music..."); print("Composition...")
-        record=CreativeProjectGenerationService(episode_service,project,registry).generate(brief,args.project_id,args.output,
+        record=CreativeProjectGenerationService(episode_service,project,registry,storyboards,StoryboardRepository()).generate(brief,args.project_id,args.output,
             VideoPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),
             MusicPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),args.video_provider,args.music_provider)
     except ValidationError:

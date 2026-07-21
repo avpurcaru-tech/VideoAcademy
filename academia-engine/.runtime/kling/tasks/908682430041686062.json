@@ -1,0 +1,15 @@
+{
+  "provider": "kling",
+  "provider_task_id": "908682430041686062",
+  "external_correlation_id": "23c6a1d448fe40d994a28b2ae1b5d8d3",
+  "normalized_status": "succeeded",
+  "created_at": "2026-07-21T23:08:12.435234Z",
+  "updated_at": "2026-07-21T23:09:53.979000Z",
+  "artifact": {
+    "artifact_id": "908682433363574840",
+    "local_path": ".runtime\\projects\\luca-si-max-colors-002\\video\\scenes\\scene-0002.mp4",
+    "byte_size": 9798061,
+    "sha256": "58cb24716a663d105c5b63a0f6f599af40d1807d5f0bd165c22b498d59ec5c90",
+    "content_type": "video/mp4"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "provider": "sunoapi_org",
+  "provider_task_id": "e4c3fedac895d7093c8186298004a3bc",
+  "external_correlation_id": null,
+  "normalized_status": "succeeded",
+  "created_at": "2026-07-21T23:19:59.608512Z",
+  "updated_at": "2026-07-21T23:20:59.076179Z",
+  "artifact": null,
+  "artifact_set": {
+    "provider_task_id": "e4c3fedac895d7093c8186298004a3bc",
+    "artifacts": [
+      {
+        "artifact_id": "4e3bd8f8-8b2d-48c1-9461-200fb3cce5ee",
+        "local_path": ".runtime\\projects\\luca-si-max-colors-002\\music\\variant-01.mp3",
+        "byte_size": 1985757,
+        "sha256": "bb29e8a93aed6eda7efd52975144ed049b558f2754972d6cb3de5e753d8a4e9b",
+        "content_type": "audio/mpeg",
+        "variant_index": 1
+      },
+      {
+        "artifact_id": "c933666d-0f3c-4ef2-b319-65b22f09ee8a",
+        "local_path": ".runtime\\projects\\luca-si-max-colors-002\\music\\variant-02.mp3",
+        "byte_size": 2074701,
+        "sha256": "97e55007c0901f5e1d1a9f43f991c6e39fdc381eadb42d5a10ea84386044f0be",
+        "content_type": "audio/mpeg",
+        "variant_index": 2
+      }
+    ],
+    "expected_artifact_count": 2,
+    "complete": true
+  },
+  "provider_artifact_ids": []
+}

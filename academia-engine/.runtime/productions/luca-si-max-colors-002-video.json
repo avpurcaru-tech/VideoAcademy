@@ -1,0 +1,126 @@
+{
+  "production_id": "luca-si-max-colors-002-video",
+  "status": "succeeded",
+  "provider": "kling",
+  "scenes": [
+    {
+      "scene_id": "scene-0001",
+      "source_scene_id": "luca-si-max-colors-001-scene-0001",
+      "order": 0,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-002-video-scene-0001"
+      },
+      "provider_task_id": "908681979834138721",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-002\\video\\scenes\\scene-0001.mp4",
+      "artifact_id": "908681983369936945",
+      "byte_size": 7820304,
+      "sha256": "e01490c23a2f2893aa0d367c442c0d0d377c4fb43dbf742343b360aa792ab581",
+      "content_type": "video/mp4"
+    },
+    {
+      "scene_id": "scene-0002",
+      "source_scene_id": "luca-si-max-colors-001-scene-0002",
+      "order": 1,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-002-video-scene-0002"
+      },
+      "provider_task_id": "908682430041686062",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-002\\video\\scenes\\scene-0002.mp4",
+      "artifact_id": "908682433363574840",
+      "byte_size": 9798061,
+      "sha256": "58cb24716a663d105c5b63a0f6f599af40d1807d5f0bd165c22b498d59ec5c90",
+      "content_type": "video/mp4"
+    },
+    {
+      "scene_id": "scene-0003",
+      "source_scene_id": "luca-si-max-colors-001-scene-0003",
+      "order": 2,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-002-video-scene-0003"
+      },
+      "provider_task_id": "908682871450902551",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-002\\video\\scenes\\scene-0003.mp4",
+      "artifact_id": "908682874848288859",
+      "byte_size": 8527469,
+      "sha256": "5e8d27c88af0931c6fd6f2f9dded8c13cd3b1a51b03e9d5796e1bd4d8c7d5bd4",
+      "content_type": "video/mp4"
+    },
+    {
+      "scene_id": "scene-0004",
+      "source_scene_id": "luca-si-max-colors-001-scene-0004",
+      "order": 3,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-002-video-scene-0004"
+      },
+      "provider_task_id": "908684795755634717",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-002\\video\\scenes\\scene-0004.mp4",
+      "artifact_id": "908684798636462151",
+      "byte_size": 9583206,
+      "sha256": "e86905d73be58aa4c8318e8824ac6488fc315bdda5b0a4f9bbef334bbcfb38fe",
+      "content_type": "video/mp4"
+    }
+  ],
+  "scene_output_directory": ".runtime\\projects\\luca-si-max-colors-002\\video\\scenes",
+  "final_output_path": ".runtime\\projects\\luca-si-max-colors-002\\video\\master.mp4",
+  "media_workspace": ".runtime\\projects\\luca-si-max-colors-002\\video\\workspace",
+  "transition_policy": {
+    "kind": "cut",
+    "duration_seconds": null
+  },
+  "final_artifact": {
+    "timeline_id": "luca-si-max-colors-002-video",
+    "local_path": ".runtime\\projects\\luca-si-max-colors-002\\video\\master.mp4",
+    "byte_size": 7454756,
+    "sha256": "8a162a9b7d1c0b18a2579d034f304cf8fa296d2a94e2ea992c6e1b1bf7ad94a4",
+    "media_info": {
+      "local_path": ".runtime\\projects\\luca-si-max-colors-002\\video\\master.mp4",
+      "duration_seconds": 60.133333,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30.0,
+      "video_codec": "h264",
+      "audio_codec": null,
+      "has_audio": false,
+      "container_format": "mov,mp4,m4a,3gp,3g2,mj2"
+    },
+    "source_count": 4,
+    "transition_count": 0
+  },
+  "failed_scene_id": "scene-0003",
+  "failure_stage": "video_submission",
+  "failure_category": "submit_response_parsing_failed",
+  "safe_message": "Scene scene-0003 submit response could not be parsed.",
+  "submit_http_status": 200,
+  "submit_provider_code": 0,
+  "submit_provider_task_id": "908682871450902551",
+  "submit_response_shape": [
+    "root: object",
+    "code: integer",
+    "message: string",
+    "request_id: string",
+    "data: object",
+    "data.id: string",
+    "data.status: string",
+    "data.external_id: string",
+    "data.create_time: integer",
+    "data.update_time: integer"
+  ],
+  "query_http_status": null,
+  "query_provider_code": null,
+  "query_provider_task_id": null,
+  "query_response_shape": [],
+  "created_at": "2026-07-21T23:06:24.570866Z",
+  "updated_at": "2026-07-21T23:19:47.610507Z"
+}

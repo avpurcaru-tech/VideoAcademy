@@ -134,18 +134,21 @@ class KlingCreateTaskResponse(BaseModel):
                     validation_errors=("data.id: missing field [missing]",),
                     response_shape=submit_shape_summary(payload), **diagnostics,
                 )
-        normalized = dict(payload)
-        raw_data = normalized.get("data")
-        if isinstance(raw_data, dict):
-            normalized_data = dict(raw_data)
-            if "id" not in normalized_data and task_id is not None:
-                normalized_data["id"] = task_id
-            normalized_data.pop("task_id", None)
-            if "external_id" not in normalized_data and external_id is not None:
-                normalized_data["external_id"] = external_id
-            normalized["data"] = normalized_data
-        normalized.pop("id", None)
-        normalized.pop("external_id", None)
+        raw_data = payload.get("data")
+        if not isinstance(raw_data, dict):
+            raise KlingMalformedResponseError("Kling Create Task success response data must be an object.",
+                response_shape=submit_shape_summary(payload), **diagnostics)
+        # The create boundary has only two required task fields. Optional
+        # metadata is copied when it has its documented type and otherwise
+        # omitted; the original response is deliberately not validated again.
+        normalized_data = {"id": task_id, "status": raw_data.get("status")}
+        for field in ("external_id",):
+            if isinstance(raw_data.get(field), str): normalized_data[field] = raw_data[field]
+        for field in ("create_time", "update_time"):
+            if type(raw_data.get(field)) is int: normalized_data[field] = raw_data[field]
+        normalized = {"code": 0, "data": normalized_data}
+        if isinstance(payload.get("message"), str): normalized["message"] = payload["message"]
+        if isinstance(payload.get("request_id"), str): normalized["request_id"] = payload["request_id"]
         try:
             response = cls.model_validate(normalized)
         except ValidationError as error:

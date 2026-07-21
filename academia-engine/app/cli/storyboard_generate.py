@@ -9,6 +9,8 @@ from app.config.environment import load_application_environment
 from app.storyboard import (StoryboardAlreadyExistsError, StoryboardGenerationError,
     StoryboardGenerationService, StoryboardGeneratorRegistry, StoryboardGeneratorRegistryError,
     StoryboardPersistenceError, StoryboardRepository)
+from app.series import SeriesRegistry, SeriesRegistryError
+from app.characters import CharacterRegistry,CharacterRegistryError
 
 
 def main() -> int:
@@ -30,11 +32,11 @@ def main() -> int:
         return 2
     try:
         generator = StoryboardGeneratorRegistry().resolve(args.generator)
-        storyboard = StoryboardGenerationService(generator).generate(brief)
+        storyboard = StoryboardGenerationService(generator, SeriesRegistry(),CharacterRegistry()).generate(brief)
         destination = StoryboardRepository(args.runtime_root).save(storyboard, overwrite=args.overwrite)
     except StoryboardAlreadyExistsError:
         print("Storyboard already exists."); return 1
-    except (StoryboardGenerationError, StoryboardGeneratorRegistryError, StoryboardPersistenceError):
+    except (StoryboardGenerationError, StoryboardGeneratorRegistryError, StoryboardPersistenceError, SeriesRegistryError,CharacterRegistryError):
         print("Storyboard generation failed at a safe provider-neutral boundary."); return 1
     except Exception:
         print("Storyboard generation failed at a safe provider-neutral boundary."); return 1

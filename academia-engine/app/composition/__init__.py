@@ -14,10 +14,20 @@ from .executor import (
     CompositionSourceValidationError,
 )
 from .resolver import resolve_manifest, to_assembly_request
-from .music_timeline import (ExistingTimelineVideoRenderer,MusicTimelineComposer,
-    MusicTimelineCompositionConflictError,MusicTimelineCompositionError,
-    MusicTimelineCompositionRequest,MusicTimelineCompositionResult,
-    MusicTimelineClipMismatchError,StoryboardVideoClip)
+
+_TIMELINE_EXPORTS = {"ExistingTimelineVideoRenderer", "MusicTimelineComposer",
+    "MusicTimelineCompositionConflictError", "MusicTimelineCompositionError",
+    "MusicTimelineCompositionRequest", "MusicTimelineCompositionResult",
+    "MusicTimelineClipMismatchError", "StoryboardVideoClip"}
+
+
+def __getattr__(name):
+    # Avoid importing app.timeline again while app.timeline.contracts imports the
+    # path-safety helpers from this package.
+    if name in _TIMELINE_EXPORTS:
+        from . import music_timeline
+        return getattr(music_timeline, name)
+    raise AttributeError(name)
 
 __all__ = [
     "ResolvedVideoComposition",

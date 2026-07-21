@@ -21,16 +21,16 @@ class ProjectResumeBlockedError(ProjectOrchestrationError): pass
 class ProjectGenerationService:
     def __init__(self,services,registry: ProjectRegistry): self._services=services; self._registry=registry
 
-    def preflight(self,episode,project_id,output_root,video_provider="kling"):
+    def preflight(self,episode,project_id,output_root,video_provider="kling",series_id=None):
         root=Path(output_root); production_id=f"{project_id}-video"
         plan=self._services.director_engine.create_plan(episode)
         self._services.episode_planner.preflight(plan,production_id,root/"video"/"scenes",root/"video"/"workspace",
             root/"video"/"master.mp4",provider=video_provider,transition=EpisodeTransitionPolicy(kind="cut"))
-        return self._new_record(episode.id,project_id,root)
+        return self._new_record(episode.id,project_id,root,series_id)
 
     def generate(self,episode,brief: EducationalSongBrief,music_plan: MusicPlan,project_id,output_root,
-                 video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org"):
-        record=self._new_record(episode.id,project_id,Path(output_root)); self._registry.create(record)
+                 video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org",series_id=None):
+        record=self._new_record(episode.id,project_id,Path(output_root),series_id); self._registry.create(record)
         self._persist_inputs(record,episode,brief,music_plan)
         return self._run(record,episode,brief,music_plan,video_policy,music_policy,video_provider,music_provider,False)
 
@@ -130,9 +130,9 @@ class ProjectGenerationService:
         except Exception:
             return {}
 
-    def _new_record(self,episode_id,project_id,root):
+    def _new_record(self,episode_id,project_id,root,series_id=None):
         now=datetime.now(timezone.utc)
-        return ProjectRecord(project_id=project_id,episode_id=episode_id,status=ProjectStatus.PLANNED,
+        return ProjectRecord(project_id=project_id,episode_id=episode_id,series_id=series_id,status=ProjectStatus.PLANNED,
             video_production_id=f"{project_id}-video",lyrics_path=root/"lyrics"/"lyrics.json",
             music_directory=root/"music",video_directory=root/"video",final_directory=root/"final",
             created_at=now,updated_at=now)

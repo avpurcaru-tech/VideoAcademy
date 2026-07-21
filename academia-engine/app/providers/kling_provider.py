@@ -86,7 +86,7 @@ class KlingProvider:
         try:
             return self._to_generation_task(task_data=data, provider_request_id=response.request_id,
                 provider_code=response.code, provider_message=response.message,
-                internal_request_id=request.request_id)
+                internal_request_id=request.request_id, tolerate_optional_metadata=True)
         except (KlingMalformedResponseError, KlingProviderContractError) as error:
             error.provider_task_id = data.id
             error.external_correlation_id = data.external_id
@@ -160,11 +160,12 @@ class KlingProvider:
         provider_code: int,
         provider_message: str | None,
         internal_request_id: str | None,
+        tolerate_optional_metadata: bool = False,
     ) -> GenerationTask:
         data = task_data
         normalized_status = self._map_status(data.status)
-        created_at = self._milliseconds_to_utc(data.create_time, "data.create_time") if data.create_time is not None else None
-        updated_at = self._milliseconds_to_utc(data.update_time, "data.update_time") if data.update_time is not None else None
+        created_at = self._optional_timestamp(data.create_time, "data.create_time", tolerate_optional_metadata)
+        updated_at = self._optional_timestamp(data.update_time, "data.update_time", tolerate_optional_metadata)
         artifacts, non_video_outputs, billing = self._artifacts_and_metadata(data)
         completed_at = (
             updated_at
@@ -265,3 +266,11 @@ class KlingProvider:
             raise KlingMalformedResponseError(
                 f"Kling Create Task response has an invalid {field_name} timestamp."
             ) from error
+
+    @classmethod
+    def _optional_timestamp(cls, value, field_name, tolerate_invalid):
+        if value is None: return None
+        try: return cls._milliseconds_to_utc(value, field_name)
+        except KlingMalformedResponseError:
+            if tolerate_invalid: return None
+            raise

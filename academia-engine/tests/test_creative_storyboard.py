@@ -72,8 +72,8 @@ class CreativeStoryboardTests(unittest.TestCase):
     def test_contract_is_provider_neutral(self):
         schema = json.dumps(CreativeStoryboard.model_json_schema()).lower()
         fields = set(CreativeStoryboard.model_fields)
-        self.assertEqual(fields, {"storyboard_id", "title", "language", "audience", "educational_goal",
-                                  "music_direction", "target_duration_seconds", "sections"})
+        self.assertEqual(fields, {"storyboard_id", "series_id", "title", "language", "audience", "educational_goal",
+                              "music_direction", "target_duration_seconds", "canonical_characters", "sections"})
         for provider in ("kling", "suno", "openai", "prompt", "payload", "model"):
             self.assertNotIn(provider, schema)
 

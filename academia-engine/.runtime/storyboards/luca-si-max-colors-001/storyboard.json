@@ -1,0 +1,149 @@
+{
+  "storyboard_id": "luca-si-max-colors-001",
+  "series_id": "luca-si-max",
+  "title": "Luca și Max învață culorile",
+  "language": "ro",
+  "audience": {
+    "target_age_min": 3,
+    "target_age_max": 6
+  },
+  "educational_goal": "Recunoașterea și numirea culorilor roșu, galben, verde și albastru prin obiecte familiare și un joc simplu de identificare.",
+  "music_direction": {
+    "style": "Cântec educativ original pentru preșcolari, cu fraze melodice scurte, repetiții clare și ritm jucăuș de plimbare prin parc",
+    "mood": "Vesel, jucăuș, răbdător și încurajator",
+    "tempo_bpm": 108.0,
+    "vocals": "Voce principală caldă și clară pentru Luca, cu pronunție lentă a culorilor; cor de copii în refren; Max comunică numai prin expresii, gesturi și mișcare, fără voce sau cuvinte.",
+    "instrumentation": [
+      "ukulele",
+      "xilofon",
+      "pian delicat",
+      "percuție ușoară",
+      "clopoței",
+      "contrabas acustic moale"
+    ]
+  },
+  "target_duration_seconds": 60.0,
+  "canonical_characters": [
+    {
+      "character_id": "luca",
+      "name": "Luca",
+      "character_type": "human child",
+      "age_description": "approximately 4–5 years old",
+      "appearance": "boy with blond hair and blue eyes",
+      "clothing": [
+        "blue T-shirt",
+        "beige shorts",
+        "white sneakers"
+      ],
+      "behavior_rules": [
+        "Luca speaks politely and names educational concepts clearly."
+      ],
+      "recurring_accessories": []
+    },
+    {
+      "character_id": "max",
+      "name": "Max",
+      "character_type": "German Shepherd puppy",
+      "age_description": "approximately 6 months old",
+      "appearance": "German Shepherd puppy with black and tan fur",
+      "clothing": [],
+      "behavior_rules": [
+        "Max does not speak.",
+        "Max communicates through expressions, gestures, and movement."
+      ],
+      "recurring_accessories": [
+        "red collar"
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "section_id": "colors-park-red-yellow",
+      "order": 1,
+      "section_type": "discovery_song",
+      "educational_goal": "Asocierea culorilor roșu și galben cu obiecte ușor de recunoscut.",
+      "learning_focus": "Roșu ca mingea și galben ca floarea.",
+      "visual_goal": "Mingea roșie și floarea galbenă apar separat, mari și clare, pe un fundal simplu de parc.",
+      "lyrics": "Luca: Uite, Max, o minge! E roșie, ce frumos!\nRoșu, roșu, roșu — o spunem bucuros!\nLângă drum e-o floare, ca soarele de sus:\nGalben, galben, galben — acum și tu ai spus!",
+      "characters": [
+        "luca",
+        "max"
+      ],
+      "objects": [
+        "minge roșie",
+        "floare galbenă"
+      ],
+      "environment": "Parc însorit, cu alei line, iarbă moale și forme rotunjite; Max găsește mingea roșie, apoi indică floarea galbenă cu lăbuța.",
+      "camera_direction": "Cadru larg de prezentare, apoi prim-planuri curate pe fiecare obiect; tranziție lină de la mingea roșie la floarea galbenă.",
+      "emotion": "Curiozitate veselă și descoperire",
+      "estimated_duration_seconds": 15.0
+    },
+    {
+      "section_id": "colors-park-green",
+      "order": 2,
+      "section_type": "guided_discovery",
+      "educational_goal": "Recunoașterea și numirea culorii verde.",
+      "learning_focus": "Verde ca frunza și iarba din parc.",
+      "visual_goal": "O frunză verde este evidențiată clar, iar culoarea ei este comparată cu iarba din jur.",
+      "lyrics": "Max vede-o frunză legănată ușor.\nLuca: Mulțumesc, Max! Ce verde e decor!\nVerde este frunza, verde-i iarba mea,\nVerde, verde, verde — hai să spunem: da!",
+      "characters": [
+        "luca",
+        "max"
+      ],
+      "objects": [
+        "frunză verde",
+        "iarbă verde"
+      ],
+      "environment": "Sub un copac rotunjit din parcul însorit, Max urmărește o frunză care coboară lent, iar Luca o ridică atent.",
+      "camera_direction": "Urmărire blândă a frunzei în coborâre, prim-plan pe frunza verde și retragere lentă pentru a arăta iarba de aceeași culoare.",
+      "emotion": "Calm, încântare și atenție",
+      "estimated_duration_seconds": 15.0
+    },
+    {
+      "section_id": "colors-park-blue-chorus",
+      "order": 3,
+      "section_type": "discovery_and_chorus",
+      "educational_goal": "Recunoașterea culorii albastru și repetarea tuturor celor patru culori.",
+      "learning_focus": "Albastru ca zmeul; consolidarea secvenței roșu, galben, verde, albastru.",
+      "visual_goal": "Zmeul albastru este prezentat pe cer, apoi cele patru obiecte colorate apar împreună într-un aranjament clar.",
+      "lyrics": "Sus pe cer dansează un zmeu albastru lin.\nLuca: Albastru este zmeul! Max, privește-l cum îl țin!\nCor: Roșu, galben, verde, albastru,\nPatru culori în cântecul nostru!\nRoșu, galben, verde, albastru,\nLe știm pe toate în parcul nostru!",
+      "characters": [
+        "luca",
+        "max"
+      ],
+      "objects": [
+        "zmeu albastru",
+        "minge roșie",
+        "floare galbenă",
+        "frunză verde"
+      ],
+      "environment": "Poiană deschisă din parcul însorit, unde Luca ține sfoara unui zmeu albastru, iar Max aleargă vesel alături fără să vorbească.",
+      "camera_direction": "Mișcare ascendentă de la Luca și Max către zmeul albastru; revenire la un cadru frontal cu toate cele patru obiecte aliniate.",
+      "emotion": "Entuziasm și reușită comună",
+      "estimated_duration_seconds": 15.0
+    },
+    {
+      "section_id": "colors-finding-game",
+      "order": 4,
+      "section_type": "interactive_color_game",
+      "educational_goal": "Verificarea recunoașterii culorilor roșu, galben, verde și albastru prin alegeri vizuale.",
+      "learning_focus": "Identificarea culorii cerute și asocierea ei cu obiectul corect.",
+      "visual_goal": "Cele patru obiecte sunt așezate vizibil și bine distanțate; fiecare răspuns corect primește o evidențiere blândă.",
+      "lyrics": "Luca: Găsești ceva roșu? Mingea — minunat!\nCe este galben? Floarea — ai aflat!\nArată verde! Frunza se ridică.\nȘi ce-i albastru? Zmeul fără frică!\nCor: Roșu, galben, verde, albastru,\nBravo! Culorile-s jocul nostru!",
+      "characters": [
+        "luca",
+        "max"
+      ],
+      "objects": [
+        "minge roșie",
+        "floare galbenă",
+        "frunză verde",
+        "zmeu albastru"
+      ],
+      "environment": "O zonă luminoasă a parcului, unde obiectele descoperite sunt așezate într-un semicerc; Max indică pe rând răspunsurile prin privire, lăbuță și mișcare.",
+      "camera_direction": "Cadru frontal interactiv, cu scurte pauze după fiecare întrebare; apropiere pe obiectul corect și final într-un cadru larg cu Luca și Max.",
+      "emotion": "Încurajare, joacă și satisfacție",
+      "estimated_duration_seconds": 15.0
+    }
+  ]
+}

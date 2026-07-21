@@ -1,0 +1,12 @@
+{
+  "series_id": "luca-si-max",
+  "title": "Luca și Max",
+  "language": "ro",
+  "visual_style": "Warm, colorful, original preschool animation with soft rounded shapes and clear educational visuals.",
+  "required_character_ids": ["luca", "max"],
+  "continuity_rules": [
+    "Every episode and every storyboard section contains both Luca and Max.",
+    "Preserve each character's canonical identity and appearance across episodes.",
+    "Do not imitate copyrighted characters or franchises."
+  ]
+}

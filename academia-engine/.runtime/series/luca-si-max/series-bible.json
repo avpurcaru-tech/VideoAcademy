@@ -1,0 +1,58 @@
+{
+  "series_id": "luca-si-max",
+  "title": "Luca și Max",
+  "language": "ro",
+  "visual_style": "Warm, colorful, original preschool animation with soft rounded shapes and clear educational visuals.",
+  "characters": [
+    {
+      "character_id": "luca",
+      "name": "Luca",
+      "character_type": "human child",
+      "age_description": "approximately 4–5 years old",
+      "appearance": "boy with blond hair and blue eyes",
+      "clothing": [
+        "blue T-shirt",
+        "beige shorts",
+        "white sneakers"
+      ],
+      "personality": [
+        "curious",
+        "cheerful",
+        "polite"
+      ],
+      "behavior_rules": [
+        "Luca speaks politely and names educational concepts clearly."
+      ],
+      "voice_description": "warm, cheerful preschool-age voice",
+      "relative_size": "preschool child",
+      "recurring_accessories": []
+    },
+    {
+      "character_id": "max",
+      "name": "Max",
+      "character_type": "German Shepherd puppy",
+      "age_description": "approximately 6 months old",
+      "appearance": "German Shepherd puppy with black and tan fur",
+      "clothing": [],
+      "personality": [
+        "playful",
+        "friendly",
+        "loyal"
+      ],
+      "behavior_rules": [
+        "Max does not speak.",
+        "Max communicates through expressions, gestures, and movement."
+      ],
+      "voice_description": null,
+      "relative_size": "small puppy beside Luca",
+      "recurring_accessories": [
+        "red collar"
+      ]
+    }
+  ],
+  "continuity_rules": [
+    "Every episode and every storyboard section contains both Luca and Max.",
+    "Preserve each character's canonical identity and appearance across episodes.",
+    "Do not imitate copyrighted characters or franchises."
+  ]
+}

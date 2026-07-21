@@ -14,8 +14,11 @@ from app.production import (EpisodeProductionConflictError, EpisodeProductionOrc
                             GenerationRequestConflictError, GenerationRequestCorruptedError,
                             ProductionSceneArtifactIntegrityError)
 from pydantic import ValidationError
-from app.services import ArtifactRecord, GenerationTaskRecord, VideoPollingPolicy
+from app.services import (ArtifactRecord, DownloadedVideoArtifact, GenerationTaskRecord, TaskRegistry,
+                          VideoEngine, VideoPollingPolicy)
 from app.services import VideoProviderOperationError, UnknownVideoProviderError, VideoEngineRegistryError
+from app.providers import KlingProvider
+from app.providers.kling_client import KlingJsonResponse
 from app.timeline import RenderedTimelineArtifact
 
 
@@ -123,6 +126,34 @@ class EpisodeProductionTests(unittest.TestCase):
         self.assertEqual(engine.submits,[])
         self.assertIn("908664449932857438",engine.resume_calls)
 
+    def test_real_kling_submit_chain_adopts_three_scenes_polls_and_never_resubmits(self):
+        task_ids = ("908681999999999999", "908682430041686062", "908682871450902551")
+        client = ThreeSceneKlingClient(task_ids)
+        tasks = TaskRegistry(self.root / "kling-tasks")
+        engine = VideoEngine({"kling": KlingProvider(client=client)}, tasks, LocalDownloader(),
+            monotonic_clock=lambda: 0.0, sleeper=lambda _seconds: None)
+        requests = tuple(generation(f"request-{index}", index).model_copy(update={
+            "video_request": generation(f"request-{index}", index).video_request.model_copy(update={"duration_seconds": 15})
+        }) for index in range(1, 4))
+        references = tuple(GenerationRequestReference(reference_id=f"three-ref-{index}") for index in range(1, 4))
+        for reference, value in zip(references, requests, strict=True): self.store.create(reference, value)
+        production = EpisodeProductionRequest(production_id="three-scene-kling", provider="kling",
+            video_requests=requests, generation_request_references=references,
+            scene_output_directory=self.root / "three-scenes", final_output_path=self.root / "three-final.mp4",
+            media_workspace=self.root / "three-media", transition_policy=EpisodeTransitionPolicy(kind="cut"))
+        orchestrator = EpisodeProductionOrchestrator(engine, FakeRenderer(self.root / "three-final.mp4"),
+            self.registry, FakeProbe(), self.store, clock=lambda: NOW)
+
+        result = orchestrator.produce(production, POLICY)
+
+        self.assertEqual([scene.provider_task_id for scene in result.scenes], list(task_ids))
+        self.assertEqual(client.posted_ids, list(task_ids))
+        self.assertTrue(all(client.events.index(f"poll:{task_id}") > client.events.index(f"submit:{task_id}")
+                            for task_id in task_ids))
+        self.assertTrue(all(tasks.exists(task_id) for task_id in task_ids))
+        orchestrator.resume("three-scene-kling", POLICY)
+        self.assertEqual(client.posted_ids, list(task_ids))
+
     def test_missing_and_corrupted_request_failures_are_durable_and_safe(self):
         request=self.request("cut",None)
         scenes=tuple({"scene_id":f"scene-{i:04d}","order":i-1,
@@ -215,6 +246,27 @@ class FakeRenderer:
 class CountingResolver:
     def __init__(self, store): self.store=store; self.calls=[]
     def resolve(self, reference): self.calls.append(reference.reference_id); return self.store.resolve(reference)
+
+
+class ThreeSceneKlingClient:
+    def __init__(self, task_ids): self.remaining=list(task_ids); self.posted_ids=[]; self.events=[]
+    def post_json(self, path, payload):
+        task_id=self.remaining.pop(0); self.posted_ids.append(task_id); self.events.append(f"submit:{task_id}")
+        return KlingJsonResponse({"code":0,"data":{"id":task_id,"status":"submitted",
+            "external_id":f"external-{task_id}","create_time":1781080778802,"update_time":1781080794151}},http_status=200)
+    def get_json(self, path, params):
+        task_id=params["task_ids"]; self.events.append(f"poll:{task_id}")
+        return KlingJsonResponse({"code":0,"message":"ok","request_id":f"query-{task_id}","data":{"id":task_id,"status":"succeeded",
+            "external_id":f"external-{task_id}","create_time":1781080778802,"update_time":1781080794151,
+            "outputs":[{"type":"video","id":f"video-{task_id}","url":"https://signed.invalid/video",
+                        "duration":"15"}]}},http_status=200)
+
+
+class LocalDownloader:
+    def download_video_artifact(self, artifact, destination, *, overwrite=False):
+        destination.parent.mkdir(parents=True,exist_ok=True); destination.write_bytes(b"mp4")
+        return DownloadedVideoArtifact(artifact_id=artifact.artifact_id,local_path=destination,byte_size=3,
+            sha256="a"*64,content_type="video/mp4")
 
 
 if __name__ == "__main__": unittest.main()
