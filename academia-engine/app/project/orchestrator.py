@@ -30,8 +30,17 @@ class ProjectGenerationService:
 
     def generate(self,episode,brief: EducationalSongBrief,music_plan: MusicPlan,project_id,output_root,
                  video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org",series_id=None):
-        record=self._new_record(episode.id,project_id,Path(output_root),series_id); self._registry.create(record)
-        self._persist_inputs(record,episode,brief,music_plan)
+        if self._registry.exists(project_id):
+            record=self._registry.load(project_id)
+            if record.status != ProjectStatus.PLANNED: raise ProjectOrchestrationError("Project already exists; use resume.")
+        else:
+            record=self._new_record(episode.id,project_id,Path(output_root),series_id); self._registry.create(record)
+        try: self._persist_inputs(record,episode,brief,music_plan)
+        except Exception:
+            try: self._update(record,status=ProjectStatus.FAILED,failure_stage=ProjectFailureStage.EPISODE_GENERATION,
+                failure_category="project_input_persistence_failed",safe_message="Project inputs could not be persisted safely.")
+            except Exception: pass
+            raise
         return self._run(record,episode,brief,music_plan,video_policy,music_policy,video_provider,music_provider,False)
 
     def _run(self,record,episode,brief,music_plan,video_policy,music_policy,video_provider,music_provider,resume):
@@ -136,6 +145,23 @@ class ProjectGenerationService:
             video_production_id=f"{project_id}-video",lyrics_path=root/"lyrics"/"lyrics.json",
             music_directory=root/"music",video_directory=root/"video",final_directory=root/"final",
             created_at=now,updated_at=now)
+    @classmethod
+    def create_planned(cls,registry,project_id,root,episode_id,series_id=None):
+        """Create the confirmed project's durable boundary before any provider or creative resolution."""
+        record=cls(None,registry)._new_record(episode_id,project_id,Path(root),series_id)
+        registry.create(record)
+        project_root=record.lyrics_path.parent.parent
+        for directory in (project_root/"input",project_root/"lyrics",record.music_directory,record.video_directory,
+                          record.final_directory,project_root/"logs"):
+            directory.mkdir(parents=True,exist_ok=True)
+        return record
+    @staticmethod
+    def fail_planned(registry,project_id,stage,category,message):
+        record=registry.load(project_id)
+        updated=record.model_copy(update={"status":ProjectStatus.FAILED,"failure_stage":stage,
+            "failure_category":category,"safe_message":message,"updated_at":datetime.now(timezone.utc)})
+        registry.update(updated)
+        return updated
     def _status(self,record,status): return self._update(record,status=status)
     def _update(self,record,**values):
         updated=record.model_copy(update={**values,"updated_at":datetime.now(timezone.utc)}); self._registry.update(updated); return updated

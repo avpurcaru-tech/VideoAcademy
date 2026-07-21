@@ -15,6 +15,9 @@ class ProjectStatus(str,Enum):
 
 
 class ProjectFailureStage(str,Enum):
+    CHARACTER_RESOLUTION="character_resolution"
+    SERIES_RESOLUTION="series_resolution"
+    STORYBOARD_GENERATION="storyboard_generation"
     EPISODE_GENERATION="episode_generation"
     VIDEO_PLANNING="video_planning"
     VIDEO_REQUEST_RESOLUTION="video_request_resolution"

@@ -30,17 +30,23 @@ def main():
         if args.output.name!=args.project_id: raise ValueError("Project output directory must match project ID.")
         brief=load_brief(args.brief); registry=ProjectRegistry(args.output.parent)
         if registry.exists(args.project_id): print("Project already exists. Use project_resume to continue it."); return 1
-        duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
         if not args.confirm:
+            duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
             local_episode=EpisodeGenerationService(DeterministicEpisodeGenerator(),duration_policy)
             project=ProjectGenerationService(build_services(preflight=True),registry)
             storyboards=StoryboardGenerationService(StoryboardGeneratorRegistry().resolve("deterministic"),SeriesRegistry(),CharacterRegistry())
             CreativeProjectGenerationService(local_episode,project,registry,storyboards).preflight(brief,args.project_id,args.output,args.video_provider)
             print("Creative project preflight passed."); print("No external provider was constructed or called.")
             print("Use --confirm to authorize Episode, video, lyrics, and music generation costs."); return 2
+        ProjectGenerationService.create_planned(registry,args.project_id,args.output,brief.brief_id,brief.series_id)
+        series_registry=SeriesRegistry(); character_registry=CharacterRegistry()
+        if brief.series_id:
+            series_bible=series_registry.load(brief.series_id)
+            character_registry.require_many(series_bible.resolved_character_ids)
+        duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
         episode_service=EpisodeGenerationService(EpisodeGeneratorRegistry().resolve(args.episode_generator),duration_policy)
         project=ProjectGenerationService(build_services(args.video_provider,args.lyrics_provider,args.music_provider),registry)
-        storyboards=StoryboardGenerationService(StoryboardGeneratorRegistry().resolve(args.episode_generator),SeriesRegistry(),CharacterRegistry())
+        storyboards=StoryboardGenerationService(StoryboardGeneratorRegistry().resolve(args.episode_generator),series_registry,character_registry)
         print("Episode..."); print("Video..."); print("Lyrics..."); print("Music..."); print("Composition...")
         record=CreativeProjectGenerationService(episode_service,project,registry,storyboards,StoryboardRepository()).generate(brief,args.project_id,args.output,
             VideoPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),
@@ -48,6 +54,22 @@ def main():
     except ValidationError:
         print("Creative brief validation failed."); return 1
     except Exception as error:
+        try:
+            if 'args' in locals() and 'registry' in locals() and registry.exists(args.project_id):
+                current=registry.load(args.project_id)
+                if current.status.value=="planned":
+                    from app.characters import CharacterRegistryError
+                    from app.series import SeriesRegistryError
+                    from app.project import ProjectFailureStage
+                    if isinstance(error,CharacterRegistryError):
+                        failure=(ProjectFailureStage.CHARACTER_RESOLUTION,"character_resolution_failed","Character resolution failed at a safe boundary.")
+                    elif isinstance(error,SeriesRegistryError):
+                        failure=(ProjectFailureStage.SERIES_RESOLUTION,"series_resolution_failed","Series resolution failed at a safe boundary.")
+                    else:
+                        failure=(ProjectFailureStage.EPISODE_GENERATION,"provider_configuration_failed","Provider configuration failed at a safe boundary.")
+                    ProjectGenerationService.fail_planned(registry,args.project_id,
+                        *failure)
+        except Exception: pass
         diagnostic=_safe_generation_error(error)
         print(diagnostic if not diagnostic.startswith("Episode generation failed") else
               "Creative project generation failed at a safe orchestration boundary."); return 1

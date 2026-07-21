@@ -18,9 +18,34 @@ class CreativeProjectGenerationService:
         episode=self._derive_episode(brief)
         return self._projects.preflight(episode,project_id,output_root,video_provider,series_id=brief.series_id)
     def generate(self,brief,project_id,output_root,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org"):
-        if self._registry.exists(project_id): raise RuntimeError("Project already exists; use resume.")
-        episode=self._derive_episode(brief)
-        from app.cli.project_generate import _semantic_song_inputs
-        song_brief,music_plan=_semantic_song_inputs(episode,project_id)
+        if self._registry.exists(project_id):
+            from .contracts import ProjectStatus
+            if self._registry.load(project_id).status != ProjectStatus.PLANNED:
+                raise RuntimeError("Project already exists; use resume.")
+        else:
+            from .orchestrator import ProjectGenerationService
+            ProjectGenerationService.create_planned(self._registry,project_id,output_root,brief.brief_id,brief.series_id)
+        try:
+            episode=self._derive_episode(brief)
+            from app.cli.project_generate import _semantic_song_inputs
+            song_brief,music_plan=_semantic_song_inputs(episode,project_id)
+        except Exception as error:
+            self._persist_early_failure(project_id,error)
+            raise
         return self._projects.generate(episode,song_brief,music_plan,project_id,output_root,video_policy,music_policy,
                                        video_provider,music_provider,series_id=brief.series_id)
+    def _persist_early_failure(self,project_id,error):
+        from app.characters import CharacterRegistryError
+        from app.series import SeriesRegistryError
+        from app.storyboard import StoryboardGenerationError
+        from .contracts import ProjectFailureStage
+        from .orchestrator import ProjectGenerationService
+        if isinstance(error,CharacterRegistryError):
+            values=(ProjectFailureStage.CHARACTER_RESOLUTION,"character_resolution_failed","Character resolution failed at a safe boundary.")
+        elif isinstance(error,SeriesRegistryError):
+            values=(ProjectFailureStage.SERIES_RESOLUTION,"series_resolution_failed","Series resolution failed at a safe boundary.")
+        elif isinstance(error,StoryboardGenerationError):
+            values=(ProjectFailureStage.STORYBOARD_GENERATION,"storyboard_generation_failed","Storyboard generation failed at a safe boundary.")
+        else:
+            values=(ProjectFailureStage.EPISODE_GENERATION,"episode_generation_failed","Episode generation failed at a safe boundary.")
+        ProjectGenerationService.fail_planned(self._registry,project_id,*values)

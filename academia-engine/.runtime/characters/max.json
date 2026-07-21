@@ -1,0 +1,26 @@
+{
+  "character_id": "max",
+  "name": "Max",
+  "canonical_description": "A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features.",
+  "personality_traits": [
+    "playful",
+    "friendly",
+    "loyal"
+  ],
+  "behavior_rules": [
+    "Max stays close to Luca.",
+    "Max communicates through movement, expressions, and gestures.",
+    "Max behaves like a young friendly puppy."
+  ],
+  "negative_rules": [
+    "Max never speaks.",
+    "Never remove or change Max's red collar.",
+    "Never change Max's breed.",
+    "Never portray Max as an adult dog.",
+    "Never change Max's black and tan fur."
+  ],
+  "character_type": "dog",
+  "age_description": "approximately 6 months old",
+  "voice_description": null,
+  "version": null
+}
