@@ -175,9 +175,12 @@ class AudioVariantVideoComposer:
 
     def compose_variants(self,video_source: Path,audio_artifacts: Iterable[Any],destination_directory: Path,
                          workspace: Path,duration_policy: AudioVideoDurationPolicy,overwrite: bool=False
+                         ,start_index: int=1
                          ) -> tuple[AudioVideoComposedArtifact,...]:
         completed=[]
-        for index,item in enumerate(audio_artifacts,start=1):
+        if isinstance(start_index,bool) or not isinstance(start_index,int) or start_index<1:
+            raise ValueError("Variant start index must be a positive integer.")
+        for index,item in enumerate(audio_artifacts,start=start_index):
             audio=Path(getattr(item,"local_path",item)); destination=Path(destination_directory)/f"final-variant-{index:02d}.mp4"
             try: completed.append(self._composer.compose(AudioVideoCompositionRequest(video_source=video_source,
                 audio_source=audio,destination=destination,workspace=workspace,duration_policy=duration_policy,

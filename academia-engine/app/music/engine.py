@@ -204,9 +204,16 @@ class MusicEngine:
             raise
 
     def generate_all_variants(self,request,destination_directory,policy,provider=None):
-        submitted=self.submit(request,provider); terminal=self.wait_until_terminal(submitted.provider_task_id,policy)
-        if terminal.normalized_status==GenerationTaskStatus.FAILED: raise MusicEngineTaskFailedError("Music task failed.")
-        return self.download_all_variants(submitted.provider_task_id,destination_directory)
+        submitted=self.submit(request,provider)
+        try:
+            terminal=self.wait_until_terminal(submitted.provider_task_id,policy)
+            if terminal.normalized_status==GenerationTaskStatus.FAILED: raise MusicEngineTaskFailedError("Music task failed.")
+            return self.download_all_variants(submitted.provider_task_id,destination_directory)
+        except Exception as error:
+            if getattr(error,"provider_task_id",None) is None:
+                try: error.provider_task_id=submitted.provider_task_id
+                except Exception: pass
+            raise
 
     def resume(self,provider_task_id,destination,policy):
         existing=self._load(provider_task_id)

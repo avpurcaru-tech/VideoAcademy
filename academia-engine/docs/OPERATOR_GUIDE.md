@@ -503,6 +503,46 @@ explicit audio-duration limit; a longer video is simply trimmed. Audio is
 never looped, stretched, pitch-shifted, or time-scaled. Existing destinations
 are rejected unless `--overwrite` is explicit.
 
+## Full project workflow
+
+One project record coordinates the existing production services:
+
+```bat
+python -m app.cli.project_generate ^
+  --episode examples\smoke\episode-input.json ^
+  --project-id counting-1-to-5 ^
+  --video-provider kling ^
+  --lyrics-provider openai ^
+  --music-provider sunoapi_org ^
+  --output .runtime\projects\counting-1-to-5 ^
+  --confirm
+```
+
+Omit `--confirm` for a non-persistent preflight that constructs no providers.
+Resume a previously confirmed durable project with:
+
+```bat
+python -m app.cli.project_resume --project-id counting-1-to-5
+```
+
+Resume skips the durable master video, lyrics, complete music artifact set, and
+each existing final variant independently. Known music task IDs are continued;
+they are never resubmitted. Project coordination state contains no prompts,
+provider payloads, credentials, or signed URLs.
+
+```text
+.runtime/projects/<project-id>/
+  project.json
+  input/
+  lyrics/lyrics.json
+  music/variant-01.mp3
+  music/variant-02.mp3
+  video/master.mp4
+  final/final-variant-01.mp4
+  final/final-variant-02.mp4
+  logs/
+```
+
 ## Version readiness checklist
 
 - [ ] Input preflight passes
