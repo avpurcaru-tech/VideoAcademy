@@ -156,15 +156,15 @@ class KlingProvider:
     def _to_generation_task(
         self,
         task_data: KlingCreateTaskData | KlingTaskData,
-        provider_request_id: str,
+        provider_request_id: str | None,
         provider_code: int,
-        provider_message: str,
+        provider_message: str | None,
         internal_request_id: str | None,
     ) -> GenerationTask:
         data = task_data
         normalized_status = self._map_status(data.status)
-        created_at = self._milliseconds_to_utc(data.create_time, "data.create_time")
-        updated_at = self._milliseconds_to_utc(data.update_time, "data.update_time")
+        created_at = self._milliseconds_to_utc(data.create_time, "data.create_time") if data.create_time is not None else None
+        updated_at = self._milliseconds_to_utc(data.update_time, "data.update_time") if data.update_time is not None else None
         artifacts, non_video_outputs, billing = self._artifacts_and_metadata(data)
         completed_at = (
             updated_at

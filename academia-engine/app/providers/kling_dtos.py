@@ -72,8 +72,8 @@ class KlingProviderContractError(KlingClientError):
 class KlingProviderApiError(KlingClientError):
     """Raised when Kling returns a non-zero documented provider code."""
 
-    def __init__(self, code: int, message: str, request_id: str) -> None:
-        super().__init__(f"Kling provider error {code}: {message}")
+    def __init__(self, code: int, message: str | None, request_id: str | None) -> None:
+        super().__init__(f"Kling provider error {code}: {message or 'No provider message.'}")
         self.code = code
         self.message = message
         self.request_id = request_id
@@ -90,8 +90,8 @@ class KlingCreateTaskData(BaseModel):
 
     id: StrictStr
     status: StrictStr
-    create_time: StrictInt
-    update_time: StrictInt
+    create_time: StrictInt | None = None
+    update_time: StrictInt | None = None
     external_id: StrictStr | None = None
 
 
@@ -101,8 +101,8 @@ class KlingCreateTaskResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     code: StrictInt
-    message: StrictStr
-    request_id: StrictStr
+    message: StrictStr | None = None
+    request_id: StrictStr | None = None
     data: KlingCreateTaskData | None = None
 
     @classmethod
@@ -116,8 +116,10 @@ class KlingCreateTaskResponse(BaseModel):
         if not isinstance(payload, dict):
             raise KlingMalformedResponseError("Kling Create Task response must be a JSON object.",
                                                response_shape=submit_shape_summary(payload), **diagnostics)
-        if code is not None and code != 0 and isinstance(payload.get("message"), str) and isinstance(payload.get("request_id"), str):
-            raise KlingProviderApiError(code, payload["message"], payload["request_id"])
+        if code is not None and code != 0:
+            message = payload.get("message") if isinstance(payload.get("message"), str) else None
+            request_id = payload.get("request_id") if isinstance(payload.get("request_id"), str) else None
+            raise KlingProviderApiError(code, message, request_id)
         if payload.get("code") == 0:
             raw_data = payload.get("data")
             if raw_data is None:

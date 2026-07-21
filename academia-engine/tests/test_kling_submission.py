@@ -22,6 +22,7 @@ from app.providers import (
     KlingTextToVideoMapper,
     KlingUnsupportedConfigurationError,
 )
+from app.providers.kling_client import KlingJsonResponse
 
 
 # Official Create Task response shape supplied for Sprint 6.3, populated with a
@@ -149,6 +150,38 @@ class KlingSubmissionTests(unittest.TestCase):
         self.assertEqual(
             task.updated_at, datetime.fromtimestamp(1781080794151 / 1000, tz=timezone.utc)
         )
+
+    def test_submit_accepts_exact_observed_minimal_success_response(self) -> None:
+        fixture = KlingJsonResponse({
+            "code": 0,
+            "data": {
+                "id": "908664449932857438",
+                "status": "submitted",
+                "external_id": "scene-3-correlation",
+                "create_time": 1781080778802,
+                "update_time": 1781080794151,
+            },
+        }, http_status=200)
+
+        task = KlingProvider(client=FakeKlingClient(fixture)).submit_scene(self._request())
+
+        self.assertEqual(task.external_task_id, "908664449932857438")
+        self.assertEqual(task.normalized_status, GenerationTaskStatus.SUBMITTED)
+        self.assertIsNone(task.provider_request_id)
+        self.assertIsNone(task.provider_message)
+
+    def test_submit_accepts_only_required_identity_and_status_fields(self) -> None:
+        fixture = KlingJsonResponse({"code": 0, "data": {
+            "id": "minimal-task", "status": "processing",
+        }}, http_status=200)
+
+        task = KlingProvider(client=FakeKlingClient(fixture)).submit_scene(self._request())
+
+        self.assertEqual(task.external_task_id, "minimal-task")
+        self.assertEqual(task.normalized_status, GenerationTaskStatus.PROCESSING)
+        self.assertIsNone(task.external_correlation_id)
+        self.assertIsNone(task.submitted_at)
+        self.assertIsNone(task.updated_at)
 
     def test_submit_maps_every_documented_status(self) -> None:
         expected_statuses = {

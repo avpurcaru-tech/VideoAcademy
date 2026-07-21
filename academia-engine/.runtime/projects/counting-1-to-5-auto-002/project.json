@@ -10,11 +10,11 @@
   "final_directory": ".runtime\\projects\\counting-1-to-5-auto-002\\final",
   "failure_stage": "video_submission",
   "failure_category": "video_submission_failed",
-  "safe_message": "Scene scene-0003 submit response could not be parsed.",
-  "failed_scene_id": "scene-0003",
+  "safe_message": "Scene scene-0004 submit response could not be parsed.",
+  "failed_scene_id": "scene-0004",
   "submit_http_status": 200,
   "submit_provider_code": 0,
-  "submit_provider_task_id": "908664449932857438",
+  "submit_provider_task_id": "908665265204891729",
   "submit_response_shape": [
     "root: object",
     "code: integer",
@@ -32,5 +32,5 @@
   "query_provider_task_id": null,
   "query_response_shape": [],
   "created_at": "2026-07-21T21:40:21.517479Z",
-  "updated_at": "2026-07-21T21:56:45.772909Z"
+  "updated_at": "2026-07-21T22:00:00.118089Z"
 }

@@ -106,6 +106,23 @@ class EpisodeProductionTests(unittest.TestCase):
         self.assertEqual(new_engine.resume_calls[0], "existing-task")
         self.assertEqual(counting.calls, ["ref-2"])
 
+    def test_scene_three_durable_kling_task_is_reused_without_resubmission(self):
+        request = self.request("cut", None)
+        scenes = tuple({"scene_id":f"scene-{index:04d}","order":index-1,
+            "generation_request_reference":{"reference_id":f"ref-{min(index, 2)}"},
+            "provider_task_id":task_id,"normalized_status":"processing"}
+            for index,task_id in enumerate(("existing-task-1","existing-task-2","908664449932857438"),start=1))
+        self.registry.create(ProductionRecord(production_id="scene-three-resume",status="failed",provider="kling",scenes=scenes,
+            scene_output_directory=request.scene_output_directory,final_output_path=request.final_output_path,
+            media_workspace=request.media_workspace,transition_policy=request.transition_policy,created_at=NOW,updated_at=NOW))
+        engine=FakeEngine()
+        orchestrator=EpisodeProductionOrchestrator(engine,self.renderer,self.registry,FakeProbe(),self.store,clock=lambda:NOW)
+
+        orchestrator.resume("scene-three-resume",POLICY)
+
+        self.assertEqual(engine.submits,[])
+        self.assertIn("908664449932857438",engine.resume_calls)
+
     def test_missing_and_corrupted_request_failures_are_durable_and_safe(self):
         request=self.request("cut",None)
         scenes=tuple({"scene_id":f"scene-{i:04d}","order":i-1,
