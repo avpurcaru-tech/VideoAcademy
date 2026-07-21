@@ -7,6 +7,8 @@ from app.config.environment import load_application_environment
 from app.cli.song_validate import configure_utf8_output
 from app.creative import (EducationalCreativeBrief,EpisodeGenerationService,EpisodeGeneratorRegistry,
                           EpisodeOutputConflictError,persist_episode_atomic)
+from app.config import KlingGenerationSettings
+from app.production import SceneDurationPolicy
 
 
 def load_brief(path):
@@ -30,7 +32,8 @@ def main():
     if args.generator!="deterministic" and not args.confirm:
         print("OpenAI Episode generation may consume credits."); print("No Episode was generated. Use --confirm to proceed."); return 2
     try:
-        episode=EpisodeGenerationService(EpisodeGeneratorRegistry().resolve(args.generator)).generate(brief)
+        policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
+        episode=EpisodeGenerationService(EpisodeGeneratorRegistry().resolve(args.generator),policy).generate(brief)
         persist_episode_atomic(episode,args.output,args.overwrite)
     except EpisodeOutputConflictError: print("Episode output already exists."); return 1
     except Exception as error: print(_safe_generation_error(error)); return 1

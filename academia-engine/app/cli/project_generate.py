@@ -6,7 +6,8 @@ from app.config.environment import load_application_environment
 from app.engines.director import DirectorEngine
 from app.media import AudioVariantVideoComposer,FFmpegAudioVideoComposer,FFprobeAdapter,SubprocessProcessRunner
 from app.music import MusicEngine,MusicPollingPolicy,MusicProviderRegistry,MusicTaskRegistry
-from app.production import EpisodeGenerationService,EpisodeProductionPlanner,GenerationRequestStore
+from app.production import EpisodeGenerationService,EpisodeProductionPlanner,GenerationRequestStore,SceneDurationPolicy
+from app.config import KlingGenerationSettings
 from app.project import ProjectGenerationService,ProjectRegistry,ProjectServices
 from app.prompts import PromptBuilder
 from app.prompts.adapters import KlingPromptAdapter
@@ -28,7 +29,8 @@ def _semantic_song_inputs(episode,project_id):
 
 
 def build_services(video_provider="kling",lyrics_provider="openai",music_provider="sunoapi_org",preflight=False,video_runtime=None):
-    director=DirectorEngine(); planner=EpisodeProductionPlanner(PromptBuilder(KlingPromptAdapter()),GenerationRequestStore())
+    duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
+    director=DirectorEngine(); planner=EpisodeProductionPlanner(PromptBuilder(KlingPromptAdapter()),GenerationRequestStore(),duration_policy)
     if preflight: return ProjectServices(director,planner,None,None,None,None,None,None)
     if lyrics_provider!="openai": raise RuntimeError("Lyrics provider is unsupported.")
     from app.cli.episode_produce import build_orchestrator

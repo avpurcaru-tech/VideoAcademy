@@ -50,7 +50,9 @@ class ProjectVideoPreflightService:
         if mapping_failures:
             durations=tuple((scene_id,request.video_request.duration_seconds) for scene_id,request in readiness)
             failure=ProjectVideoPreflightError("request_generation_settings_mismatch",
-                "Video request is incompatible with configured Kling generation settings.",mapping_failures[0][0])
+                "Legacy video requests are incompatible with configured Kling generation settings. "
+                "Because persisted requests are immutable, recreate the project with a new project ID; no Kling task was submitted.",
+                mapping_failures[0][0])
             unique={duration for _,duration in durations}
             if len(unique)==1:
                 requested=durations[0][1]

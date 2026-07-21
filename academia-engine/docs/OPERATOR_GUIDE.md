@@ -15,6 +15,15 @@ Never place credentials, authorization headers, provider payloads, or signed dow
 ```text
 Episode JSON -> DirectorEngine -> DirectorPlan -> PromptBuilder
              -> VideoGenerationRequest -> GenerationRequestStore
+
+Video execution duration is selected by one provider-neutral scene-duration
+policy configured from the validated provider settings. Episode and DirectorPlan
+durations remain semantic pacing hints. Scene count is the target episode
+duration divided by the execution clip duration, rounded to the nearest whole
+clip (half up); targets outside the supported 2-12 scene range are rejected.
+Persisted requests are immutable. A legacy project whose request durations do
+not match the configured provider duration must be recreated under a new project
+ID; preflight never rewrites it or submits provider work.
              -> EpisodeProductionRequest -> EpisodeProductionOrchestrator
              -> VideoEngine -> Kling/provider -> local scene artifacts
              -> Timeline -> FFmpeg -> final.mp4

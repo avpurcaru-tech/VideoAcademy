@@ -16,19 +16,23 @@ class GeneratedEpisodeIdentityError(CreativeEpisodeError): pass
 
 
 class EpisodeGenerationService:
-    def __init__(self,generator: EpisodeGenerator):
+    def __init__(self,generator: EpisodeGenerator,duration_policy=None):
         if not isinstance(generator,EpisodeGenerator): raise EpisodeGeneratorFailureError("Episode generator is unavailable.")
         self._generator=generator
+        self._duration_policy=duration_policy
     def generate(self,brief):
         try: brief=EducationalCreativeBrief.model_validate(_payload(brief))
         except ValidationError as error: raise InvalidGeneratedEpisodeError("Creative brief is invalid.") from error
-        try: generated=self._generator.generate_episode(brief)
+        planned_brief=brief
+        if self._duration_policy is not None:
+            planned_brief=brief.model_copy(update={"scene_count":self._duration_policy.scene_count(brief.target_duration_seconds)})
+        try: generated=self._generator.generate_episode(planned_brief)
         except Exception as error: raise EpisodeGeneratorFailureError("Episode generator failed at a safe boundary.") from error
         try: episode=Episode.model_validate(_payload(generated)).model_copy(update={"id":brief.brief_id})
         except (ValidationError,TypeError) as error: raise InvalidGeneratedEpisodeError("Generated Episode is invalid.") from error
-        if len(episode.scenes)!=brief.scene_count: raise GeneratedEpisodeSceneCountError("Generated Episode scene count differs from the brief.")
+        if len(episode.scenes)!=planned_brief.scene_count: raise GeneratedEpisodeSceneCountError("Generated Episode scene count differs from the duration plan.")
         numbers=[scene.number for scene in episode.scenes]
-        if len(numbers)!=len(set(numbers)) or numbers!=list(range(1,brief.scene_count+1)):
+        if len(numbers)!=len(set(numbers)) or numbers!=list(range(1,planned_brief.scene_count+1)):
             raise GeneratedEpisodeSceneOrderError("Generated Episode scene numbering must be unique and contiguous.")
         if episode.metadata.language!=brief.language: raise GeneratedEpisodeLanguageError("Generated Episode language differs from the brief.")
         if episode.metadata.target_age_min!=brief.target_age_min or episode.metadata.target_age_max!=brief.target_age_max:

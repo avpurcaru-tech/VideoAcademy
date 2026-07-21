@@ -55,10 +55,14 @@ class ProjectVideoPreflightTests(unittest.TestCase):
             path=self.root/"requests"/f"safe-scene-{index:04d}.json"
             path.write_text(request.model_copy(update={"video_request":request.video_request.model_copy(
                 update={"duration_seconds":10})}).model_dump_json(),encoding="utf-8")
+        before=tuple((self.root/"requests"/f"safe-scene-{index:04d}.json").read_bytes() for index in (1,2))
         with self.assertRaises(ProjectVideoPreflightError) as caught:
             self.service({"KLING_API_KEY":"configured"}).inspect("safe")
         self.assertEqual(caught.exception.field_diagnostics,
             (("KLING_DURATION","configured 15, request requires 10"),))
+        self.assertIn("recreate the project with a new project ID",str(caught.exception))
+        self.assertIn("no Kling task was submitted",str(caught.exception))
+        self.assertEqual(before,tuple((self.root/"requests"/f"safe-scene-{index:04d}.json").read_bytes() for index in (1,2)))
 
     def test_nonuniform_scene_durations_report_every_scene(self):
         reference=GenerationRequestReference(reference_id="safe-scene-0001")

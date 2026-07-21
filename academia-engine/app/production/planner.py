@@ -6,6 +6,7 @@ from app.models import DirectorPlan, VideoGenerationRequest
 from app.prompts import PromptBuilder
 
 from .contracts import EpisodeProductionRequest, EpisodeTransitionPolicy
+from .duration_policy import SceneDurationPolicy
 from .request_reference import (GenerationRequestConflictError, GenerationRequestCorruptedError, GenerationRequestNotFoundError,
                                 GenerationRequestReference, GenerationRequestResolverError, GenerationRequestStore)
 
@@ -28,9 +29,11 @@ class EpisodeProductionReferenceError(EpisodeProductionPlanningError): pass
 
 class EpisodeProductionPlanner:
     """Provider-neutral DirectorPlan -> durable semantic generation request integration."""
-    def __init__(self, prompt_builder: PromptBuilder, request_store: GenerationRequestStore) -> None:
+    def __init__(self, prompt_builder: PromptBuilder, request_store: GenerationRequestStore,
+                 duration_policy: SceneDurationPolicy | None = None) -> None:
         self._prompt_builder = prompt_builder
         self._request_store = request_store
+        self._duration_policy = duration_policy or SceneDurationPolicy(15)
 
     def plan(self, director_plan: DirectorPlan, production_id: str, scene_output_directory: Path,
              workspace: Path, destination: Path, *, provider: str = "default",
@@ -51,6 +54,7 @@ class EpisodeProductionPlanner:
         ordered = director_plan.model_copy(update={"scenes": sorted(director_plan.scenes, key=lambda scene: scene.scene_number)})
         try:
             video_requests = self._prompt_builder.build(ordered)
+            video_requests = tuple(self._duration_policy.apply_execution_duration(value) for value in video_requests)
         except ValidationError as error:
             raise EpisodeProductionSemanticVideoRequestError(error) from error
         except Exception as error:

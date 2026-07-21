@@ -41,7 +41,7 @@ class EpisodeProductionPlannerTests(unittest.TestCase):
     def test_identical_reference_is_idempotent_and_conflicting_reference_rejected(self):
         director=plan((1,2)); first=self.plan(director,"cut",None)
         self.assertEqual(self.plan(director,"cut",None),first)
-        changed=plan((1,2)); changed.scenes[0].duration_seconds=20
+        changed=plan((1,2)); changed.scenes[0].camera.description="A meaningfully different view"
         with self.assertRaises(EpisodeProductionRequestConflictError): self.plan(changed,"cut",None)
 
     def test_facade_delegates_production_without_duplicating_workflow(self):
