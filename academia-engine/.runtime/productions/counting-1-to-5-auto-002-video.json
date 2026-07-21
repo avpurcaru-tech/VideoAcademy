@@ -1,6 +1,6 @@
 {
   "production_id": "counting-1-to-5-auto-002-video",
-  "status": "failed",
+  "status": "succeeded",
   "provider": "kling",
   "scenes": [
     {
@@ -63,13 +63,13 @@
       },
       "provider_task_id": "908665265204891729",
       "external_correlation_id": null,
-      "normalized_status": null,
-      "production_status": "generating",
-      "local_path": null,
-      "artifact_id": null,
-      "byte_size": null,
-      "sha256": null,
-      "content_type": null
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\counting-1-to-5-auto-002\\video\\scenes\\scene-0004.mp4",
+      "artifact_id": "908665267746639897",
+      "byte_size": 9445078,
+      "sha256": "33d134a427cb71e2f5e1505e9480da96a4be4903c3199fadadb1aef5394105c3",
+      "content_type": "video/mp4"
     },
     {
       "scene_id": "scene-0005",
@@ -78,15 +78,15 @@
       "generation_request_reference": {
         "reference_id": "counting-1-to-5-auto-002-video-scene-0005"
       },
-      "provider_task_id": null,
+      "provider_task_id": "908666077855485989",
       "external_correlation_id": null,
-      "normalized_status": null,
-      "production_status": "pending",
-      "local_path": null,
-      "artifact_id": null,
-      "byte_size": null,
-      "sha256": null,
-      "content_type": null
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\counting-1-to-5-auto-002\\video\\scenes\\scene-0005.mp4",
+      "artifact_id": "908666080585977882",
+      "byte_size": 11368644,
+      "sha256": "014b174c0b48b6b97e3f2831461ce29bbfb6369ce9b49da654228649fca3ba5f",
+      "content_type": "video/mp4"
     }
   ],
   "scene_output_directory": ".runtime\\projects\\counting-1-to-5-auto-002\\video\\scenes",
@@ -96,14 +96,32 @@
     "kind": "cut",
     "duration_seconds": null
   },
-  "final_artifact": null,
-  "failed_scene_id": "scene-0004",
+  "final_artifact": {
+    "timeline_id": "counting-1-to-5-auto-002-video",
+    "local_path": ".runtime\\projects\\counting-1-to-5-auto-002\\video\\master.mp4",
+    "byte_size": 10696302,
+    "sha256": "b08abcae4973a9409be09a0ba9a4fd013fd50c7c840525ce0ea434c2c40ba949",
+    "media_info": {
+      "local_path": ".runtime\\projects\\counting-1-to-5-auto-002\\video\\master.mp4",
+      "duration_seconds": 75.166667,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30.0,
+      "video_codec": "h264",
+      "audio_codec": null,
+      "has_audio": false,
+      "container_format": "mov,mp4,m4a,3gp,3g2,mj2"
+    },
+    "source_count": 5,
+    "transition_count": 0
+  },
+  "failed_scene_id": "scene-0005",
   "failure_stage": "video_submission",
   "failure_category": "submit_response_parsing_failed",
-  "safe_message": "Scene scene-0004 submit response could not be parsed.",
+  "safe_message": "Scene scene-0005 submit response could not be parsed.",
   "submit_http_status": 200,
   "submit_provider_code": 0,
-  "submit_provider_task_id": "908665265204891729",
+  "submit_provider_task_id": "908666077855485989",
   "submit_response_shape": [
     "root: object",
     "code: integer",
@@ -121,5 +139,5 @@
   "query_provider_task_id": null,
   "query_response_shape": [],
   "created_at": "2026-07-21T21:40:21.616087Z",
-  "updated_at": "2026-07-21T22:00:00.104647Z"
+  "updated_at": "2026-07-21T22:05:30.797445Z"
 }

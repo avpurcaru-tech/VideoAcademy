@@ -1,0 +1,15 @@
+{
+  "provider": "kling",
+  "provider_task_id": "908666077855485989",
+  "external_correlation_id": "01035db3dd504c859b0e18dfbfa6101e",
+  "normalized_status": "succeeded",
+  "created_at": "2026-07-21T22:03:13.809034Z",
+  "updated_at": "2026-07-21T22:05:01.845000Z",
+  "artifact": {
+    "artifact_id": "908666080585977882",
+    "local_path": ".runtime\\projects\\counting-1-to-5-auto-002\\video\\scenes\\scene-0005.mp4",
+    "byte_size": 11368644,
+    "sha256": "014b174c0b48b6b97e3f2831461ce29bbfb6369ce9b49da654228649fca3ba5f",
+    "content_type": "video/mp4"
+  }
+}
