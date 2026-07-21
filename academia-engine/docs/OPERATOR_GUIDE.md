@@ -463,6 +463,46 @@ python -m app.cli.music_engine_task ^
   --timeout 900
 ```
 
+## Compose generated music with an existing video
+
+Composition replaces any audio already present in the source video. It maps
+only the source video stream and the selected generated-music stream, producing
+an MP4 with H.264 video, AAC audio, and `yuv420p` pixels. It does not mix,
+duck, concatenate, or modify the source files.
+
+Compose one audio artifact:
+
+```bat
+python -m app.cli.video_add_audio ^
+  --video .runtime\productions\smoke-episode-001\final.mp4 ^
+  --audio .runtime\music\counting-1-to-5-d5662f\variant-01.mp3 ^
+  --workspace .runtime\media\audio-video ^
+  --output .runtime\final\counting-1-to-5\final-variant-01.mp4 ^
+  --duration-policy extend_video_to_audio
+```
+
+Compose both ordered variants independently:
+
+```bat
+python -m app.cli.video_add_audio_variants ^
+  --video .runtime\productions\smoke-episode-001\final.mp4 ^
+  --audio .runtime\music\counting-1-to-5-d5662f\variant-01.mp3 ^
+  --audio .runtime\music\counting-1-to-5-d5662f\variant-02.mp3 ^
+  --workspace .runtime\media\audio-video ^
+  --output-dir .runtime\final\counting-1-to-5 ^
+  --duration-policy extend_video_to_audio
+```
+
+The batch outputs are `final-variant-01.mp4`, `final-variant-02.mp4`, and so
+on in input order. Each output is published atomically and independently.
+
+`trim_video_to_audio` requires the video to be at least as long as the audio
+and trims it to the audio duration. `extend_video_to_audio` uses FFmpeg's
+input-level `-stream_loop -1` only when the video is shorter, then applies an
+explicit audio-duration limit; a longer video is simply trimmed. Audio is
+never looped, stretched, pitch-shifted, or time-scaled. Existing destinations
+are rejected unless `--overwrite` is explicit.
+
 ## Version readiness checklist
 
 - [ ] Input preflight passes

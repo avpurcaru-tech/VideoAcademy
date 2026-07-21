@@ -27,7 +27,8 @@ from .assembly import (
     VideoAssemblyError,
     VideoAssemblyService,
 )
-from .contracts import AssembledVideoArtifact, AudioLoudnessProfile, ConcatenatedVideoArtifact, LoudnessNormalizedVideoArtifact, MediaProbeResult, NormalizedVideoArtifact, VideoAssemblyRequest, VideoNormalizationProfile
+from .contracts import AssembledVideoArtifact, AudioLoudnessProfile, AudioProbeResult, ConcatenatedVideoArtifact, LoudnessNormalizedVideoArtifact, MediaProbeResult, NormalizedVideoArtifact, VideoAssemblyRequest, VideoNormalizationProfile
+from .audio_video import *
 from .loudness import (
     DEFAULT_AUDIO_DURATION_TOLERANCE_SECONDS,
     EmptyLoudnessOutputError,
@@ -66,6 +67,7 @@ __all__ = [
     "MediaProbeError",
     "MediaProbeResult",
     "AudioLoudnessProfile",
+    "AudioProbeResult",
     "AssembledVideoArtifact",
     "VideoAssemblyRequest",
     "VideoAssemblyService",

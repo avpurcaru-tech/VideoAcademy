@@ -3,7 +3,7 @@ from fractions import Fraction
 from pathlib import Path
 from typing import Any
 
-from .contracts import MediaProbeResult
+from .contracts import AudioProbeResult,MediaProbeResult
 from .process_runner import ProcessRunner
 
 
@@ -35,6 +35,25 @@ class FFprobeAdapter:
         self._timeout_seconds = timeout_seconds
 
     def probe_video(self, path: Path) -> MediaProbeResult:
+        local_path,payload=self._probe_payload(path)
+        return self._parse_payload(local_path,payload)
+
+    def probe_audio(self,path: Path) -> AudioProbeResult:
+        local_path,payload=self._probe_payload(path)
+        if not isinstance(payload,dict): raise FFprobeResponseError("ffprobe JSON root must be an object.")
+        streams=payload.get("streams"); media_format=payload.get("format")
+        if not isinstance(streams,list) or not isinstance(media_format,dict):
+            raise FFprobeResponseError("ffprobe response is missing streams or format data.")
+        audios=[stream for stream in streams if isinstance(stream,dict) and stream.get("codec_type")=="audio"]
+        if not audios: raise FFprobeResponseError("ffprobe response contains no audio stream.")
+        try:
+            return AudioProbeResult(local_path=local_path,duration_seconds=float(media_format["duration"]),
+                audio_codec=_required_text(audios[0].get("codec_name"),"audio codec"),
+                container_format=_required_text(media_format.get("format_name"),"container format"))
+        except (KeyError,TypeError,ValueError) as error:
+            raise FFprobeResponseError("ffprobe response contains incomplete or invalid audio fields.") from error
+
+    def _probe_payload(self,path: Path) -> tuple[Path,Any]:
         local_path = Path(path)
         args = [
             self._executable,
@@ -60,7 +79,7 @@ class FFprobeAdapter:
             payload = json.loads(result.stdout)
         except (json.JSONDecodeError, TypeError) as error:
             raise FFprobeResponseError("ffprobe returned malformed JSON.") from error
-        return self._parse_payload(local_path, payload)
+        return local_path,payload
 
     @staticmethod
     def _parse_payload(path: Path, payload: Any) -> MediaProbeResult:

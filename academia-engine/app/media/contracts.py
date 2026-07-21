@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class MediaProbeResult(BaseModel):
     """Normalized media facts with no raw tool response attached."""
 
-    model_config = ConfigDict(extra="forbid", frozen=True)
+    model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
 
     local_path: Path
     duration_seconds: float = Field(gt=0)
@@ -16,6 +16,17 @@ class MediaProbeResult(BaseModel):
     video_codec: str = Field(min_length=1)
     audio_codec: str | None = None
     has_audio: bool
+    container_format: str = Field(min_length=1)
+
+
+class AudioProbeResult(BaseModel):
+    """Normalized audio-only facts with no raw probe response attached."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True, allow_inf_nan=False)
+
+    local_path: Path
+    duration_seconds: float = Field(gt=0)
+    audio_codec: str = Field(min_length=1)
     container_format: str = Field(min_length=1)
 
 
