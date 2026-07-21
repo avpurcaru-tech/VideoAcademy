@@ -27,12 +27,12 @@ def _semantic_song_inputs(episode,project_id):
     return brief,music
 
 
-def build_services(video_provider="kling",lyrics_provider="openai",music_provider="sunoapi_org",preflight=False):
+def build_services(video_provider="kling",lyrics_provider="openai",music_provider="sunoapi_org",preflight=False,video_runtime=None):
     director=DirectorEngine(); planner=EpisodeProductionPlanner(PromptBuilder(KlingPromptAdapter()),GenerationRequestStore())
     if preflight: return ProjectServices(director,planner,None,None,None,None,None,None)
     if lyrics_provider!="openai": raise RuntimeError("Lyrics provider is unsupported.")
     from app.cli.episode_produce import build_orchestrator
-    orchestrator=build_orchestrator(); episode=EpisodeGenerationService(planner,orchestrator)
+    orchestrator=build_orchestrator(video_runtime); episode=EpisodeGenerationService(planner,orchestrator)
     lyrics=LyricsGenerationService(OpenAILyricsGenerator())
     runtime=MusicProviderRegistry().resolve(music_provider); music_registry=MusicTaskRegistry()
     music=MusicEngine({music_provider:runtime.provider},music_registry,runtime.downloader,default_provider=music_provider)

@@ -21,6 +21,7 @@ from .kling_dtos import (
 from .kling_mapper import KlingTextToVideoMapper, KlingUnsupportedConfigurationError
 from .kling_downloader import KlingVideoArtifactDownloader
 from .video_provider import VideoProvider
+from .kling_factory import KlingProviderRegistry,KlingProviderRegistryError
 
 __all__ = [
     "KlingAuthenticationError",
@@ -44,4 +45,6 @@ __all__ = [
     "KlingTimeoutError",
     "KlingVideoOutput",
     "VideoProvider",
+    "KlingProviderRegistry",
+    "KlingProviderRegistryError",
 ]

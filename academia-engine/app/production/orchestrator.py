@@ -6,6 +6,7 @@ from pydantic import ValidationError
 from app.models import GenerationTaskStatus, VideoGenerationRequest
 from app.services import VideoEngineError, VideoEngineTaskFailedError, VideoPollingPolicy
 from app.services import UnknownVideoProviderError, VideoEngineRegistryError, VideoProviderOperationError
+from app.providers import KlingUnsupportedConfigurationError
 from app.timeline import (TimelineMediaValidationError, TimelineMediaValidator, TimelineOutput,
                           TimelineRendererError, TimelineScene, TimelineTransition, VideoTimeline,
                           build_render_plan)
@@ -38,6 +39,7 @@ class EpisodeUnsupportedProductionStateError(EpisodeProductionError): pass
 class EpisodeGenerationRequestResolutionError(EpisodeProductionError): pass
 class EpisodeGenerationRequestMissingError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeGenerationRequestCorruptedError(EpisodeGenerationRequestResolutionError): pass
+class EpisodeGenerationSettingsMismatchError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeProviderUnavailableError(EpisodeProductionError): pass
 class EpisodeProviderConfigurationError(EpisodeProductionError): pass
 class EpisodeSubmitRejectedError(EpisodeSceneSubmissionError): pass
@@ -146,6 +148,9 @@ class EpisodeProductionOrchestrator:
                         raise EpisodeProductionRegistryError(f"Scene {scene.scene_id} task registry persistence failed.") from error
                     except VideoEngineError as error:
                         cause=error.__cause__
+                        if isinstance(cause,KlingUnsupportedConfigurationError):
+                            raise EpisodeGenerationSettingsMismatchError(
+                                f"Scene {scene.scene_id} request is incompatible with provider generation settings.") from error
                         if isinstance(cause,(ValueError,KeyError)):
                             raise EpisodeProviderConfigurationError(f"Scene {scene.scene_id} provider configuration is missing or invalid.") from error
                         category=type(cause).__name__.lower() if cause is not None else ""
@@ -221,6 +226,7 @@ class EpisodeProductionOrchestrator:
         mapping=(
             (EpisodeGenerationRequestMissingError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_reference_missing")),
             (EpisodeGenerationRequestCorruptedError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_record_corrupted")),
+            (EpisodeGenerationSettingsMismatchError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_generation_settings_mismatch")),
             (EpisodeGenerationRequestResolutionError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_validation_failed")),
             (EpisodeProviderConfigurationError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_configuration_missing")),
             (EpisodeProviderUnavailableError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_unavailable")),

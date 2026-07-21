@@ -16,6 +16,10 @@ def main():
         print(f"Category: {error.category}")
         print(f"Failed scene: {error.scene_id or 'unavailable'}")
         print(f"Safe message: {error}")
+        if hasattr(error,"field_diagnostics"):
+            print("Kling configuration diagnostics:")
+            for field,category in error.field_diagnostics: print(f"- {field}: {category}")
+            for diagnostic in getattr(error,"generation_diagnostics",()): print(f"- {diagnostic}")
         return 1
     except Exception:
         print("Video preflight failed due to invalid durable local state."); return 1

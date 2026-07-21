@@ -5,16 +5,17 @@ from app.config.environment import load_application_environment
 from app.media import FFprobeAdapter, SubprocessProcessRunner
 from app.production import (EpisodeProductionError, EpisodeProductionOrchestrator, EpisodeProductionRequest,
                             GenerationRequestStore, ProductionRegistry)
-from app.providers import KlingProvider, KlingVideoArtifactDownloader
+from app.providers import KlingProviderRegistry, KlingVideoArtifactDownloader
 from app.services import TaskRegistry, VideoEngine, VideoPollingPolicy
 from app.timeline import FFmpegTimelineRenderer
 
 
-def build_orchestrator() -> EpisodeProductionOrchestrator:
+def build_orchestrator(provider=None) -> EpisodeProductionOrchestrator:
     load_application_environment()
     runner = SubprocessProcessRunner()
     probe = FFprobeAdapter(runner)
-    engine = VideoEngine({"kling": KlingProvider()}, TaskRegistry(), KlingVideoArtifactDownloader())
+    if provider is None: _,provider=KlingProviderRegistry().construct("kling")
+    engine = VideoEngine({"kling": provider}, TaskRegistry(), KlingVideoArtifactDownloader())
     return EpisodeProductionOrchestrator(engine, FFmpegTimelineRenderer(runner, probe), ProductionRegistry(), probe,
                                          GenerationRequestStore())
 
