@@ -38,6 +38,7 @@ class GeneratedAudioArtifact(MusicContract):
     artifact_id: str = Field(min_length=1,max_length=200)
     download_url: str = Field(min_length=1,max_length=4000)
     content_type: str = Field(min_length=1,max_length=100)
+    duration_seconds: float | None = Field(default=None,gt=0)
 
 
 class GeneratedMusicVariant(MusicContract):
@@ -105,6 +106,7 @@ class MusicGenerationTaskRecord(MusicContract):
     updated_at: datetime
     artifact: DurableAudioArtifact | None=None
     artifact_set: DurableAudioArtifactSet | None=None
+    provider_artifact_ids: tuple[str,...]=()
 
     @field_validator("created_at","updated_at")
     @classmethod

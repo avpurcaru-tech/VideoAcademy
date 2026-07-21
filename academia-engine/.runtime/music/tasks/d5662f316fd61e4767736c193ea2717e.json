@@ -1,0 +1,36 @@
+{
+  "provider": "sunoapi_org",
+  "provider_task_id": "d5662f316fd61e4767736c193ea2717e",
+  "external_correlation_id": null,
+  "normalized_status": "succeeded",
+  "created_at": "2026-07-21T16:09:24.747381Z",
+  "updated_at": "2026-07-21T16:11:11.783016Z",
+  "artifact": null,
+  "artifact_set": {
+    "provider_task_id": "d5662f316fd61e4767736c193ea2717e",
+    "artifacts": [
+      {
+        "artifact_id": "12755ee0-44be-4370-be9b-b6eb9ebe9963",
+        "local_path": ".runtime\\music\\counting-1-to-5-d5662f\\variant-01.mp3",
+        "byte_size": 3110925,
+        "sha256": "d6364899e2316d87b93b24cf156d6eae98d6a8f2b0f546002f52c8d06fb09567",
+        "content_type": "audio/mpeg",
+        "variant_index": 1
+      },
+      {
+        "artifact_id": "564c6960-e795-4fa6-936a-6067cd46e857",
+        "local_path": ".runtime\\music\\counting-1-to-5-d5662f\\variant-02.mp3",
+        "byte_size": 1630941,
+        "sha256": "bd6bb7194862a9989b2ae5993d4766f22ddc31b86f81fca7b8537e4f22fb0312",
+        "content_type": "audio/mpeg",
+        "variant_index": 2
+      }
+    ],
+    "expected_artifact_count": 2,
+    "complete": true
+  },
+  "provider_artifact_ids": [
+    "12755ee0-44be-4370-be9b-b6eb9ebe9963",
+    "564c6960-e795-4fa6-936a-6067cd46e857"
+  ]
+}

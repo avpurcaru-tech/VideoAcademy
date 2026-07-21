@@ -82,6 +82,20 @@ class MusicEngine:
         return self._persist(existing.model_copy(update={"normalized_status":task.normalized_status,
             "external_correlation_id":task.external_correlation_id,"updated_at":task.updated_at or _now()}))
 
+    def reconcile_existing_task(self,provider: str,provider_task_id: str) -> MusicGenerationTaskRecord:
+        """Query once and adopt a known provider task without submitting generation."""
+        task=self._query(provider,provider_task_id); now=_now()
+        record=MusicGenerationTaskRecord(provider=provider,provider_task_id=provider_task_id,
+            external_correlation_id=task.external_correlation_id,normalized_status=task.normalized_status,
+            created_at=task.created_at or now,updated_at=task.updated_at or now,
+            provider_artifact_ids=tuple(artifact.artifact_id for artifact in task.artifacts))
+        try:
+            if self._registry.exists(provider_task_id): self._registry.update(record)
+            else: self._registry.create(record)
+            return self._registry.load(provider_task_id)
+        except MusicTaskRegistryError as error:
+            raise MusicEngineRegistryError("Reconciled music task could not be stored.") from error
+
     def get_task_by_external_id(self,external_correlation_id: str,provider: str|None=None) -> MusicGenerationTask:
         name=provider or self._default_provider; selected=self._provider(name)
         if not isinstance(selected,MusicExternalIdProvider):

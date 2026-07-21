@@ -37,6 +37,7 @@ def _failure(error: SunoApiOrgError,category: str) -> None:
     if error.http_status is not None: print(f"HTTP status: {error.http_status}")
     if error.provider_code is not None: print(f"Provider code: {error.provider_code}")
     if error.retry_after: print(f"Retry-After: {error.retry_after}")
+    for diagnostic in error.response_shape: print(diagnostic)
 
 
 if __name__=="__main__": raise SystemExit(main())

@@ -113,6 +113,7 @@ def _print_sunoapi_org_diagnostic(error) -> None:
     if task_id: print(f"Provider task ID: {task_id}")
     if diagnostic.provider_request_id: print(f"Provider request ID: {diagnostic.provider_request_id}")
     if diagnostic.retry_after: print(f"Retry-After: {diagnostic.retry_after}")
+    for shape_line in diagnostic.response_shape: print(shape_line)
     if task_id:
         print("Provider task ID was preserved durably. Resume or query it; do not resubmit.")
     elif diagnostic.phase in {"network_before_response","http_failure","provider_application"}:
