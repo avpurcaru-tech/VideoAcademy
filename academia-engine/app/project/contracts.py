@@ -37,6 +37,16 @@ class ProjectFailureStage(str,Enum):
     MUSIC_GENERATION="music_generation"
     COMPOSITION="composition"
 
+class ProjectVideoSceneDiagnostic(BaseModel):
+    model_config=ConfigDict(extra="forbid",frozen=True)
+    scene_id: str
+    storyboard_section_id: str
+    timeline_segment_count: int=Field(ge=1)
+    requested_duration: int=Field(ge=1)
+    canonical_character_ids: tuple[str,...]
+    request_reference_id: str
+    prompt_character_count: int=Field(ge=0)
+
 
 class ProjectRecord(BaseModel):
     """Prompt-free durable coordination state; provider payloads and URLs are forbidden."""
@@ -60,9 +70,12 @@ class ProjectRecord(BaseModel):
     provider_request_id: str|None=Field(default=None,max_length=200,pattern=r"^[A-Za-z0-9_-]+$")
     provider_model: str|None=Field(default=None,max_length=200)
     provider_retry_after: str|None=Field(default=None,max_length=100)
+    video_plan_diagnostics: tuple[ProjectVideoSceneDiagnostic,...]=()
     failed_scene_id: str|None=None
     submit_http_status: int|None=None
     submit_provider_code: int|None=None
+    submit_provider_message: str|None=Field(default=None,max_length=200)
+    submit_request_id: str|None=Field(default=None,max_length=200)
     submit_provider_task_id: str|None=Field(default=None,pattern=r"^[A-Za-z0-9_-]+$")
     submit_response_shape: tuple[str,...]=()
     query_http_status: int|None=None

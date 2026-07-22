@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from app.models import GenerationTaskStatus, VideoGenerationRequest
 from app.services import VideoEngineError, VideoEngineTaskFailedError, VideoPollingPolicy
 from app.services import UnknownVideoProviderError, VideoEngineRegistryError, VideoProviderOperationError
-from app.providers import KlingUnsupportedConfigurationError
+from app.providers import KlingPromptTooLongError,KlingUnsupportedConfigurationError
 from app.timeline import (TimelineMediaValidationError, TimelineMediaValidator, TimelineOutput,
                           TimelineRendererError, TimelineScene, TimelineTransition, VideoTimeline,
                           build_render_plan)
@@ -40,6 +40,7 @@ class EpisodeGenerationRequestResolutionError(EpisodeProductionError): pass
 class EpisodeGenerationRequestMissingError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeGenerationRequestCorruptedError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeGenerationSettingsMismatchError(EpisodeGenerationRequestResolutionError): pass
+class EpisodePromptTooLongError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeProviderUnavailableError(EpisodeProductionError): pass
 class EpisodeProviderConfigurationError(EpisodeProductionError): pass
 class EpisodeSubmitRejectedError(EpisodeSceneSubmissionError): pass
@@ -47,6 +48,33 @@ class EpisodeSubmitResponseParsingError(EpisodeSceneSubmissionError): pass
 class ProductionArtifactIntegrityError(EpisodeProductionError): pass
 class ProductionFinalArtifactMissingError(ProductionArtifactIntegrityError): pass
 class ProductionSceneArtifactIntegrityError(ProductionArtifactIntegrityError): pass
+
+_CLEAR_VIDEO_FAILURE={"failed_scene_id":None,"failure_stage":None,"failure_category":None,"safe_message":None,
+    "submit_http_status":None,"submit_provider_code":None,"submit_provider_message":None,"submit_request_id":None,
+    "submit_provider_task_id":None,"submit_response_shape":(),"query_http_status":None,"query_provider_code":None,
+    "query_provider_task_id":None,"query_response_shape":()}
+
+def _has_stale_video_failure(record):
+    return any(getattr(record,name) not in (None,()) for name in _CLEAR_VIDEO_FAILURE)
+
+def reconcile_succeeded_production(registry,integrity,production_id):
+    record=registry.load(production_id)
+    if record.status != EpisodeProductionStatus.SUCCEEDED: return record
+    for scene in record.scenes:
+        if scene.production_status != EpisodeSceneStatus.READY or scene.local_path is None:
+            raise ProductionSceneArtifactIntegrityError(f"Succeeded production scene {scene.scene_id} is not ready.")
+        result=integrity.verify_scene(scene)
+        if result.state==ArtifactIntegrityState.MISSING:
+            raise EpisodeSceneArtifactMissingError(f"Succeeded production scene {scene.scene_id} file is missing.")
+        if not result.valid:
+            raise ProductionSceneArtifactIntegrityError(f"Succeeded production scene {scene.scene_id} failed integrity verification.")
+    if record.final_artifact is None: raise ProductionFinalArtifactMissingError("Succeeded production final artifact metadata is missing.")
+    final=integrity.verify_artifact(record.final_artifact)
+    if final.state==ArtifactIntegrityState.MISSING: raise ProductionFinalArtifactMissingError("Succeeded production final artifact is missing.")
+    if not final.valid: raise ProductionArtifactIntegrityError("Succeeded production final artifact failed integrity verification.")
+    if _has_stale_video_failure(record):
+        record=record.model_copy(update={**_CLEAR_VIDEO_FAILURE,"updated_at":utc_now()}); registry.update(record)
+    return record
 
 
 class EpisodeProductionOrchestrator:
@@ -100,13 +128,12 @@ class EpisodeProductionOrchestrator:
         except ProductionRegistryError as error:
             raise EpisodeProductionRegistryError("Episode production could not be loaded.") from error
         if record.status == EpisodeProductionStatus.SUCCEEDED:
-            if record.final_artifact is None:
-                raise ProductionFinalArtifactMissingError("Succeeded production final artifact metadata is missing.")
+            if _has_stale_video_failure(record):
+                return self._result(reconcile_succeeded_production(self._registry,self._integrity,production_id))
+            if record.final_artifact is None: raise ProductionFinalArtifactMissingError("Succeeded production final artifact metadata is missing.")
             integrity=self._integrity.verify_artifact(record.final_artifact)
-            if integrity.state == ArtifactIntegrityState.MISSING:
-                raise ProductionFinalArtifactMissingError("Succeeded production final artifact is missing.")
-            if not integrity.valid:
-                raise ProductionArtifactIntegrityError("Succeeded production final artifact failed integrity verification.")
+            if integrity.state==ArtifactIntegrityState.MISSING: raise ProductionFinalArtifactMissingError("Succeeded production final artifact is missing.")
+            if not integrity.valid: raise ProductionArtifactIntegrityError("Succeeded production final artifact failed integrity verification.")
             return self._result(record)
         return self._execute(production_id, polling_policy)
 
@@ -152,6 +179,8 @@ class EpisodeProductionOrchestrator:
                         if isinstance(cause,KlingUnsupportedConfigurationError):
                             raise EpisodeGenerationSettingsMismatchError(
                                 f"Scene {scene.scene_id} request is incompatible with provider generation settings.") from error
+                        if isinstance(cause,KlingPromptTooLongError):
+                            raise EpisodePromptTooLongError(f"Scene {scene.scene_id} prompt exceeds the provider limit.") from error
                         if isinstance(cause,(ValueError,KeyError)):
                             raise EpisodeProviderConfigurationError(f"Scene {scene.scene_id} provider configuration is missing or invalid.") from error
                         category=type(cause).__name__.lower() if cause is not None else ""
@@ -162,6 +191,7 @@ class EpisodeProductionOrchestrator:
                                 record=self._replace_scene(record,index,scene)
                             record=self._attach_submit_diagnostic(record,cause,task_id)
                             raise EpisodeSubmitResponseParsingError(f"Scene {scene.scene_id} submit response could not be parsed.") from error
+                        record=self._attach_submit_diagnostic(record,cause,None)
                         raise EpisodeSubmitRejectedError(f"Scene {scene.scene_id} submit was rejected before a task ID was returned.") from error
                     scene = scene.model_copy(update={"provider_task_id": task.provider_task_id, "normalized_status": task.normalized_status})
                     scene = scene.model_copy(update={"production_status": EpisodeSceneStatus.GENERATING})
@@ -203,6 +233,8 @@ class EpisodeProductionOrchestrator:
                 raise EpisodeFinalRenderError("Episode final render failed.") from error
             record = record.model_copy(update={"final_artifact": final})
             self._registry.update(record)
+            if _has_stale_video_failure(record):
+                record=record.model_copy(update={**_CLEAR_VIDEO_FAILURE,"updated_at":self._clock()}); self._registry.update(record)
             record = self._set_status(record, EpisodeProductionStatus.SUCCEEDED)
             return self._result(record)
         except EpisodeProductionError as error:
@@ -224,10 +256,19 @@ class EpisodeProductionOrchestrator:
             return record
         updated=record.model_copy(update={"submit_http_status":getattr(error,"http_status",None),
             "submit_provider_code":getattr(error,"provider_code",None),
+            "submit_provider_message":self._safe_provider_message(getattr(error,"provider_message",None)),
+            "submit_request_id":getattr(error,"provider_request_id",None) or getattr(error,"request_id",None),
             "submit_provider_task_id":task_id if isinstance(task_id,str) else None,
             "submit_response_shape":tuple(getattr(error,"response_shape",()))})
         self._registry.update(updated)
         return updated
+
+    @staticmethod
+    def _safe_provider_message(value):
+        if not isinstance(value,str) or not value.strip() or "\0" in value: return None
+        lowered=value.casefold()
+        if any(token in lowered for token in ("api_key","authorization","prompt","canonical description")): return None
+        return " ".join(value.split())[:200]
 
     def _attach_query_diagnostic(self,record,error,task_id):
         updated=record.model_copy(update={"query_http_status":getattr(error,"http_status",None),
@@ -250,11 +291,12 @@ class EpisodeProductionOrchestrator:
             (EpisodeGenerationRequestMissingError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_reference_missing")),
             (EpisodeGenerationRequestCorruptedError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_record_corrupted")),
             (EpisodeGenerationSettingsMismatchError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_generation_settings_mismatch")),
+            (EpisodePromptTooLongError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"video_request_prompt_too_long")),
             (EpisodeGenerationRequestResolutionError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_validation_failed")),
             (EpisodeProviderConfigurationError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_configuration_missing")),
             (EpisodeProviderUnavailableError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_unavailable")),
-            (EpisodeSubmitResponseParsingError,(ProductionFailureStage.VIDEO_SUBMISSION,"submit_response_parsing_failed")),
-            (EpisodeSubmitRejectedError,(ProductionFailureStage.VIDEO_SUBMISSION,"submit_rejected_before_task_creation")),
+            (EpisodeSubmitResponseParsingError,(ProductionFailureStage.VIDEO_SUBMISSION,"video_submit_response_failed")),
+            (EpisodeSubmitRejectedError,(ProductionFailureStage.VIDEO_SUBMISSION,"video_request_rejected")),
             (EpisodeScenePollingError,(ProductionFailureStage.VIDEO_POLLING,"provider_polling_failed")),
             (EpisodeSceneDownloadError,(ProductionFailureStage.VIDEO_DOWNLOAD,"artifact_download_failed")),
             (EpisodeProductionRegistryError,(ProductionFailureStage.REGISTRY_PERSISTENCE,"registry_persistence_failed")),

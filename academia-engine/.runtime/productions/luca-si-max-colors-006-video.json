@@ -1,0 +1,117 @@
+{
+  "production_id": "luca-si-max-colors-006-video",
+  "status": "succeeded",
+  "provider": "kling",
+  "scenes": [
+    {
+      "scene_id": "scene-0001",
+      "source_scene_id": "culori-rosu-galben",
+      "order": 0,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-006-video-scene-0001"
+      },
+      "provider_task_id": "908702606405537865",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-006\\video\\scenes\\scene-0001.mp4",
+      "artifact_id": "908702610474663972",
+      "byte_size": 6478109,
+      "sha256": "a1f8dc29a40f317436290d69e0661ece15a597474f3761bfebd393594f794996",
+      "content_type": "video/mp4"
+    },
+    {
+      "scene_id": "scene-0002",
+      "source_scene_id": "culori-verde-albastru",
+      "order": 1,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-006-video-scene-0002"
+      },
+      "provider_task_id": "908703046664847440",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-006\\video\\scenes\\scene-0002.mp4",
+      "artifact_id": "908703051199553604",
+      "byte_size": 11724346,
+      "sha256": "6e86c07ce4b278cafaf75a2a3a8cd36efebe55e07c1ca97647529a15dfd22ee5",
+      "content_type": "video/mp4"
+    },
+    {
+      "scene_id": "scene-0003",
+      "source_scene_id": "refren-patru-culori",
+      "order": 2,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-006-video-scene-0003"
+      },
+      "provider_task_id": "908703514846306359",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-006\\video\\scenes\\scene-0003.mp4",
+      "artifact_id": "908703519752982578",
+      "byte_size": 7620907,
+      "sha256": "a5910b15962d111424959b133d50b9fffa306401c1582f2b55b35049a1b7a9c2",
+      "content_type": "video/mp4"
+    },
+    {
+      "scene_id": "scene-0004",
+      "source_scene_id": "jocul-gaseste-culoarea",
+      "order": 3,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-006-video-scene-0004"
+      },
+      "provider_task_id": "908708284167753767",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "ready",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-006\\video\\scenes\\scene-0004.mp4",
+      "artifact_id": "908708288295608370",
+      "byte_size": 14655420,
+      "sha256": "b29840eb7656f60b2f3615624ea22d36bd79dc1feb55627b20a2cf136ab0bd0d",
+      "content_type": "video/mp4"
+    }
+  ],
+  "scene_output_directory": ".runtime\\projects\\luca-si-max-colors-006\\video\\scenes",
+  "final_output_path": ".runtime\\projects\\luca-si-max-colors-006\\video\\master.mp4",
+  "media_workspace": ".runtime\\projects\\luca-si-max-colors-006\\video\\workspace",
+  "transition_policy": {
+    "kind": "cut",
+    "duration_seconds": null
+  },
+  "final_artifact": {
+    "timeline_id": "luca-si-max-colors-006-video",
+    "local_path": ".runtime\\projects\\luca-si-max-colors-006\\video\\master.mp4",
+    "byte_size": 9559651,
+    "sha256": "4b4c478e3685c6b780d4f9e85888d37817f279a36517e35333639d99c2af4605",
+    "media_info": {
+      "local_path": ".runtime\\projects\\luca-si-max-colors-006\\video\\master.mp4",
+      "duration_seconds": 60.133008,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30.0,
+      "video_codec": "h264",
+      "audio_codec": null,
+      "has_audio": false,
+      "container_format": "mov,mp4,m4a,3gp,3g2,mj2"
+    },
+    "source_count": 4,
+    "transition_count": 0
+  },
+  "failed_scene_id": null,
+  "failure_stage": null,
+  "failure_category": null,
+  "safe_message": null,
+  "submit_http_status": null,
+  "submit_provider_code": null,
+  "submit_provider_message": null,
+  "submit_request_id": null,
+  "submit_provider_task_id": null,
+  "submit_response_shape": [],
+  "query_http_status": null,
+  "query_provider_code": null,
+  "query_provider_task_id": null,
+  "query_response_shape": [],
+  "created_at": "2026-07-22T00:28:22.271558Z",
+  "updated_at": "2026-07-22T01:03:28.178593Z"
+}

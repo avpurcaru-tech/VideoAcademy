@@ -70,6 +70,8 @@ def _failure(record):
     if record.provider_retry_after: print(f"Retry-After: {record.provider_retry_after}")
     if record.submit_http_status is not None: print(f"HTTP status: {record.submit_http_status}")
     if record.submit_provider_code is not None: print(f"Kling code: {record.submit_provider_code}")
+    if record.submit_provider_message: print(f"Kling message: {record.submit_provider_message}")
+    if record.submit_request_id: print(f"Request ID: {record.submit_request_id}")
     if record.submit_provider_task_id: print(f"Provider task ID: {record.submit_provider_task_id}")
     if record.submit_response_shape:
         print("Response shape:")

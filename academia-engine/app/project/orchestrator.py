@@ -6,11 +6,17 @@ from app.media import AudioVideoDurationPolicy
 from app.music import MusicGenerationRequest
 from app.production import EpisodeTransitionPolicy
 from app.production import (EpisodeGenerationRequestResolutionError,EpisodeProviderConfigurationError,
+                            EpisodeGenerationSettingsMismatchError,
+                            EpisodePromptTooLongError,
                             EpisodeProviderUnavailableError,EpisodeSceneSubmissionError,EpisodeScenePollingError,
-                            EpisodeSceneDownloadError,EpisodeProductionRegistryError,ProductionRegistry)
+                            EpisodeSceneDownloadError,EpisodeProductionRegistryError,ProductionRegistry,
+                            EpisodeSubmitRejectedError,EpisodeSubmitResponseParsingError,
+                            EpisodeProductionPlanningError,EpisodeProductionRequestConflictError,
+                            EpisodeProductionRequestStoreCorruptedError,EpisodeProductionPromptBuilderError,
+                            EpisodeProductionVideoRequestError,EpisodeProductionContractError)
 from app.song import EducationalSongBrief,LyricsPlan,MusicPlan,persist_lyrics_atomic
 
-from .contracts import ProjectFailureStage,ProjectRecord,ProjectStatus
+from .contracts import ProjectFailureStage,ProjectRecord,ProjectStatus,ProjectVideoSceneDiagnostic
 from .registry import ProjectRegistry
 
 
@@ -93,20 +99,33 @@ class ProjectGenerationService:
                     timeline=timeline.model_copy(update={"timeline_id":f"{storyboard.storyboard_id}-variant-{index:02d}"})
                     self._persist_model(path,timeline)
                 timelines.append(timeline)
+            self._validate_timeline_mapping(storyboard,timelines)
             record=self._status(record,ProjectStatus.TIMELINES_READY)
             production=None
             try: production=ProductionRegistry().load(record.video_production_id)
             except Exception: pass
+            if production is not None and production.status.value=="succeeded":
+                from app.production import ProductionIntegrityService,reconcile_succeeded_production
+                production=reconcile_succeeded_production(ProductionRegistry(),ProductionIntegrityService(),record.video_production_id)
             if production is None or any(scene.local_path is None for scene in production.scenes):
                 self._progress("Video...")
-                record=self._status(record,ProjectStatus.VIDEO_PLANNING)
-                record=self._status(record,ProjectStatus.VIDEO_GENERATING)
-                result=self._services.episode_generation_service.plan_and_produce(storyboard,video_policy,
-                    production_id=record.video_production_id,scene_output_directory=record.video_directory/"scenes",
-                    workspace=record.video_directory/"workspace",destination=record.video_directory/"master.mp4",
-                    provider=video_provider,transition=EpisodeTransitionPolicy(kind="cut"))
+                if production is None:
+                    record=self._status(record,ProjectStatus.VIDEO_PLANNING)
+                    request=self._services.episode_generation_service.plan_only(storyboard,
+                        production_id=record.video_production_id,scene_output_directory=record.video_directory/"scenes",
+                        workspace=record.video_directory/"workspace",destination=record.video_directory/"master.mp4",
+                        provider=video_provider,transition=EpisodeTransitionPolicy(kind="cut"))
+                    record=self._update(record,video_plan_diagnostics=self._video_plan_diagnostics(request,timelines))
+                    record=self._status(record,ProjectStatus.VIDEO_GENERATING)
+                    self._services.episode_generation_service.produce_planned(request,video_policy)
+                else:
+                    record=self._status(record,ProjectStatus.VIDEO_GENERATING)
+                    self._services.video_resumer.resume(record.video_production_id,video_policy)
                 production=ProductionRegistry().load(record.video_production_id)
-            record=self._status(record,ProjectStatus.VIDEO_READY)
+            record=self._update(record,status=ProjectStatus.VIDEO_READY,failure_stage=None,failure_category=None,
+                safe_message=None,failure_details=(),failed_scene_id=None,submit_http_status=None,submit_provider_code=None,
+                submit_provider_message=None,submit_request_id=None,submit_provider_task_id=None,submit_response_shape=(),
+                query_http_status=None,query_provider_code=None,query_provider_task_id=None,query_response_shape=())
             clips=tuple(StoryboardVideoClip(storyboard_section_id=scene.source_scene_id,
                 local_path=scene.local_path) for scene in production.scenes)
             self._progress("Composition..."); record=self._status(record,ProjectStatus.COMPOSING)
@@ -115,12 +134,16 @@ class ProjectGenerationService:
                 if destination.is_file(): continue
                 self._services.music_timeline_composer.compose(MusicTimelineCompositionRequest(
                     composition_id=f"{record.project_id}-variant-{index:02d}",timeline=timeline,video_clips=clips,
+                    shared_master_path=production.final_artifact.local_path,
                     music_source=audio.local_path,destination=destination,
                     workspace=record.final_directory/f"workspace-variant-{index:02d}",resume=True))
             return self._status(record,ProjectStatus.COMPLETED)
         except Exception as error:
-            try: self._update(record,status=ProjectStatus.FAILED,failure_stage=self._storyboard_run_failure_stage(record),
-                failure_category="generation_failed",safe_message="Storyboard-first project generation failed at a safe boundary.")
+            try:
+                values={"status":ProjectStatus.FAILED,"failure_stage":self._storyboard_run_failure_stage(record),
+                    "failure_category":self._storyboard_run_failure_category(error,record),
+                    "safe_message":"Storyboard-first project generation failed at a safe boundary."}
+                values.update(self._storyboard_video_diagnostic(record,error)); self._update(record,**values)
             except Exception: pass
             raise
 
@@ -131,6 +154,66 @@ class ProjectGenerationService:
         if record.status in (ProjectStatus.VIDEO_PLANNING,ProjectStatus.VIDEO_GENERATING): return ProjectFailureStage.VIDEO_PLANNING
         if record.status==ProjectStatus.COMPOSING: return ProjectFailureStage.COMPOSITION
         return ProjectFailureStage.LYRICS_GENERATION
+
+    @staticmethod
+    def _storyboard_run_failure_category(error,record):
+        mappings=((EpisodeProductionRequestStoreCorruptedError,"video_request_persistence_failed"),
+            (EpisodeProductionRequestConflictError,"video_request_persistence_failed"),
+            (EpisodeProductionPromptBuilderError,"video_section_mapping_failed"),
+            (EpisodeProductionVideoRequestError,"video_request_build_failed"),
+            (EpisodeProductionContractError,"video_scene_count_failed"),
+            (EpisodeGenerationSettingsMismatchError,"video_duration_policy_failed"),
+            (EpisodePromptTooLongError,"video_request_prompt_too_long"),
+            (EpisodeProviderConfigurationError,"video_provider_configuration_failed"),
+            (EpisodeSubmitResponseParsingError,"video_submit_response_failed"),
+            (EpisodeSubmitRejectedError,"video_request_rejected"),
+            (EpisodeProductionRegistryError,"video_request_persistence_failed"),
+            (EpisodeProductionPlanningError,"video_request_build_failed"))
+        for kind,category in mappings:
+            if isinstance(error,kind): return category
+        if record.status in (ProjectStatus.TIMELINES_GENERATING,ProjectStatus.TIMELINES_READY): return "video_timeline_load_failed"
+        if record.status==ProjectStatus.COMPOSING: return "composition_failed"
+        return "video_stage_failed"
+
+    @staticmethod
+    def _storyboard_video_diagnostic(record,error):
+        if record.status not in (ProjectStatus.VIDEO_PLANNING,ProjectStatus.VIDEO_GENERATING): return {}
+        try:
+            production=ProductionRegistry().load(record.video_production_id)
+            categories={"provider_configuration_missing":"video_provider_configuration_failed",
+                "request_generation_settings_mismatch":"video_duration_policy_failed",
+                "video_request_prompt_too_long":"video_request_prompt_too_long",
+                "registry_persistence_failed":"video_request_persistence_failed",
+                "submit_rejected_before_task_creation":"video_request_rejected",
+                "submit_response_parsing_failed":"video_submit_response_failed"}
+            return {"failure_stage":ProjectFailureStage(production.failure_stage.value),
+                "failure_category":categories.get(production.failure_category,production.failure_category),"failed_scene_id":production.failed_scene_id,
+                "submit_http_status":production.submit_http_status,"submit_provider_code":production.submit_provider_code,
+                "submit_provider_message":production.submit_provider_message,"submit_request_id":production.submit_request_id,
+                "submit_provider_task_id":production.submit_provider_task_id,"submit_response_shape":production.submit_response_shape}
+        except Exception: return {}
+
+    @staticmethod
+    def _validate_timeline_mapping(storyboard,timelines):
+        expected=tuple(section.section_id for section in storyboard.sections)
+        for timeline in timelines:
+            actual=tuple(segment.storyboard_section_id for segment in timeline.segments)
+            if actual!=expected: raise ProjectOrchestrationError("Music timeline does not map to storyboard sections.")
+
+    @staticmethod
+    def _video_plan_diagnostics(request,timelines):
+        from app.providers.kling_mapper import KlingTextToVideoMapper
+        values=[]
+        for scene_id,section_id,reference,generation in zip(
+                (f"scene-{index:04d}" for index in range(1,len(request.video_requests)+1)),request.source_scene_ids,
+                request.generation_request_references,request.video_requests,strict=True):
+            mapped=sum(1 for timeline in timelines for segment in timeline.segments if segment.storyboard_section_id==section_id)
+            values.append(ProjectVideoSceneDiagnostic(scene_id=scene_id,storyboard_section_id=section_id,
+                timeline_segment_count=mapped,requested_duration=generation.video_request.duration_seconds,
+                canonical_character_ids=tuple(value.id for value in generation.video_request.characters),
+                request_reference_id=reference.reference_id,
+                prompt_character_count=len(KlingTextToVideoMapper._build_prompt(generation))))
+        return tuple(values)
 
     @staticmethod
     def _persist_model(destination,model):
@@ -301,7 +384,11 @@ class ProjectResumeService:
             try:
                 from app.storyboard import CreativeStoryboard
                 storyboard=CreativeStoryboard.model_validate_json((inputs/"storyboard.json").read_text(encoding="utf-8"))
-            except Exception as error: raise ProjectResumeBlockedError("Durable storyboard is unavailable.") from error
+            except Exception as error:
+                try: self._generation._update(record,status=ProjectStatus.FAILED,failure_stage=ProjectFailureStage.VIDEO_PLANNING,
+                    failure_category="video_storyboard_load_failed",safe_message="Durable storyboard is unavailable.")
+                except Exception: pass
+                raise ProjectResumeBlockedError("Durable storyboard is unavailable.") from error
             return self._generation._run_storyboard(record,storyboard,video_policy,music_policy,video_provider,music_provider)
         try:
             from app.models import Episode

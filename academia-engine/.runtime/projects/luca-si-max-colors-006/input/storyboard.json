@@ -1,0 +1,159 @@
+{
+  "storyboard_id": "luca-si-max-colors-001",
+  "series_id": "luca-si-max",
+  "title": "Luca și Max descoperă culorile",
+  "language": "ro",
+  "audience": {
+    "target_age_min": 3,
+    "target_age_max": 6
+  },
+  "educational_goal": "Recunoașterea și numirea culorilor roșu, galben, verde și albastru prin obiecte familiare, repetiție muzicală și un joc de identificare.",
+  "music_direction": {
+    "style": "Cântec educativ original de tip pop-jucăuș pentru preșcolari, cu fraze melodice scurte și refren repetitiv",
+    "mood": "Vesel, cald, jucăuș și răbdător",
+    "tempo_bpm": 104.0,
+    "vocals": "Voce principală caldă și clară, cu dicție lentă; răspunsuri cântate de un mic grup de copii. Max nu vorbește și comunică exclusiv prin mișcări și expresii.",
+    "instrumentation": [
+      "ukulele",
+      "marimbă",
+      "pian luminos",
+      "clopoței",
+      "percuție ușoară",
+      "contrabas moale",
+      "bătăi ritmice din palme"
+    ]
+  },
+  "target_duration_seconds": 60.0,
+  "required_character_ids": [
+    "luca",
+    "max"
+  ],
+  "sections": [
+    {
+      "section_id": "culori-rosu-galben",
+      "order": 1,
+      "section_type": "descoperire ghidată",
+      "educational_goal": "Asocierea culorilor roșu și galben cu obiecte ușor de recunoscut.",
+      "learning_focus": "roșu; galben",
+      "visual_goal": "Prezentarea clară și separată a unei mingi roșii și a unei flori galbene într-un parc însorit.",
+      "lyrics": "Luca spune: „Mingea este roșie,\nRoșu, roșu, ce frumos!”\nFloarea este galbenă,\nGalben ca un soare luminos!”",
+      "characters": [
+        "luca",
+        "max"
+      ],
+      "actions": [
+        "Max descoperă o minge roșie și o rostogolește ușor spre Luca.",
+        "Luca numește culoarea roșie.",
+        "Max observă o floare galbenă, iar Luca numește culoarea galbenă."
+      ],
+      "gestures": [
+        "Luca indică pe rând mingea și floarea.",
+        "Max dă vesel din coadă și înclină curios capul."
+      ],
+      "objects": [
+        "minge roșie",
+        "floare galbenă"
+      ],
+      "environment": "Parc însorit, cu alee lină și spațiu deschis, redat prin forme moi și imagini educaționale clare.",
+      "camera_direction": "Cadru larg de introducere, apoi prim-planuri curate pe fiecare obiect în momentul numirii culorii.",
+      "emotion": "Curiozitate veselă și încântare.",
+      "estimated_duration_seconds": 15.0
+    },
+    {
+      "section_id": "culori-verde-albastru",
+      "order": 2,
+      "section_type": "explorare muzicală",
+      "educational_goal": "Asocierea culorilor verde și albastru cu elemente din parc.",
+      "learning_focus": "verde; albastru",
+      "visual_goal": "Evidențierea unei frunze verzi și a unui zmeu albastru, fiecare izolat vizual când este numit.",
+      "lyrics": "Luca spune: „Frunza este verde,\nVerde, verde, legănat!\nZmeul este albastru,\nSus pe cer s-a înălțat!”",
+      "characters": [
+        "luca",
+        "max"
+      ],
+      "actions": [
+        "Max găsește o frunză verde care se mișcă ușor în vânt.",
+        "Luca numește culoarea verde.",
+        "Max urmărește un zmeu albastru, iar Luca numește culoarea albastră."
+      ],
+      "gestures": [
+        "Luca ridică frunza pentru a fi văzută clar, apoi arată spre zmeu.",
+        "Max urmărește zmeul cu privirea și face un salt jucăuș."
+      ],
+      "objects": [
+        "frunză verde",
+        "zmeu albastru"
+      ],
+      "environment": "O zonă luminoasă a parcului, cu iarbă, copaci și cer senin.",
+      "camera_direction": "Prim-plan pe frunză, mișcare lentă în sus către zmeu, apoi cadru comun cu Luca și Max.",
+      "emotion": "Mirare, energie blândă și bucurie.",
+      "estimated_duration_seconds": 15.0
+    },
+    {
+      "section_id": "refren-patru-culori",
+      "order": 3,
+      "section_type": "refren recapitulativ",
+      "educational_goal": "Repetarea în ordine a celor patru culori pentru consolidarea vocabularului.",
+      "learning_focus": "roșu; galben; verde; albastru",
+      "visual_goal": "Afișarea simultană și apoi succesivă a celor patru obiecte, sincronizată cu fiecare cuvânt de culoare.",
+      "lyrics": "„Roșu, galben, verde, albastru,\nPatru culori cântăm!\nRoșu, galben, verde, albastru,\nLe vedem și le-nvățăm!”",
+      "characters": [
+        "luca",
+        "max"
+      ],
+      "actions": [
+        "Luca așază cele patru obiecte într-un semicerc.",
+        "Fiecare obiect este evidențiat pe ritm când culoarea sa este cântată.",
+        "Max se deplasează jucăuș de la un obiect la altul fără să vocalizeze cuvinte."
+      ],
+      "gestures": [
+        "Luca numără cele patru culori pe degete.",
+        "Max atinge ușor fiecare obiect cu lăbuța și dă din coadă."
+      ],
+      "objects": [
+        "minge roșie",
+        "floare galbenă",
+        "frunză verde",
+        "zmeu albastru"
+      ],
+      "environment": "Poiană luminoasă din parc, amenajată ca un spațiu simplu de recapitulare.",
+      "camera_direction": "Cadru frontal clar, urmat de patru prim-planuri ritmice și o revenire la cadrul comun.",
+      "emotion": "Entuziasm, încredere și bucurie colectivă.",
+      "estimated_duration_seconds": 15.0
+    },
+    {
+      "section_id": "jocul-gaseste-culoarea",
+      "order": 4,
+      "section_type": "joc interactiv și încheiere",
+      "educational_goal": "Verificarea recunoașterii celor patru culori prin întrebări și pauze pentru răspuns.",
+      "learning_focus": "identificarea activă a culorilor roșu, galben, verde și albastru",
+      "visual_goal": "Invitarea copiilor să aleagă obiectul potrivit dintre cele patru opțiuni clar vizibile.",
+      "lyrics": "Luca întreabă: „Unde-i roșu? Unde-i verde?”\nPauză scurtă: „Ai găsit!”\n„Galben, albastru — arată-le și tu!\nBravo! Culorile le știi acum!”",
+      "characters": [
+        "luca",
+        "max"
+      ],
+      "actions": [
+        "Luca invită publicul să găsească pe rând culorile cerute.",
+        "După fiecare pauză, obiectul corect se evidențiază.",
+        "Max indică obiectele corecte prin apropiere, privire și atingere, fără să vorbească.",
+        "Luca și Max încheie jocul împreună."
+      ],
+      "gestures": [
+        "Luca deschide palmele spre cele patru opțiuni și oferă un semn de încurajare.",
+        "Max înclină capul în timpul pauzelor și sare vesel după răspunsurile corecte.",
+        "Luca face cu mâna la final."
+      ],
+      "objects": [
+        "minge roșie",
+        "floare galbenă",
+        "frunză verde",
+        "zmeu albastru"
+      ],
+      "environment": "Aceeași poiană însorită, cu obiectele așezate la distanțe egale pentru alegeri vizuale clare.",
+      "camera_direction": "Cadru stabil asupra tuturor opțiunilor, pauze vizuale pentru răspuns, apoi prim-planuri pe alegerile corecte și cadru larg de final.",
+      "emotion": "Încurajare, satisfacție și celebrare veselă.",
+      "estimated_duration_seconds": 15.0
+    }
+  ]
+}

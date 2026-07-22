@@ -136,3 +136,4 @@ class EpisodeGenerationService:
     def plan_and_produce(self, director_plan: DirectorPlan, polling_policy, **configuration):
         request = self.plan_only(director_plan, **configuration)
         return self._orchestrator.produce(request, polling_policy)
+    def produce_planned(self,request,polling_policy): return self._orchestrator.produce(request,polling_policy)

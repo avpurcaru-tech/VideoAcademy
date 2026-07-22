@@ -145,6 +145,8 @@ class ProductionRecord(BaseModel):
     safe_message: str | None = Field(default=None, max_length=500)
     submit_http_status: int | None = None
     submit_provider_code: int | None = None
+    submit_provider_message: str | None = Field(default=None,max_length=200)
+    submit_request_id: str | None = Field(default=None,max_length=200)
     submit_provider_task_id: str | None = Field(default=None, pattern=r"^[A-Za-z0-9_-]+$")
     submit_response_shape: tuple[str, ...] = ()
     query_http_status: int | None = None

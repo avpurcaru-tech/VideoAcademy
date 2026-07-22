@@ -3,6 +3,9 @@ from typing import Literal, Mapping
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
+KLING_PROMPT_MAX_CHARACTERS = 3072
+KLING_PROMPT_RECOMMENDED_CHARACTERS = 2500
+
 
 class KlingGenerationConfigurationError(ValueError):
     """Raised when Kling generation settings are not supported by the documented contract."""

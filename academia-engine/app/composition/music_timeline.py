@@ -21,6 +21,7 @@ class MusicTimelineCompositionRequest(BaseModel):
     composition_id: str=Field(min_length=1,max_length=200)
     timeline: MusicTimeline|None=None
     video_clips: tuple[StoryboardVideoClip,...]=Field(min_length=1)
+    shared_master_path: Path|None=None
     music_source: Path
     destination: Path
     workspace: Path

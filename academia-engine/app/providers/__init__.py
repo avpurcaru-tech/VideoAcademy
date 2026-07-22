@@ -19,7 +19,8 @@ from .kling_dtos import (
     KlingTaskNotFoundError,
     KlingVideoOutput,
 )
-from .kling_mapper import KlingTextToVideoMapper, KlingUnsupportedConfigurationError
+from .kling_mapper import (KlingTextToVideoMapper,KlingUnsupportedConfigurationError,
+    KlingPromptTooLongError,KlingPromptLengthDiagnostic)
 from .kling_downloader import KlingVideoArtifactDownloader
 from .video_provider import VideoProvider
 from .kling_factory import KlingProviderRegistry,KlingProviderRegistryError
@@ -43,6 +44,8 @@ __all__ = [
     "KlingTextToVideoMapper",
     "KlingSubmissionDisabledError",
     "KlingUnsupportedConfigurationError",
+    "KlingPromptTooLongError",
+    "KlingPromptLengthDiagnostic",
     "KlingProvider",
     "KlingTimeoutError",
     "KlingVideoOutput",

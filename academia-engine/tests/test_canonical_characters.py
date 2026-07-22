@@ -62,7 +62,8 @@ class CanonicalCharacterTests(unittest.TestCase):
             payloads=[mapper.map(value,external_task_id=f"external-{index}").to_payload()["prompt"]
                       for index,value in enumerate(requests)]
             luca_description=profile("luca").canonical_description; max_description=profile("max").canonical_description
-            self.assertTrue(all(luca_description in value and max_description in value for value in payloads))
+            self.assertTrue(all("golden-blond" in value and "bright blue eyes" in value for value in payloads))
+            self.assertTrue(all("German Shepherd" in value and "red collar" in value and "Max never speaks" in value for value in payloads))
             luca_blocks=[next(character.appearance for character in request.video_request.characters if character.id=="luca") for request in requests]
             self.assertEqual(1,len(set(luca_blocks)))
             section=storyboard.sections[0].model_copy(update={"characters":("luca",)})
@@ -71,7 +72,7 @@ class CanonicalCharacterTests(unittest.TestCase):
             luca_only=luca_only.model_copy(update={"target_duration_seconds":section.estimated_duration_seconds})
             request=StoryboardVideoPlanner(character_registry=characters,series_registry=series).build(luca_only,"video-2")[0]
             text=mapper.map(request,external_task_id="external-only").to_payload()["prompt"]
-            self.assertIn(luca_description,text); self.assertNotIn(max_description,text)
+            self.assertIn("golden-blond",text); self.assertNotIn("German Shepherd",text)
             self.assertIn("sunny park",text.lower())
 
     def test_character_cli_register_and_show(self):
