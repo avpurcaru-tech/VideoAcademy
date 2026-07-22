@@ -1,0 +1,33 @@
+{
+  "project_id": "luca-si-max-colors-005",
+  "episode_id": "luca-si-max-colors-001",
+  "series_id": "luca-si-max",
+  "status": "failed",
+  "video_production_id": "luca-si-max-colors-005-video",
+  "music_task_id": null,
+  "lyrics_path": ".runtime\\projects\\luca-si-max-colors-005\\lyrics\\lyrics.json",
+  "music_directory": ".runtime\\projects\\luca-si-max-colors-005\\music",
+  "video_directory": ".runtime\\projects\\luca-si-max-colors-005\\video",
+  "final_directory": ".runtime\\projects\\luca-si-max-colors-005\\final",
+  "failure_stage": "storyboard_generation",
+  "failure_category": "storyboard_character_identity_redefined",
+  "safe_message": "Storyboard generation failed at a safe boundary.",
+  "failure_details": [
+    "canonical_characters.luca.appearance: canonical appearance changed"
+  ],
+  "provider_http_status": null,
+  "provider_request_id": null,
+  "provider_model": null,
+  "provider_retry_after": null,
+  "failed_scene_id": null,
+  "submit_http_status": null,
+  "submit_provider_code": null,
+  "submit_provider_task_id": null,
+  "submit_response_shape": [],
+  "query_http_status": null,
+  "query_provider_code": null,
+  "query_provider_task_id": null,
+  "query_response_shape": [],
+  "created_at": "2026-07-22T00:09:33.506873Z",
+  "updated_at": "2026-07-22T00:10:12.848123Z"
+}

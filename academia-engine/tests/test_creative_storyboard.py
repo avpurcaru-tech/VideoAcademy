@@ -73,7 +73,7 @@ class CreativeStoryboardTests(unittest.TestCase):
         schema = json.dumps(CreativeStoryboard.model_json_schema()).lower()
         fields = set(CreativeStoryboard.model_fields)
         self.assertEqual(fields, {"storyboard_id", "series_id", "title", "language", "audience", "educational_goal",
-                              "music_direction", "target_duration_seconds", "canonical_characters", "sections"})
+                          "music_direction", "target_duration_seconds", "required_character_ids", "canonical_characters", "sections"})
         for provider in ("kling", "suno", "openai", "prompt", "payload", "model"):
             self.assertNotIn(provider, schema)
 
@@ -85,7 +85,8 @@ class CreativeStoryboardTests(unittest.TestCase):
         result = OpenAIStoryboardGenerator(client=client).generate_storyboard(brief())
         self.assertEqual(result, expected)
         kwargs = client.responses.parse.call_args.kwargs
-        self.assertEqual(kwargs["text_format"], CreativeStoryboard)
+        from app.providers.openai_storyboard_provider import OpenAIStoryboardDTO
+        self.assertEqual(kwargs["text_format"], OpenAIStoryboardDTO)
 
     def test_openai_cli_without_confirm_never_resolves_or_calls_provider(self):
         with tempfile.TemporaryDirectory() as directory:

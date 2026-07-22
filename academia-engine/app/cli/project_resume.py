@@ -17,6 +17,16 @@ def main() -> int:
     parser.add_argument("--timeout",type=float,default=900); args=parser.parse_args()
     try:
         registry=ProjectRegistry()
+        existing=registry.load(args.project_id)
+        if existing.failure_stage==ProjectFailureStage.STORYBOARD_GENERATION and not (existing.lyrics_path.parent.parent/"input"/"episode.json").is_file():
+            try:
+                from app.cli.project_retry_storyboard import retry_storyboard
+                retry_storyboard(args.project_id,registry)
+            except Exception:
+                print("Project resume failed during storyboard recovery at a safe boundary.")
+                try: _failure(registry.load(args.project_id))
+                except Exception: pass
+                return 1
         try: _,video_runtime=KlingProviderRegistry().construct("kling")
         except KlingProviderConfigurationError as configuration_error:
             try:

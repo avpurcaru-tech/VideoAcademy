@@ -75,24 +75,17 @@ class StoryboardGenerationService:
     def _validate_series(storyboard, bible, profiles):
         if storyboard.series_id != bible.series_id:
             raise StoryboardSeriesContinuityError("Storyboard series identity differs from the registered series.")
-        canonical={value.character_id:value for value in storyboard.canonical_characters}
-        unknown_canonical=set(canonical)-set(bible.resolved_character_ids)
-        if unknown_canonical:
-            value=sorted(unknown_canonical)[0]
+        declared=set(storyboard.required_character_ids)
+        unknown_declared=declared-set(bible.resolved_character_ids)
+        if unknown_declared:
+            value=sorted(unknown_declared)[0]
             raise _diagnostic(StoryboardSeriesContinuityError("Storyboard redefines canonical identity."),
-                "storyboard_unknown_character","canonical_characters",f"unknown character {value}")
-        bible_characters={value.character_id:value for value in bible.characters}
-        for character_id,value in canonical.items():
-            expected=bible_characters[character_id]
-            if value.name != expected.name:
-                raise _diagnostic(StoryboardSeriesContinuityError("Storyboard renames a canonical character."),
-                    "storyboard_character_identity_redefined",f"canonical_characters.{character_id}.name","canonical name changed")
-            if value.appearance != expected.appearance:
-                raise _diagnostic(StoryboardSeriesContinuityError("Storyboard changes canonical appearance."),
-                    "storyboard_character_identity_redefined",f"canonical_characters.{character_id}.appearance","canonical appearance changed")
-            if value.clothing != expected.clothing:
-                raise _diagnostic(StoryboardSeriesContinuityError("Storyboard changes canonical clothing."),
-                    "storyboard_character_clothing_changed",f"canonical_characters.{character_id}.clothing","canonical clothing changed")
+                "storyboard_unknown_character","required_character_ids",f"unknown character {value}")
+        missing_declared=set(bible.resolved_character_ids)-declared
+        if missing_declared:
+            value=sorted(missing_declared)[0]
+            raise _diagnostic(StoryboardSeriesContinuityError("Storyboard is missing a required character."),
+                "storyboard_missing_required_character","required_character_ids",f"missing required character {value}")
         required_ids = set(bible.resolved_character_ids)
         for section in storyboard.sections:
             references = set(section.characters)

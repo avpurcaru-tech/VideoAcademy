@@ -21,7 +21,7 @@ class StoryboardVideoPlanner:
             storyboard = CreativeStoryboard.model_validate(storyboard)
             canonical = {value.character_id: value for value in storyboard.canonical_characters}
             profiles={}
-            if storyboard.series_id and not canonical:
+            if storyboard.series_id:
                 from app.characters import CharacterRegistry
                 from app.series import SeriesRegistry
                 bible=(self._series_registry or SeriesRegistry()).load(storyboard.series_id)
@@ -33,7 +33,8 @@ class StoryboardVideoPlanner:
                 semantic_description = (
                     f"{section.environment}\nVisual goal: {section.visual_goal}\nObjects: {objects}"
                 )
-                action = f"{section.visual_goal} Objects in the scene: {objects}."
+                specific=" ".join((*section.actions,*section.gestures))
+                action = f"{section.visual_goal} {specific} Objects in the scene: {objects}."
                 video_request = VideoRequest(scene_number=scene_number,
                     duration_seconds=self._duration_policy.execution_duration_seconds,
                     environment=VideoEnvironment(location_name=section.environment[:150],
@@ -55,6 +56,12 @@ class StoryboardVideoPlanner:
 
     @staticmethod
     def _video_character(storyboard, reference, canonical,profiles):
+        if reference in profiles:
+            value=profiles[reference]
+            block=(f"Canonical character {value.name}:\n{value.canonical_description}\nBehavior rules: "
+                f"{' '.join(value.behavior_rules)}\nContinuity constraints: {' '.join(value.negative_rules)}")
+            return VideoCharacter(id=value.character_id,name=value.name,role=value.character_type or "recurring character",
+                appearance=block[:1000])
         if reference in canonical:
             value = canonical[reference]
             description = "; ".join(filter(None, (value.age_description, value.appearance,
@@ -62,12 +69,6 @@ class StoryboardVideoPlanner:
                 "recurring accessories: " + ", ".join(value.recurring_accessories) if value.recurring_accessories else "")))
             return VideoCharacter(id=value.character_id, name=value.name, role=value.character_type,
                 appearance=description[:1000])
-        if reference in profiles:
-            value=profiles[reference]
-            block=(f"Canonical character {value.name}:\n{value.canonical_description}\nBehavior rules: "
-                f"{' '.join(value.behavior_rules)}\nContinuity constraints: {' '.join(value.negative_rules)}")
-            return VideoCharacter(id=value.character_id,name=value.name,role=value.character_type or "recurring character",
-                appearance=block[:1000])
         return VideoCharacter(id=StoryboardVideoPlanner._character_id(storyboard.storyboard_id, reference),
             name=reference, role="storyboard character", appearance="Original character as established by the storyboard.")
 

@@ -1,9 +1,9 @@
 import os
 
 from openai import APIConnectionError, APIError, APITimeoutError, AuthenticationError, OpenAI, RateLimitError
-from pydantic import ValidationError
+from pydantic import BaseModel,ConfigDict,Field,ValidationError
 
-from app.storyboard.contracts import CreativeStoryboard
+from app.storyboard.contracts import CreativeStoryboard,StoryboardAudience,StoryboardMusicDirection,StoryboardSection
 
 
 DEFAULT_OPENAI_STORYBOARD_MODEL = "gpt-5.6"
@@ -21,6 +21,20 @@ class OpenAIStoryboardStructuredOutputError(OpenAIStoryboardError): pass
 class OpenAIStoryboardStructuredOutputMissingError(OpenAIStoryboardStructuredOutputError): pass
 class OpenAIStoryboardStructuredOutputMalformedError(OpenAIStoryboardStructuredOutputError): pass
 class OpenAIStoryboardRefusalError(OpenAIStoryboardError): pass
+
+class OpenAIStoryboardDTO(BaseModel):
+    """Provider output: creative semantics and canonical IDs, never canonical identity prose."""
+    model_config=ConfigDict(extra="forbid",frozen=True)
+    storyboard_id: str
+    series_id: str|None=None
+    title: str
+    language: str
+    audience: StoryboardAudience
+    educational_goal: str
+    music_direction: StoryboardMusicDirection
+    target_duration_seconds: float
+    required_character_ids: tuple[str,...]=()
+    sections: tuple[StoryboardSection,...]=Field(min_length=1)
 
 def _refused(response):
     return any(getattr(content,"type",None)=="refusal" for item in getattr(response,"output",())
@@ -55,7 +69,7 @@ class OpenAIStoryboardGenerator:
 
     def generate_storyboard(self, brief, series_bible=None, character_profiles=()):
         try:
-            response = self._client.responses.parse(model=self._model, input=_input(brief, series_bible, character_profiles), text_format=CreativeStoryboard)
+            response = self._client.responses.parse(model=self._model, input=_input(brief, series_bible, character_profiles), text_format=OpenAIStoryboardDTO)
         except ValidationError as error:
             raise OpenAIStoryboardStructuredOutputMalformedError("OpenAI storyboard output is malformed.") from error
         except AuthenticationError as error:
@@ -73,9 +87,12 @@ class OpenAIStoryboardGenerator:
         if _refused(response):
             raise _decorate(OpenAIStoryboardRefusalError("OpenAI declined the storyboard request."),response,self._model)
         storyboard = getattr(response, "output_parsed", None)
-        if not isinstance(storyboard, CreativeStoryboard):
+        if isinstance(storyboard,CreativeStoryboard):
+            storyboard=OpenAIStoryboardDTO.model_validate(storyboard.model_dump(mode="python"))
+        if not isinstance(storyboard, OpenAIStoryboardDTO):
             raise _decorate(OpenAIStoryboardStructuredOutputMissingError("OpenAI returned no valid structured storyboard."),response,self._model)
-        return storyboard
+        try: return CreativeStoryboard.model_validate(storyboard.model_dump(mode="python"))
+        except ValidationError as error: raise OpenAIStoryboardStructuredOutputMalformedError("OpenAI storyboard mapping failed.") from error
 
 
 def _input(brief, series_bible=None, character_profiles=()):
@@ -93,8 +110,10 @@ def _input(brief, series_bible=None, character_profiles=()):
         "Include original musical style, mood, tempo, vocal direction, and instrumentation in music_direction. "
         "Do not include API payloads, provider names, model settings, URLs, credentials, rendering commands, or implementation details. "
         "Use contiguous section orders starting at one, unique IDs, positive durations, and section durations that exactly total the target. "
-        "When series context is supplied, reference every recurring character by stable ID in every section and do not emit alternate appearance fields. "
-        "Never rename characters, alter appearance or clothing, or violate behavior or negative rules. Locations, backgrounds, props, and weather may vary freely. "
+        "When series context is supplied, return required characters only as stable IDs in required_character_ids and each section.characters. "
+        "Reference canonical characters only by their IDs and names. Do not restate or rewrite appearance. Do not define clothing, age, breed, "
+        "eye color, hair color, accessories, canonical descriptions, personality profiles, or negative rules. Max must not speak. "
+        "Never rename characters or violate behavior rules. Locations, backgrounds, props, actions, gestures, emotions, and weather may vary freely. "
         "Do not imitate copyrighted characters or franchises.")},
         {"role": "user", "content": (
             f"Storyboard ID: {brief.brief_id}\nTopic: {brief.topic}\nEducational goals: {'; '.join(brief.learning_objectives)}\n"

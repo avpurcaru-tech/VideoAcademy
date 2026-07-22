@@ -17,7 +17,7 @@ class StoryboardEpisodeAdapter:
             storyboard = CreativeStoryboard.model_validate(storyboard)
             canonical = {value.character_id: value for value in storyboard.canonical_characters}
             profiles={}
-            if storyboard.series_id and not canonical:
+            if storyboard.series_id:
                 from app.characters import CharacterRegistry
                 from app.series import SeriesRegistry
                 bible=(self._series_registry or SeriesRegistry()).load(storyboard.series_id)
@@ -25,7 +25,7 @@ class StoryboardEpisodeAdapter:
             character_names = tuple(dict.fromkeys(
                 name for section in storyboard.sections for name in section.characters
             ))
-            character_ids = {name: (name if name in canonical or name in profiles else self._character_id(storyboard.storyboard_id, name)) for name in character_names}
+            character_ids = {name: (name if name in profiles or name in canonical else self._character_id(storyboard.storyboard_id, name)) for name in character_names}
             characters = [self._character(storyboard, name, character_ids[name], canonical,profiles) for name in character_names]
             scenes = [Scene(number=section.order, narration=section.lyrics,
                 visual_description=section.visual_goal,
@@ -53,6 +53,11 @@ class StoryboardEpisodeAdapter:
     @staticmethod
     def _character(storyboard, name, character_id, canonical,profiles):
         sections = [section for section in storyboard.sections if name in section.characters]
+        if name in profiles:
+            value=profiles[name]
+            return Character(id=value.character_id,name=value.name,role=value.character_type or "recurring character",
+                description="; ".join((*value.personality_traits,*value.behavior_rules,*value.negative_rules))[:1000],
+                appearance=value.canonical_description[:1000])
         if name in canonical:
             value = canonical[name]
             appearance = "; ".join(filter(None, (value.age_description, value.appearance,
@@ -60,11 +65,6 @@ class StoryboardEpisodeAdapter:
                 "recurring accessories: " + ", ".join(value.recurring_accessories) if value.recurring_accessories else "")))
             return Character(id=value.character_id, name=value.name, role=value.character_type,
                 description="; ".join(value.behavior_rules), appearance=appearance)
-        if name in profiles:
-            value=profiles[name]
-            return Character(id=value.character_id,name=value.name,role=value.character_type or "recurring character",
-                description="; ".join((*value.personality_traits,*value.behavior_rules,*value.negative_rules))[:1000],
-                appearance=value.canonical_description[:1000])
         return Character(id=character_id, name=name, role=sections[0].educational_goal,
             description=sections[0].learning_focus, appearance=sections[0].visual_goal)
 

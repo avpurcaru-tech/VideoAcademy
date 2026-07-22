@@ -2,7 +2,7 @@ from typing import Protocol, runtime_checkable
 
 from app.creative import EducationalCreativeBrief
 
-from .contracts import CreativeStoryboard, StoryboardAudience, StoryboardCharacter, StoryboardMusicDirection, StoryboardSection
+from .contracts import CreativeStoryboard, StoryboardAudience, StoryboardMusicDirection, StoryboardSection
 
 
 @runtime_checkable
@@ -28,7 +28,7 @@ class DeterministicStoryboardGenerator:
                 camera_direction="A stable eye-level view with gentle movement.", emotion=brief.tone,
                 estimated_duration_seconds=duration))
         return CreativeStoryboard(storyboard_id=brief.brief_id, series_id=series_bible.series_id if series_bible else None,
-            canonical_characters=(), title=f"Learning {brief.topic}",
+            required_character_ids=series_bible.resolved_character_ids if series_bible else (), title=f"Learning {brief.topic}",
             language=brief.language, audience=StoryboardAudience(target_age_min=brief.target_age_min,
                 target_age_max=brief.target_age_max), educational_goal="; ".join(brief.learning_objectives),
             music_direction=StoryboardMusicDirection(style="original educational song", mood=brief.tone,

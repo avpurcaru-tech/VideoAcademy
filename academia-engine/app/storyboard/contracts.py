@@ -46,6 +46,8 @@ class StoryboardSection(BaseModel):
     visual_goal: str = Field(min_length=1, max_length=2000)
     lyrics: str = Field(min_length=1, max_length=10000)
     characters: tuple[str, ...]
+    actions: tuple[str,...] = ()
+    gestures: tuple[str,...] = ()
     objects: tuple[str, ...]
     environment: str = Field(min_length=1, max_length=2000)
     camera_direction: str = Field(min_length=1, max_length=1000)
@@ -60,7 +62,7 @@ class StoryboardSection(BaseModel):
             raise ValueError("Storyboard text must be non-blank and safe.")
         return value
 
-    @field_validator("characters", "objects")
+    @field_validator("characters", "actions", "gestures", "objects")
     @classmethod
     def safe_lists(cls, values):
         if any(not value.strip() or "\0" in value for value in values):
@@ -94,8 +96,17 @@ class CreativeStoryboard(BaseModel):
         style="original educational song", mood="cheerful", tempo_bpm=110,
         vocals="clear child-friendly vocals", instrumentation=("ukulele", "xylophone", "light percussion")))
     target_duration_seconds: float = Field(gt=0)
-    canonical_characters: tuple[StoryboardCharacter, ...] = ()
+    required_character_ids: tuple[str,...] = ()
+    # Read-only compatibility for already persisted storyboards. Excluded from all new serialization.
+    canonical_characters: tuple[StoryboardCharacter, ...] = Field(default=(),exclude=True)
     sections: tuple[StoryboardSection, ...] = Field(min_length=1)
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_legacy_characters(cls,value):
+        if isinstance(value,dict) and not value.get("required_character_ids") and value.get("canonical_characters"):
+            value={**value,"required_character_ids":[item.get("character_id") for item in value["canonical_characters"]]}
+        return value
 
     @field_validator("title", "language", "educational_goal")
     @classmethod
@@ -122,4 +133,6 @@ class CreativeStoryboard(BaseModel):
             known = set(canonical_ids)
             if any(not set(section.characters) <= known for section in self.sections):
                 raise ValueError("Storyboard section references an invalid recurring character.")
+        if len(self.required_character_ids)!=len(set(self.required_character_ids)):
+            raise ValueError("Storyboard required character IDs must be unique.")
         return self
