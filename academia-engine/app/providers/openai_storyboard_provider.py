@@ -11,12 +11,29 @@ DEFAULT_OPENAI_STORYBOARD_MODEL = "gpt-5.6"
 
 class OpenAIStoryboardError(RuntimeError): pass
 class OpenAIStoryboardConfigurationError(OpenAIStoryboardError): pass
+class OpenAIStoryboardUnavailableError(OpenAIStoryboardError): pass
 class OpenAIStoryboardAuthenticationError(OpenAIStoryboardError): pass
 class OpenAIStoryboardRateLimitError(OpenAIStoryboardError): pass
 class OpenAIStoryboardTimeoutError(OpenAIStoryboardError): pass
 class OpenAIStoryboardConnectionError(OpenAIStoryboardError): pass
 class OpenAIStoryboardAPIError(OpenAIStoryboardError): pass
 class OpenAIStoryboardStructuredOutputError(OpenAIStoryboardError): pass
+class OpenAIStoryboardStructuredOutputMissingError(OpenAIStoryboardStructuredOutputError): pass
+class OpenAIStoryboardStructuredOutputMalformedError(OpenAIStoryboardStructuredOutputError): pass
+class OpenAIStoryboardRefusalError(OpenAIStoryboardError): pass
+
+def _refused(response):
+    return any(getattr(content,"type",None)=="refusal" for item in getattr(response,"output",())
+        for content in getattr(item,"content",()))
+
+def _decorate(error,source,model):
+    error.model=model
+    response=getattr(source,"response",None)
+    error.http_status=getattr(source,"status_code",None) or getattr(response,"status_code",None)
+    error.request_id=getattr(source,"request_id",None)
+    headers=getattr(response,"headers",{}) or {}
+    error.retry_after=headers.get("retry-after") if hasattr(headers,"get") else None
+    return error
 
 
 class OpenAIStoryboardGenerator:
@@ -34,28 +51,30 @@ class OpenAIStoryboardGenerator:
         try:
             self._client = OpenAI(api_key=key, max_retries=0)
         except Exception as error:
-            raise OpenAIStoryboardConfigurationError("OpenAI storyboard client could not be configured.") from error
+            raise OpenAIStoryboardUnavailableError("OpenAI storyboard client is unavailable.") from error
 
     def generate_storyboard(self, brief, series_bible=None, character_profiles=()):
         try:
             response = self._client.responses.parse(model=self._model, input=_input(brief, series_bible, character_profiles), text_format=CreativeStoryboard)
         except ValidationError as error:
-            raise OpenAIStoryboardStructuredOutputError("OpenAI storyboard output is malformed.") from error
+            raise OpenAIStoryboardStructuredOutputMalformedError("OpenAI storyboard output is malformed.") from error
         except AuthenticationError as error:
-            raise OpenAIStoryboardAuthenticationError("OpenAI storyboard authentication failed.") from error
+            raise _decorate(OpenAIStoryboardAuthenticationError("OpenAI storyboard authentication failed."),error,self._model) from error
         except RateLimitError as error:
-            raise OpenAIStoryboardRateLimitError("OpenAI storyboard rate limit was reached.") from error
+            raise _decorate(OpenAIStoryboardRateLimitError("OpenAI storyboard rate limit was reached."),error,self._model) from error
         except APITimeoutError as error:
-            raise OpenAIStoryboardTimeoutError("OpenAI storyboard request timed out.") from error
+            raise _decorate(OpenAIStoryboardTimeoutError("OpenAI storyboard request timed out."),error,self._model) from error
         except APIConnectionError as error:
-            raise OpenAIStoryboardConnectionError("OpenAI storyboard request could not connect.") from error
+            raise _decorate(OpenAIStoryboardConnectionError("OpenAI storyboard request could not connect."),error,self._model) from error
         except APIError as error:
-            raise OpenAIStoryboardAPIError("OpenAI storyboard API request failed.") from error
+            raise _decorate(OpenAIStoryboardAPIError("OpenAI storyboard API request failed."),error,self._model) from error
         except Exception as error:
-            raise OpenAIStoryboardAPIError("OpenAI storyboard request failed safely.") from error
+            raise _decorate(OpenAIStoryboardAPIError("OpenAI storyboard request failed safely."),error,self._model) from error
+        if _refused(response):
+            raise _decorate(OpenAIStoryboardRefusalError("OpenAI declined the storyboard request."),response,self._model)
         storyboard = getattr(response, "output_parsed", None)
         if not isinstance(storyboard, CreativeStoryboard):
-            raise OpenAIStoryboardStructuredOutputError("OpenAI returned no valid structured storyboard.")
+            raise _decorate(OpenAIStoryboardStructuredOutputMissingError("OpenAI returned no valid structured storyboard."),response,self._model)
         return storyboard
 
 

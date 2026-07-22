@@ -40,9 +40,12 @@ def main():
             print("Use --confirm to authorize Episode, video, lyrics, and music generation costs."); return 2
         ProjectGenerationService.create_planned(registry,args.project_id,args.output,brief.brief_id,brief.series_id)
         series_registry=SeriesRegistry(); character_registry=CharacterRegistry()
+        resolved_character_ids=()
         if brief.series_id:
             series_bible=series_registry.load(brief.series_id)
-            character_registry.require_many(series_bible.resolved_character_ids)
+            resolved_character_ids=series_bible.resolved_character_ids
+            character_registry.require_many(resolved_character_ids)
+        ProjectGenerationService.persist_creative_brief(registry.load(args.project_id),brief,resolved_character_ids)
         duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
         episode_service=EpisodeGenerationService(EpisodeGeneratorRegistry().resolve(args.episode_generator),duration_policy)
         project=ProjectGenerationService(build_services(args.video_provider,args.lyrics_provider,args.music_provider),registry)

@@ -156,6 +156,19 @@ class ProjectGenerationService:
             directory.mkdir(parents=True,exist_ok=True)
         return record
     @staticmethod
+    def persist_creative_brief(record,brief,character_ids=()):
+        root=record.lyrics_path.parent.parent/"input"
+        root.mkdir(parents=True,exist_ok=True)
+        payload=brief.model_dump(mode="json")
+        payload["resolved_character_ids"]=list(character_ids)
+        destination=root/"creative-brief.json"; temporary=destination.with_suffix(".json.part")
+        try:
+            with temporary.open("w",encoding="utf-8") as stream:
+                import json
+                json.dump(payload,stream,ensure_ascii=False,indent=2); stream.flush(); os.fsync(stream.fileno())
+            os.replace(temporary,destination)
+        finally: temporary.unlink(missing_ok=True)
+    @staticmethod
     def fail_planned(registry,project_id,stage,category,message):
         record=registry.load(project_id)
         updated=record.model_copy(update={"status":ProjectStatus.FAILED,"failure_stage":stage,

@@ -51,6 +51,13 @@ def _failure(record):
     print(f"Project failure category: {record.failure_category or 'unavailable'}")
     print(f"Failed scene: {record.failed_scene_id or 'unavailable'}")
     print(f"Safe message: {record.safe_message or 'No durable diagnostic is available for this legacy failure.'}")
+    if record.failure_details:
+        print("Storyboard validation failed:")
+        for detail in record.failure_details: print(f"- {detail}")
+    if record.provider_http_status is not None: print(f"HTTP status: {record.provider_http_status}")
+    if record.provider_request_id: print(f"Request ID: {record.provider_request_id}")
+    if record.provider_model: print(f"Model: {record.provider_model}")
+    if record.provider_retry_after: print(f"Retry-After: {record.provider_retry_after}")
     if record.submit_http_status is not None: print(f"HTTP status: {record.submit_http_status}")
     if record.submit_provider_code is not None: print(f"Kling code: {record.submit_provider_code}")
     if record.submit_provider_task_id: print(f"Provider task ID: {record.submit_provider_task_id}")

@@ -46,6 +46,11 @@ class ProjectRecord(BaseModel):
     failure_stage: ProjectFailureStage|None=None
     failure_category: str|None=Field(default=None,max_length=100)
     safe_message: str|None=Field(default=None,max_length=500)
+    failure_details: tuple[str,...]=()
+    provider_http_status: int|None=None
+    provider_request_id: str|None=Field(default=None,max_length=200,pattern=r"^[A-Za-z0-9_-]+$")
+    provider_model: str|None=Field(default=None,max_length=200)
+    provider_retry_after: str|None=Field(default=None,max_length=100)
     failed_scene_id: str|None=None
     submit_http_status: int|None=None
     submit_provider_code: int|None=None
