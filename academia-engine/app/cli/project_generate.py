@@ -5,6 +5,9 @@ from app.cli.episode_project_plan import load_episode
 from app.config.environment import load_application_environment
 from app.engines.director import DirectorEngine
 from app.media import AudioVariantVideoComposer,FFmpegAudioVideoComposer,FFprobeAdapter,SubprocessProcessRunner
+from app.composition import ExistingTimelineVideoRenderer,MusicTimelineComposer
+from app.music_timeline import MusicTimelineGenerationService,MusicTimelineGeneratorRegistry
+from app.timeline import FFmpegTimelineRenderer
 from app.music import MusicEngine,MusicPollingPolicy,MusicProviderRegistry,MusicTaskRegistry
 from app.production import EpisodeGenerationService,EpisodeProductionPlanner,GenerationRequestStore,SceneDurationPolicy
 from app.config import KlingGenerationSettings
@@ -38,8 +41,12 @@ def build_services(video_provider="kling",lyrics_provider="openai",music_provide
     lyrics=LyricsGenerationService(OpenAILyricsGenerator())
     runtime=MusicProviderRegistry().resolve(music_provider); music_registry=MusicTaskRegistry()
     music=MusicEngine({music_provider:runtime.provider},music_registry,runtime.downloader,default_provider=music_provider)
-    runner=SubprocessProcessRunner(); composer=AudioVariantVideoComposer(FFmpegAudioVideoComposer(runner,FFprobeAdapter(runner)))
-    return ProjectServices(director,planner,episode,orchestrator,lyrics,music,composer,music_registry)
+    runner=SubprocessProcessRunner(); probe=FFprobeAdapter(runner); mux=FFmpegAudioVideoComposer(runner,probe)
+    composer=AudioVariantVideoComposer(mux)
+    timeline_service=MusicTimelineGenerationService(MusicTimelineGeneratorRegistry().resolve("openai"))
+    timeline_composer=MusicTimelineComposer(ExistingTimelineVideoRenderer(probe,FFmpegTimelineRenderer(runner,probe)),mux)
+    return ProjectServices(director,planner,episode,orchestrator,lyrics,music,composer,music_registry,
+        probe,timeline_service,timeline_composer)
 
 
 def main() -> int:

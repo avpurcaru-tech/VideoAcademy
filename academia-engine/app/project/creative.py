@@ -14,6 +14,9 @@ class CreativeProjectGenerationService:
                     except Exception: raise
             return EpisodeService().resolve(storyboard)
         return self._episodes.generate(brief)
+    def _derive_storyboard(self,brief):
+        if self._storyboards is None: raise RuntimeError("Storyboard generation service is unavailable.")
+        return self._storyboards.generate(brief)
     def preflight(self,brief,project_id,output_root,video_provider="kling"):
         episode=self._derive_episode(brief)
         return self._projects.preflight(episode,project_id,output_root,video_provider,series_id=brief.series_id)
@@ -25,15 +28,19 @@ class CreativeProjectGenerationService:
         else:
             from .orchestrator import ProjectGenerationService
             ProjectGenerationService.create_planned(self._registry,project_id,output_root,brief.brief_id,brief.series_id)
-        try:
-            episode=self._derive_episode(brief)
+        if self._storyboards is None:
+            episode=self._episodes.generate(brief)
             from app.cli.project_generate import _semantic_song_inputs
             song_brief,music_plan=_semantic_song_inputs(episode,project_id)
+            return self._projects.generate(episode,song_brief,music_plan,project_id,output_root,video_policy,music_policy,
+                video_provider,music_provider,series_id=brief.series_id)
+        try:
+            self._projects.mark_storyboard_generating(project_id)
+            storyboard=self._derive_storyboard(brief)
         except Exception as error:
             self._persist_early_failure(project_id,error)
             raise
-        return self._projects.generate(episode,song_brief,music_plan,project_id,output_root,video_policy,music_policy,
-                                       video_provider,music_provider,series_id=brief.series_id)
+        return self._projects.generate_storyboard(storyboard,project_id,video_policy,music_policy,video_provider,music_provider)
     def _persist_early_failure(self,project_id,error):
         from app.characters import CharacterRegistryError
         from app.series import SeriesRegistryError

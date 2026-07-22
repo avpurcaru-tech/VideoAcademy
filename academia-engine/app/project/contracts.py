@@ -7,8 +7,16 @@ from pydantic import BaseModel,ConfigDict,Field,field_validator
 
 class ProjectStatus(str,Enum):
     PLANNED="planned"
+    STORYBOARD_GENERATING="storyboard_generating"
+    STORYBOARD_READY="storyboard_ready"
+    LYRICS_READY="lyrics_ready"
     VIDEO_GENERATING="video_generating"
+    VIDEO_PLANNING="video_planning"
+    VIDEO_READY="video_ready"
     MUSIC_GENERATING="music_generating"
+    MUSIC_READY="music_ready"
+    TIMELINES_GENERATING="timelines_generating"
+    TIMELINES_READY="timelines_ready"
     COMPOSING="composing"
     COMPLETED="completed"
     FAILED="failed"
@@ -37,6 +45,7 @@ class ProjectRecord(BaseModel):
     episode_id: str=Field(min_length=1,max_length=200)
     series_id: str|None=Field(default=None,pattern=r"^[a-z0-9][a-z0-9_-]*$")
     status: ProjectStatus
+    orchestration_version: str=Field(default="legacy",pattern=r"^(legacy|storyboard_first)$")
     video_production_id: str=Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
     music_task_id: str|None=Field(default=None,pattern=r"^[A-Za-z0-9_-]+$")
     lyrics_path: Path

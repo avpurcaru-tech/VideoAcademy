@@ -19,7 +19,7 @@ class ProjectResumeBlockedError(ProjectOrchestrationError): pass
 
 
 class ProjectGenerationService:
-    def __init__(self,services,registry: ProjectRegistry): self._services=services; self._registry=registry
+    def __init__(self,services,registry: ProjectRegistry,progress=None): self._services=services; self._registry=registry; self._progress=progress or (lambda value:None)
 
     def preflight(self,episode,project_id,output_root,video_provider="kling",series_id=None):
         root=Path(output_root); production_id=f"{project_id}-video"
@@ -27,6 +27,9 @@ class ProjectGenerationService:
         self._services.episode_planner.preflight(plan,production_id,root/"video"/"scenes",root/"video"/"workspace",
             root/"video"/"master.mp4",provider=video_provider,transition=EpisodeTransitionPolicy(kind="cut"))
         return self._new_record(episode.id,project_id,root,series_id)
+
+    def mark_storyboard_generating(self,project_id):
+        return self._status(self._registry.load(project_id),ProjectStatus.STORYBOARD_GENERATING)
 
     def generate(self,episode,brief: EducationalSongBrief,music_plan: MusicPlan,project_id,output_root,
                  video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org",series_id=None):
@@ -42,6 +45,101 @@ class ProjectGenerationService:
             except Exception: pass
             raise
         return self._run(record,episode,brief,music_plan,video_policy,music_policy,video_provider,music_provider,False)
+
+    def generate_storyboard(self,storyboard,project_id,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org"):
+        from app.storyboard import CreativeStoryboard
+        record=self._registry.load(project_id); storyboard=CreativeStoryboard.model_validate(storyboard)
+        self._persist_model(record.lyrics_path.parent.parent/"input"/"storyboard.json",storyboard)
+        record=self._status(record,ProjectStatus.STORYBOARD_READY)
+        return self._run_storyboard(record,storyboard,video_policy,music_policy,video_provider,music_provider)
+
+    def _run_storyboard(self,record,storyboard,video_policy,music_policy,video_provider,music_provider):
+        from app.composition import MusicTimelineCompositionRequest,StoryboardVideoClip
+        from app.music import MusicGenerationRequest
+        from app.music_timeline import MusicTimeline
+        from app.production import ProductionRegistry
+        from app.storyboard import StoryboardLyricsAdapter,StoryboardMusicAdapter
+        try:
+            self._progress("Lyrics...")
+            if record.lyrics_path.is_file(): lyrics=LyricsPlan.model_validate_json(record.lyrics_path.read_text(encoding="utf-8"))
+            else:
+                lyrics=StoryboardLyricsAdapter().adapt(storyboard); persist_lyrics_atomic(lyrics,record.lyrics_path)
+            music_plan_path=record.lyrics_path.parent.parent/"input"/"music-plan.json"
+            if music_plan_path.is_file(): music_plan=MusicPlan.model_validate_json(music_plan_path.read_text(encoding="utf-8"))
+            else:
+                music_plan=StoryboardMusicAdapter().music_plan(storyboard); self._persist_model(music_plan_path,music_plan)
+            record=self._status(record,ProjectStatus.LYRICS_READY)
+            music_record=None
+            if record.music_task_id:
+                music_record=self._services.music_registry.load(record.music_task_id)
+                if music_record.artifact_set is None or not music_record.artifact_set.complete:
+                    terminal=self._services.music_engine.wait_until_terminal(record.music_task_id,music_policy)
+                    if terminal.normalized_status.value=="failed": raise ProjectOrchestrationError("Music task failed.")
+                    music_record=self._services.music_engine.download_all_variants(record.music_task_id,record.music_directory)
+            else:
+                self._progress("Music...")
+                record=self._status(record,ProjectStatus.MUSIC_GENERATING)
+                request=MusicGenerationRequest(song_id=lyrics.song_id,title=lyrics.title,lyrics=lyrics,music_plan=music_plan)
+                music_record=self._services.music_engine.generate_all_variants(request,record.music_directory,music_policy,music_provider)
+                record=self._update(record,music_task_id=music_record.provider_task_id)
+            record=self._status(record,ProjectStatus.MUSIC_READY)
+            timelines=[]; self._progress("Timelines..."); record=self._status(record,ProjectStatus.TIMELINES_GENERATING)
+            for index,audio in enumerate(music_record.artifact_set.artifacts,start=1):
+                path=record.music_directory/f"timeline-variant-{index:02d}.json"
+                if path.is_file(): timeline=MusicTimeline.model_validate_json(path.read_text(encoding="utf-8"))
+                else:
+                    duration=self._services.audio_probe.probe_audio(audio.local_path).duration_seconds
+                    timeline=self._services.music_timeline_service.generate(storyboard,lyrics,duration)
+                    timeline=timeline.model_copy(update={"timeline_id":f"{storyboard.storyboard_id}-variant-{index:02d}"})
+                    self._persist_model(path,timeline)
+                timelines.append(timeline)
+            record=self._status(record,ProjectStatus.TIMELINES_READY)
+            production=None
+            try: production=ProductionRegistry().load(record.video_production_id)
+            except Exception: pass
+            if production is None or any(scene.local_path is None for scene in production.scenes):
+                self._progress("Video...")
+                record=self._status(record,ProjectStatus.VIDEO_PLANNING)
+                record=self._status(record,ProjectStatus.VIDEO_GENERATING)
+                result=self._services.episode_generation_service.plan_and_produce(storyboard,video_policy,
+                    production_id=record.video_production_id,scene_output_directory=record.video_directory/"scenes",
+                    workspace=record.video_directory/"workspace",destination=record.video_directory/"master.mp4",
+                    provider=video_provider,transition=EpisodeTransitionPolicy(kind="cut"))
+                production=ProductionRegistry().load(record.video_production_id)
+            record=self._status(record,ProjectStatus.VIDEO_READY)
+            clips=tuple(StoryboardVideoClip(storyboard_section_id=scene.source_scene_id,
+                local_path=scene.local_path) for scene in production.scenes)
+            self._progress("Composition..."); record=self._status(record,ProjectStatus.COMPOSING)
+            for index,(audio,timeline) in enumerate(zip(music_record.artifact_set.artifacts,timelines,strict=True),start=1):
+                destination=record.final_directory/f"final-variant-{index:02d}.mp4"
+                if destination.is_file(): continue
+                self._services.music_timeline_composer.compose(MusicTimelineCompositionRequest(
+                    composition_id=f"{record.project_id}-variant-{index:02d}",timeline=timeline,video_clips=clips,
+                    music_source=audio.local_path,destination=destination,
+                    workspace=record.final_directory/f"workspace-variant-{index:02d}",resume=True))
+            return self._status(record,ProjectStatus.COMPLETED)
+        except Exception as error:
+            try: self._update(record,status=ProjectStatus.FAILED,failure_stage=self._storyboard_run_failure_stage(record),
+                failure_category="generation_failed",safe_message="Storyboard-first project generation failed at a safe boundary.")
+            except Exception: pass
+            raise
+
+    @staticmethod
+    def _storyboard_run_failure_stage(record):
+        if record.status in (ProjectStatus.MUSIC_GENERATING,ProjectStatus.MUSIC_READY): return ProjectFailureStage.MUSIC_GENERATION
+        if record.status in (ProjectStatus.TIMELINES_GENERATING,ProjectStatus.TIMELINES_READY): return ProjectFailureStage.MUSIC_GENERATION
+        if record.status in (ProjectStatus.VIDEO_PLANNING,ProjectStatus.VIDEO_GENERATING): return ProjectFailureStage.VIDEO_PLANNING
+        if record.status==ProjectStatus.COMPOSING: return ProjectFailureStage.COMPOSITION
+        return ProjectFailureStage.LYRICS_GENERATION
+
+    @staticmethod
+    def _persist_model(destination,model):
+        destination=Path(destination); destination.parent.mkdir(parents=True,exist_ok=True); temporary=destination.with_suffix(destination.suffix+".part")
+        try:
+            temporary.write_text(model.model_dump_json(indent=2),encoding="utf-8")
+            with temporary.open("r+b") as stream: os.fsync(stream.fileno())
+            os.replace(temporary,destination)
+        finally: temporary.unlink(missing_ok=True)
 
     def _run(self,record,episode,brief,music_plan,video_policy,music_policy,video_provider,music_provider,resume):
         try:
@@ -148,7 +246,7 @@ class ProjectGenerationService:
     @classmethod
     def create_planned(cls,registry,project_id,root,episode_id,series_id=None):
         """Create the confirmed project's durable boundary before any provider or creative resolution."""
-        record=cls(None,registry)._new_record(episode_id,project_id,Path(root),series_id)
+        record=cls(None,registry)._new_record(episode_id,project_id,Path(root),series_id).model_copy(update={"orchestration_version":"storyboard_first"})
         registry.create(record)
         project_root=record.lyrics_path.parent.parent
         for directory in (project_root/"input",project_root/"lyrics",record.music_directory,record.video_directory,
@@ -199,6 +297,12 @@ class ProjectResumeService:
         record=self._registry.load(project_id)
         if record.status==ProjectStatus.COMPLETED: return record
         root=record.lyrics_path.parent.parent; inputs=root/"input"
+        if record.orchestration_version=="storyboard_first":
+            try:
+                from app.storyboard import CreativeStoryboard
+                storyboard=CreativeStoryboard.model_validate_json((inputs/"storyboard.json").read_text(encoding="utf-8"))
+            except Exception as error: raise ProjectResumeBlockedError("Durable storyboard is unavailable.") from error
+            return self._generation._run_storyboard(record,storyboard,video_policy,music_policy,video_provider,music_provider)
         try:
             from app.models import Episode
             episode=Episode.model_validate_json((inputs/"episode.json").read_text(encoding="utf-8"))

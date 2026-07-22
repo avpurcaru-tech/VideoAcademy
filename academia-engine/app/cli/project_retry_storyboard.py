@@ -12,13 +12,10 @@ def retry_storyboard(project_id,registry=None,generator=None,repository=None):
     registry=registry or ProjectRegistry(); record=registry.load(project_id); brief=_load(record)
     series=SeriesRegistry(); characters=CharacterRegistry()
     service=StoryboardGenerationService(generator or StoryboardGeneratorRegistry().resolve("openai"),series,characters)
-    storyboard=service.generate(brief); repository=repository or StoryboardRepository()
-    try: repository.save(storyboard)
-    except Exception:
-        if repository.load(storyboard.storyboard_id)!=storyboard: raise
-    episode=EpisodeService(character_registry=characters,series_registry=series).resolve(storyboard)
-    song,music=_semantic_song_inputs(episode,project_id)
-    ProjectGenerationService(None,registry)._persist_inputs(record,episode,song,music)
+    storyboard=service.generate(brief)
+    ProjectGenerationService._persist_model(record.lyrics_path.parent.parent/"input"/"storyboard.json",storyboard)
+    registry.update(record.model_copy(update={"status":"storyboard_ready","failure_stage":None,
+        "failure_category":None,"safe_message":None,"failure_details":()}))
     return storyboard
 
 def main():

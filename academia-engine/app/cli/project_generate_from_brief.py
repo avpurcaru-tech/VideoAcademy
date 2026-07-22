@@ -48,9 +48,9 @@ def main():
         ProjectGenerationService.persist_creative_brief(registry.load(args.project_id),brief,resolved_character_ids)
         duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
         episode_service=EpisodeGenerationService(EpisodeGeneratorRegistry().resolve(args.episode_generator),duration_policy)
-        project=ProjectGenerationService(build_services(args.video_provider,args.lyrics_provider,args.music_provider),registry)
+        project=ProjectGenerationService(build_services(args.video_provider,args.lyrics_provider,args.music_provider),registry,progress=print)
         storyboards=StoryboardGenerationService(StoryboardGeneratorRegistry().resolve(args.episode_generator),series_registry,character_registry)
-        print("Episode..."); print("Video..."); print("Lyrics..."); print("Music..."); print("Composition...")
+        print("Storyboard...")
         record=CreativeProjectGenerationService(episode_service,project,registry,storyboards,StoryboardRepository()).generate(brief,args.project_id,args.output,
             VideoPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),
             MusicPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),args.video_provider,args.music_provider)

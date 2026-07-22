@@ -18,7 +18,7 @@ def main() -> int:
     try:
         registry=ProjectRegistry()
         existing=registry.load(args.project_id)
-        if existing.failure_stage==ProjectFailureStage.STORYBOARD_GENERATION and not (existing.lyrics_path.parent.parent/"input"/"episode.json").is_file():
+        if existing.failure_stage==ProjectFailureStage.STORYBOARD_GENERATION and not (existing.lyrics_path.parent.parent/"input"/"storyboard.json").is_file():
             try:
                 from app.cli.project_retry_storyboard import retry_storyboard
                 retry_storyboard(args.project_id,registry)
