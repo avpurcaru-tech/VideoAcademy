@@ -1,0 +1,17 @@
+{
+  "song_id": "luca-si-max-colors-001",
+  "tempo_bpm": 108.0,
+  "musical_style": "Cântec educativ original pentru preșcolari, cu ritm săltăreț și refren ușor de repetat",
+  "mood": "Vesel, jucăuș și răbdător",
+  "instrumentation": [
+    "ukulele",
+    "marimbă",
+    "clopoței",
+    "pian delicat",
+    "tobe ușoare",
+    "bătăi din palme",
+    "contrabas moale"
+  ],
+  "vocal_style": "Voce principală caldă și clară pentru Luca, susținută de un mic cor de copii în refren; pronunție rară și distinctă a culorilor; Max nu vorbește și comunică numai prin mișcări și expresii.",
+  "target_duration_seconds": 60.0
+}

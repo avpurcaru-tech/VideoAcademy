@@ -33,6 +33,7 @@ class EpisodeProviderSceneFailedError(EpisodeProductionError): pass
 class EpisodeSceneDownloadError(EpisodeProductionError): pass
 class EpisodeIdentityValidatorUnavailableError(EpisodeProductionError): pass
 class EpisodeSceneIdentityValidationError(EpisodeProductionError): pass
+class EpisodeIdentityReviewRequiredError(EpisodeProductionError): pass
 class EpisodeSceneArtifactMissingError(EpisodeProductionError): pass
 class EpisodeTimelineConstructionError(EpisodeProductionError): pass
 class EpisodeTimelineValidationError(EpisodeProductionError): pass
@@ -44,6 +45,8 @@ class EpisodeGenerationRequestMissingError(EpisodeGenerationRequestResolutionErr
 class EpisodeGenerationRequestCorruptedError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeGenerationSettingsMismatchError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeCharacterReferenceUnsupportedError(EpisodeGenerationRequestResolutionError): pass
+class EpisodeCanonicalReferenceUrlUnavailableError(EpisodeGenerationRequestResolutionError): pass
+class EpisodeCanonicalReferencePublisherUnavailableError(EpisodeGenerationRequestResolutionError): pass
 class EpisodePromptTooLongError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeProviderUnavailableError(EpisodeProductionError): pass
 class EpisodeProviderConfigurationError(EpisodeProductionError): pass
@@ -85,7 +88,7 @@ class EpisodeProductionOrchestrator:
     def __init__(self, video_engine, timeline_renderer, production_registry: ProductionRegistry, probe,
                  request_resolver: GenerationRequestResolver, *, clock: Callable = utc_now,
                  integrity_service: ProductionIntegrityService | None = None, identity_validator=None,
-                 identity_retry_policy=None) -> None:
+                 identity_retry_policy=None, identity_validation_mode="required") -> None:
         self._video_engine = video_engine
         self._renderer = timeline_renderer
         self._registry = production_registry
@@ -96,6 +99,7 @@ class EpisodeProductionOrchestrator:
         from .visual_identity import VisualConsistencyRetryPolicy
         self._identity_validator=identity_validator
         self._identity_retry_policy=identity_retry_policy or VisualConsistencyRetryPolicy()
+        self._identity_validation_mode=identity_validation_mode
 
     def produce(self, request: EpisodeProductionRequest, polling_policy: VideoPollingPolicy) -> EpisodeProductionResult:
         try:
@@ -112,13 +116,17 @@ class EpisodeProductionOrchestrator:
             if not isinstance(resolved, VideoGenerationRequest) or resolved != expected:
                 raise EpisodeGenerationRequestResolutionError("A generation request reference resolved inconsistently.")
         now = self._clock()
-        scenes = tuple(EpisodeSceneResult(scene_id=f"scene-{index + 1:04d}", order=index,
+        scene_ids=tuple(value.planned_shot_id or f"scene-{index+1:04d}" for index,value in enumerate(request.video_requests))
+        scenes = tuple(EpisodeSceneResult(scene_id=scene_ids[index], order=index,
             source_scene_id=request.source_scene_ids[index] if request.source_scene_ids else None,
             generation_request_reference=request.generation_request_references[index],
-            character_reference_images=request.video_requests[index].character_reference_images)
+            character_reference_images=request.video_requests[index].character_reference_images,
+            derived_from_scene_id=(scene_ids[request.reuse_source_indices[index]]
+                if request.reuse_source_indices and request.reuse_source_indices[index] is not None else None))
             for index in range(len(request.video_requests)))
         record = ProductionRecord(production_id=request.production_id, status=EpisodeProductionStatus.PENDING,
                                   provider=request.provider, scenes=scenes,
+                                  identity_validation_mode=self._identity_validation_mode,
                                   scene_output_directory=request.scene_output_directory,
                                   final_output_path=request.final_output_path, media_workspace=request.media_workspace,
                                   transition_policy=request.transition_policy, created_at=now, updated_at=now)
@@ -148,6 +156,7 @@ class EpisodeProductionOrchestrator:
         return self._execute(production_id, polling_policy)
 
     def _execute(self, production_id: str, policy: VideoPollingPolicy) -> EpisodeProductionResult:
+        from .identity_review import is_awaiting_identity_review
         try:
             record = self._registry.load(production_id)
             for scene in record.scenes:
@@ -157,9 +166,20 @@ class EpisodeProductionOrchestrator:
             record = self._set_status(record, EpisodeProductionStatus.GENERATING)
             for index in range(len(record.scenes)):
                 scene = record.scenes[index]
+                if scene.derived_from_scene_id and scene.local_path is None:
+                    source=next((value for value in record.scenes if value.scene_id==scene.derived_from_scene_id),None)
+                    if source is None or source.production_status!=EpisodeSceneStatus.READY or source.local_path is None:
+                        raise EpisodeSceneArtifactMissingError(f"Derived coverage source for {scene.scene_id} is unavailable.")
+                    scene=scene.model_copy(update={"provider_task_id":source.provider_task_id,
+                        "normalized_status":source.normalized_status,"production_status":EpisodeSceneStatus.READY,
+                        "local_path":source.local_path,"artifact_id":source.artifact_id,"byte_size":source.byte_size,
+                        "sha256":source.sha256,"content_type":source.content_type,"identity_validated":source.identity_validated})
+                    record=self._replace_scene(record,index,scene); continue
                 if scene.local_path is not None:
                     if not scene.local_path.is_file():
                         raise EpisodeSceneArtifactMissingError(f"Local artifact for {scene.scene_id} is missing.")
+                    if is_awaiting_identity_review(scene):
+                        raise EpisodeIdentityReviewRequiredError(f"Scene {scene.scene_id} requires visual identity review.")
                     continue
                 destination = record.scene_output_directory / f"scene-{index + 1:04d}.mp4"
                 if scene.provider_task_id is None:
@@ -189,6 +209,14 @@ class EpisodeProductionOrchestrator:
                         if isinstance(cause,KlingCharacterReferenceUnsupportedError):
                             raise EpisodeCharacterReferenceUnsupportedError(
                                 f"Scene {scene.scene_id} provider endpoint does not support canonical visual references.") from error
+                        from app.visual_references import (CanonicalReferenceUrlUnavailableError,
+                            VisualReferencePublisherUnavailableError)
+                        if isinstance(cause,CanonicalReferenceUrlUnavailableError):
+                            raise EpisodeCanonicalReferenceUrlUnavailableError(
+                                f"Scene {scene.scene_id} canonical reference URL is unavailable.") from error
+                        if isinstance(cause,VisualReferencePublisherUnavailableError):
+                            raise EpisodeCanonicalReferencePublisherUnavailableError(
+                                f"Scene {scene.scene_id} canonical reference publisher is unavailable.") from error
                         if isinstance(cause,KlingUnsupportedConfigurationError):
                             raise EpisodeGenerationSettingsMismatchError(
                                 f"Scene {scene.scene_id} request is incompatible with provider generation settings.") from error
@@ -224,12 +252,41 @@ class EpisodeProductionOrchestrator:
                 if completed.artifact is None:
                     raise EpisodeSceneDownloadError(f"Scene {scene.scene_id} has no downloaded artifact.")
                 artifact = completed.artifact
+                # The provider work and download are durable before identity disposition.
+                scene = scene.model_copy(update={"normalized_status": completed.normalized_status,
+                    "local_path": artifact.local_path, "artifact_id": artifact.artifact_id,
+                    "byte_size": artifact.byte_size, "sha256": artifact.sha256,
+                    "content_type": artifact.content_type})
+                record = self._replace_scene(record, index, scene)
                 if scene.character_reference_images:
+                    mode=record.identity_validation_mode
+                    if mode == "disabled":
+                        scene=scene.model_copy(update={"production_status":EpisodeSceneStatus.READY,
+                            "identity_warning":"visual_identity_validation_explicitly_disabled"})
+                        record=self._replace_scene(record,index,scene); continue
                     if self._identity_validator is None:
+                        if mode == "advisory":
+                            scene=scene.model_copy(update={"production_status":EpisodeSceneStatus.READY,
+                                "identity_warning":"visual_identity_validator_unavailable"})
+                            record=self._replace_scene(record,index,scene); continue
                         raise EpisodeIdentityValidatorUnavailableError(
                             f"Scene {scene.scene_id} canonical identity validation is not configured.")
                     validation=self._identity_validator.validate(artifact.local_path,scene.character_reference_images)
                     attempts=scene.identity_validation_attempts+1
+                    base={"identity_validation_attempts":attempts,
+                        "identity_validator_implementation":validation.implementation,
+                        "identity_validator_version":validation.version,
+                        "identity_validation_reasons":validation.safe_reasons}
+                    if validation.review_required:
+                        if mode == "advisory":
+                            scene=scene.model_copy(update={**base,"production_status":EpisodeSceneStatus.READY,
+                                "identity_warning":"visual_identity_review_required"})
+                            record=self._replace_scene(record,index,scene); continue
+                        scene=scene.model_copy(update={**base,"production_status":EpisodeSceneStatus.AWAITING_IDENTITY_REVIEW,
+                            "identity_validation_status":"pending_manual_review","identity_review_status":"pending",
+                            "review_requested_at":self._clock(),"identity_validated":None})
+                        record=self._replace_scene(record,index,scene)
+                        raise EpisodeIdentityReviewRequiredError(f"Scene {scene.scene_id} requires visual identity review.")
                     if not validation.valid:
                         if self._identity_retry_policy.can_retry(scene.identity_validation_attempts):
                             retry=scene.model_copy(update={"provider_task_id":None,"normalized_status":None,
@@ -239,7 +296,7 @@ class EpisodeProductionOrchestrator:
                             return self._execute(production_id,policy)
                         raise EpisodeSceneIdentityValidationError(
                             f"Scene {scene.scene_id} failed canonical identity validation.")
-                    scene=scene.model_copy(update={"identity_validation_attempts":attempts,"identity_validated":True})
+                    scene=scene.model_copy(update={**base,"identity_validated":True})
                 scene = scene.model_copy(update={"normalized_status": completed.normalized_status,
                     "local_path": artifact.local_path, "artifact_id": artifact.artifact_id,
                     "byte_size": artifact.byte_size, "sha256": artifact.sha256, "content_type": artifact.content_type,
@@ -321,6 +378,8 @@ class EpisodeProductionOrchestrator:
             (EpisodeGenerationRequestCorruptedError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_record_corrupted")),
             (EpisodeGenerationSettingsMismatchError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_generation_settings_mismatch")),
             (EpisodeCharacterReferenceUnsupportedError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"canonical_reference_provider_unsupported")),
+            (EpisodeCanonicalReferenceUrlUnavailableError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"canonical_reference_url_unavailable")),
+            (EpisodeCanonicalReferencePublisherUnavailableError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"canonical_reference_publisher_unavailable")),
             (EpisodePromptTooLongError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"video_request_prompt_too_long")),
             (EpisodeGenerationRequestResolutionError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_validation_failed")),
             (EpisodeProviderConfigurationError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_configuration_missing")),
@@ -329,8 +388,9 @@ class EpisodeProductionOrchestrator:
             (EpisodeSubmitRejectedError,(ProductionFailureStage.VIDEO_SUBMISSION,"video_request_rejected")),
             (EpisodeScenePollingError,(ProductionFailureStage.VIDEO_POLLING,"provider_polling_failed")),
             (EpisodeSceneDownloadError,(ProductionFailureStage.VIDEO_DOWNLOAD,"artifact_download_failed")),
-            (EpisodeIdentityValidatorUnavailableError,(ProductionFailureStage.VIDEO_DOWNLOAD,"visual_identity_validator_unavailable")),
-            (EpisodeSceneIdentityValidationError,(ProductionFailureStage.VIDEO_DOWNLOAD,"visual_identity_validation_failed")),
+            (EpisodeIdentityValidatorUnavailableError,(ProductionFailureStage.VISUAL_IDENTITY_VALIDATION,"visual_identity_validator_unavailable")),
+            (EpisodeIdentityReviewRequiredError,(ProductionFailureStage.VISUAL_IDENTITY_VALIDATION,"visual_identity_review_required")),
+            (EpisodeSceneIdentityValidationError,(ProductionFailureStage.VISUAL_IDENTITY_VALIDATION,"visual_identity_validation_failed")),
             (EpisodeProductionRegistryError,(ProductionFailureStage.REGISTRY_PERSISTENCE,"registry_persistence_failed")),
         )
         for kind,value in mapping:

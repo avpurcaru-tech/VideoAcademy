@@ -19,7 +19,7 @@ class StoryboardVideoPlanner:
         self._duration_policy = duration_policy or SceneDurationPolicy(15)
         self._character_registry=character_registry; self._series_registry=series_registry
 
-    def build(self, storyboard: CreativeStoryboard, production_id: str) -> tuple[VideoGenerationRequest, ...]:
+    def build(self, storyboard: CreativeStoryboard, production_id: str,coverage_plan=None) -> tuple[VideoGenerationRequest, ...]:
         try:
             storyboard = CreativeStoryboard.model_validate(storyboard)
             canonical = {value.character_id: value for value in storyboard.canonical_characters}
@@ -30,7 +30,10 @@ class StoryboardVideoPlanner:
                 bible=(self._series_registry or SeriesRegistry()).load(storyboard.series_id)
                 profiles={value.character_id:value for value in (self._character_registry or CharacterRegistry()).require_many(bible.resolved_character_ids)}
             requests = []
-            for scene_number, section in enumerate(storyboard.sections, start=1):
+            sections={value.section_id:value for value in storyboard.sections}
+            planning=((sections[shot.source_storyboard_section_id],shot) for shot in coverage_plan.unique_shots) if coverage_plan else (
+                (section,None) for section in storyboard.sections)
+            for scene_number, (section,coverage_shot) in enumerate(planning, start=1):
                 characters = [self._video_character(storyboard, reference, canonical,profiles) for reference in section.characters]
                 references=[]
                 for character_id in section.characters:
@@ -48,7 +51,7 @@ class StoryboardVideoPlanner:
                 semantic_description = (
                     f"{section.environment}\nVisual goal: {section.visual_goal}\nObjects: {objects}"
                 )
-                specific=" ".join((*section.actions,*section.gestures))
+                specific=coverage_shot.action_variation if coverage_shot else " ".join((*section.actions,*section.gestures))
                 action = f"{section.visual_goal} {specific} Objects in the scene: {objects}."
                 video_request = VideoRequest(scene_number=scene_number,
                     duration_seconds=self._duration_policy.execution_duration_seconds,
@@ -58,12 +61,14 @@ class StoryboardVideoPlanner:
                     characters=characters,
                     character_actions=[CharacterAction(character_id=character.id, action=action[:1000],
                         emotion=section.emotion[:100]) for character in characters],
-                    camera=self._camera(section.camera_direction), transition=Transition(type="cut"))
+                    camera=self._camera(coverage_shot.camera_variation if coverage_shot else section.camera_direction), transition=Transition(type="cut"))
                 # Applying the shared policy here keeps execution duration behavior identical to the legacy planner.
                 video_request = self._duration_policy.apply_execution_duration(video_request)
+                if coverage_shot: video_request=video_request.model_copy(update={"duration_seconds":int(coverage_shot.duration_seconds)})
                 requests.append(VideoGenerationRequest(
                     request_id=f"{production_id}-scene-{scene_number:04d}", video_request=video_request,
-                    character_reference_images=tuple(references),scene_visual_reference=self._scene_reference(section.characters)))
+                    character_reference_images=tuple(references),scene_visual_reference=self._scene_reference(section.characters),
+                    planned_shot_id=coverage_shot.shot_id if coverage_shot else None))
             return tuple(requests)
         except Exception as error:
             if isinstance(error, StoryboardVideoPlanningError):

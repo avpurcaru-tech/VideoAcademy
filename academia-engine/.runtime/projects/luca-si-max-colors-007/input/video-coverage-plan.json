@@ -1,0 +1,347 @@
+{
+  "coverage_duration_seconds": 99.959979,
+  "provider_capabilities": {
+    "provider_name": "kling_image_to_video",
+    "supported_clip_durations": [
+      10
+    ],
+    "selected_clip_duration": 10,
+    "maximum_clips_per_production": null,
+    "supports_reference_images": true,
+    "supports_multiple_references": false,
+    "cost_per_generated_second": null
+  },
+  "policy": "balanced",
+  "original_section_count": 4,
+  "unique_scene_count": 7,
+  "derived_or_reused_scene_count": 3,
+  "total_timeline_coverage_seconds": 100.0,
+  "unique_shots": [
+    {
+      "shot_id": "shot-0001",
+      "source_storyboard_section_id": "culori-rosu-01",
+      "semantic_purpose": "descoperire: Prezentarea clară a mingii, izolată vizual pentru recunoașterea rapidă a culorii.",
+      "action_variation": "Max descoperă mingea lângă o bancă. Variation 1 of 1.",
+      "camera_variation": "wide establishing",
+      "duration_seconds": 10.0,
+      "recurring_character_ids": [
+        "luca",
+        "max"
+      ]
+    },
+    {
+      "shot_id": "shot-0002",
+      "source_storyboard_section_id": "culori-galben-02",
+      "semantic_purpose": "explorare: Evidențierea florii într-un spațiu luminos și simplu, fără aglomerare vizuală.",
+      "action_variation": "Luca și Max se apropie de o floare. Variation 1 of 2.",
+      "camera_variation": "wide establishing",
+      "duration_seconds": 10.0,
+      "recurring_character_ids": [
+        "luca",
+        "max"
+      ]
+    },
+    {
+      "shot_id": "shot-0003",
+      "source_storyboard_section_id": "culori-galben-02",
+      "semantic_purpose": "explorare: Evidențierea florii într-un spațiu luminos și simplu, fără aglomerare vizuală.",
+      "action_variation": "Luca numește culoarea florii. Variation 2 of 2.",
+      "camera_variation": "medium tracking",
+      "duration_seconds": 10.0,
+      "recurring_character_ids": [
+        "luca",
+        "max"
+      ]
+    },
+    {
+      "shot_id": "shot-0004",
+      "source_storyboard_section_id": "culori-verde-albastru-03",
+      "semantic_purpose": "comparare: Afișarea succesivă și apoi simultană a frunzei verzi și a zmeului albastru pentru comparație.",
+      "action_variation": "Max observă o frunză căzută pe alee. Variation 1 of 2.",
+      "camera_variation": "wide establishing",
+      "duration_seconds": 10.0,
+      "recurring_character_ids": [
+        "luca",
+        "max"
+      ]
+    },
+    {
+      "shot_id": "shot-0005",
+      "source_storyboard_section_id": "culori-verde-albastru-03",
+      "semantic_purpose": "comparare: Afișarea succesivă și apoi simultană a frunzei verzi și a zmeului albastru pentru comparație.",
+      "action_variation": "Luca ridică frunza și numește verde. Variation 2 of 2.",
+      "camera_variation": "medium tracking",
+      "duration_seconds": 10.0,
+      "recurring_character_ids": [
+        "luca",
+        "max"
+      ]
+    },
+    {
+      "shot_id": "shot-0006",
+      "source_storyboard_section_id": "jocul-culorilor-04",
+      "semantic_purpose": "recapitulare_interactivă: Reunirea celor patru obiecte într-un joc clar de tip „găsește culoarea”, cu pauze pentru răspunsul copiilor.",
+      "action_variation": "Luca invită publicul să găsească pe rând fiecare culoare. Variation 1 of 2.",
+      "camera_variation": "wide establishing",
+      "duration_seconds": 10.0,
+      "recurring_character_ids": [
+        "luca",
+        "max"
+      ]
+    },
+    {
+      "shot_id": "shot-0007",
+      "source_storyboard_section_id": "jocul-culorilor-04",
+      "semantic_purpose": "recapitulare_interactivă: Reunirea celor patru obiecte într-un joc clar de tip „găsește culoarea”, cu pauze pentru răspunsul copiilor.",
+      "action_variation": "Max se deplasează pe rând lângă minge, floare, frunză și zmeu, fără să vorbească. Variation 2 of 2.",
+      "camera_variation": "medium tracking",
+      "duration_seconds": 10.0,
+      "recurring_character_ids": [
+        "luca",
+        "max"
+      ]
+    }
+  ],
+  "shared_usage_plan": [
+    {
+      "order": 1,
+      "shot_id": "shot-0001",
+      "source_storyboard_section_id": "culori-rosu-01",
+      "duration_seconds": 10.0,
+      "reused": false,
+      "reused_from_shot_id": null
+    },
+    {
+      "order": 2,
+      "shot_id": "shot-0002",
+      "source_storyboard_section_id": "culori-galben-02",
+      "duration_seconds": 10.0,
+      "reused": false,
+      "reused_from_shot_id": null
+    },
+    {
+      "order": 3,
+      "shot_id": "shot-0003",
+      "source_storyboard_section_id": "culori-galben-02",
+      "duration_seconds": 10.0,
+      "reused": false,
+      "reused_from_shot_id": null
+    },
+    {
+      "order": 4,
+      "shot_id": "shot-0004",
+      "source_storyboard_section_id": "culori-verde-albastru-03",
+      "duration_seconds": 10.0,
+      "reused": false,
+      "reused_from_shot_id": null
+    },
+    {
+      "order": 5,
+      "shot_id": "shot-0005",
+      "source_storyboard_section_id": "culori-verde-albastru-03",
+      "duration_seconds": 10.0,
+      "reused": false,
+      "reused_from_shot_id": null
+    },
+    {
+      "order": 6,
+      "shot_id": "shot-0006",
+      "source_storyboard_section_id": "jocul-culorilor-04",
+      "duration_seconds": 10.0,
+      "reused": false,
+      "reused_from_shot_id": null
+    },
+    {
+      "order": 7,
+      "shot_id": "shot-0007",
+      "source_storyboard_section_id": "jocul-culorilor-04",
+      "duration_seconds": 10.0,
+      "reused": false,
+      "reused_from_shot_id": null
+    },
+    {
+      "order": 8,
+      "shot_id": "shot-0001",
+      "source_storyboard_section_id": "culori-rosu-01",
+      "duration_seconds": 10.0,
+      "reused": true,
+      "reused_from_shot_id": "shot-0001"
+    },
+    {
+      "order": 9,
+      "shot_id": "shot-0003",
+      "source_storyboard_section_id": "culori-galben-02",
+      "duration_seconds": 10.0,
+      "reused": true,
+      "reused_from_shot_id": "shot-0003"
+    },
+    {
+      "order": 10,
+      "shot_id": "shot-0004",
+      "source_storyboard_section_id": "culori-verde-albastru-03",
+      "duration_seconds": 10.0,
+      "reused": true,
+      "reused_from_shot_id": "shot-0004"
+    }
+  ],
+  "variant_plans": [
+    {
+      "variant_id": "variant-01",
+      "audio_duration_seconds": 99.959979,
+      "usages": [
+        {
+          "order": 1,
+          "shot_id": "shot-0001",
+          "source_storyboard_section_id": "culori-rosu-01",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 2,
+          "shot_id": "shot-0002",
+          "source_storyboard_section_id": "culori-galben-02",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 3,
+          "shot_id": "shot-0003",
+          "source_storyboard_section_id": "culori-galben-02",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 4,
+          "shot_id": "shot-0004",
+          "source_storyboard_section_id": "culori-verde-albastru-03",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 5,
+          "shot_id": "shot-0005",
+          "source_storyboard_section_id": "culori-verde-albastru-03",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 6,
+          "shot_id": "shot-0006",
+          "source_storyboard_section_id": "jocul-culorilor-04",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 7,
+          "shot_id": "shot-0007",
+          "source_storyboard_section_id": "jocul-culorilor-04",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 8,
+          "shot_id": "shot-0001",
+          "source_storyboard_section_id": "culori-rosu-01",
+          "duration_seconds": 10.0,
+          "reused": true,
+          "reused_from_shot_id": "shot-0001"
+        },
+        {
+          "order": 9,
+          "shot_id": "shot-0003",
+          "source_storyboard_section_id": "culori-galben-02",
+          "duration_seconds": 10.0,
+          "reused": true,
+          "reused_from_shot_id": "shot-0003"
+        },
+        {
+          "order": 10,
+          "shot_id": "shot-0004",
+          "source_storyboard_section_id": "culori-verde-albastru-03",
+          "duration_seconds": 10.0,
+          "reused": true,
+          "reused_from_shot_id": "shot-0004"
+        }
+      ],
+      "final_trim_seconds": 0.040020999999995865,
+      "coverage_seconds": 100.0,
+      "coverage_valid": true
+    },
+    {
+      "variant_id": "variant-02",
+      "audio_duration_seconds": 64.519979,
+      "usages": [
+        {
+          "order": 1,
+          "shot_id": "shot-0001",
+          "source_storyboard_section_id": "culori-rosu-01",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 2,
+          "shot_id": "shot-0002",
+          "source_storyboard_section_id": "culori-galben-02",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 3,
+          "shot_id": "shot-0003",
+          "source_storyboard_section_id": "culori-galben-02",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 4,
+          "shot_id": "shot-0004",
+          "source_storyboard_section_id": "culori-verde-albastru-03",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 5,
+          "shot_id": "shot-0005",
+          "source_storyboard_section_id": "culori-verde-albastru-03",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 6,
+          "shot_id": "shot-0006",
+          "source_storyboard_section_id": "jocul-culorilor-04",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        },
+        {
+          "order": 7,
+          "shot_id": "shot-0007",
+          "source_storyboard_section_id": "jocul-culorilor-04",
+          "duration_seconds": 10.0,
+          "reused": false,
+          "reused_from_shot_id": null
+        }
+      ],
+      "final_trim_seconds": 5.480020999999994,
+      "coverage_seconds": 70.0,
+      "coverage_valid": true
+    }
+  ],
+  "estimated_generated_seconds": 70.0,
+  "estimated_provider_cost": null,
+  "maximum_allowed_cost": null,
+  "confirmation_required": false
+}

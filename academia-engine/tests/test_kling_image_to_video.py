@@ -63,5 +63,20 @@ class KlingImageToVideoTests(unittest.TestCase):
             second=registry.publish_once(LUCA_MAX_SCENE_REFERENCE,publisher)
             self.assertEqual(first,second); publisher.publish.assert_called_once()
 
+    def test_existing_https_publication_registration_is_idempotent_without_upload(self):
+        with tempfile.TemporaryDirectory() as root:
+            registry=VisualReferencePublicationRegistry(Path(root)/"map.json")
+            url="https://raw.githubusercontent.com/example/repository/reference.png"
+            first=registry.register_existing(LUCA_MAX_SCENE_REFERENCE,url)
+            second=registry.register_existing(LUCA_MAX_SCENE_REFERENCE,"https://different.example/unused.png")
+            self.assertEqual(first,second)
+            self.assertEqual(url,registry.resolve(LUCA_MAX_SCENE_REFERENCE))
+
+    def test_existing_publication_requires_https(self):
+        with tempfile.TemporaryDirectory() as root:
+            registry=VisualReferencePublicationRegistry(Path(root)/"map.json")
+            with self.assertRaises(CanonicalReferenceUrlUnavailableError):
+                registry.register_existing(LUCA_MAX_SCENE_REFERENCE,"http://example.test/reference.png")
+
 
 if __name__=="__main__": unittest.main()

@@ -7,7 +7,8 @@ from app.music import MusicPollingPolicy
 from app.project import ProjectGenerationService,ProjectRegistry,ProjectResumeService
 from app.project import ProjectFailureStage,ProjectStatus
 from app.config import KlingProviderConfigurationError
-from app.providers import KlingProviderRegistry
+from app.providers import (KlingProviderRegistry,KlingProviderRegistryError,KlingProviderCredentialsMissingError,
+    KlingReferencePublisherUnavailableError)
 from app.services import VideoPollingPolicy
 
 
@@ -18,6 +19,14 @@ def main() -> int:
     try:
         registry=ProjectRegistry()
         existing=registry.load(args.project_id)
+        selected_provider=existing.video_provider
+        if selected_provider is None and existing.video_coverage_plan_path and existing.video_coverage_plan_path.is_file():
+            from app.video_coverage import VideoCoveragePlan
+            coverage=VideoCoveragePlan.model_validate_json(existing.video_coverage_plan_path.read_text(encoding="utf-8"))
+            selected_provider=coverage.provider_capabilities.provider_name
+            existing=existing.model_copy(update={"video_provider":selected_provider,"updated_at":datetime.now(timezone.utc)})
+            registry.update(existing)
+        selected_provider=selected_provider or "kling"
         if existing.failure_stage==ProjectFailureStage.STORYBOARD_GENERATION and not (existing.lyrics_path.parent.parent/"input"/"storyboard.json").is_file():
             try:
                 from app.cli.project_retry_storyboard import retry_storyboard
@@ -27,23 +36,28 @@ def main() -> int:
                 try: _failure(registry.load(args.project_id))
                 except Exception: pass
                 return 1
-        try: _,video_runtime=KlingProviderRegistry().construct("kling")
-        except KlingProviderConfigurationError as configuration_error:
+        try: _,video_runtime=KlingProviderRegistry().construct_runtime(selected_provider)
+        except (KlingProviderConfigurationError,KlingProviderRegistryError) as configuration_error:
+            if isinstance(configuration_error,KlingProviderCredentialsMissingError): category="provider_credentials_missing"; message="Video provider credentials are missing."
+            elif isinstance(configuration_error,KlingReferencePublisherUnavailableError): category="canonical_reference_publisher_unavailable"; message="Canonical reference publisher is unavailable."
+            elif isinstance(configuration_error,KlingProviderRegistryError): category="provider_unavailable"; message="Selected video provider is unavailable."
+            else: category="video_provider_configuration_invalid"; message="Kling provider configuration is invalid."
             try:
                 record=registry.load(args.project_id)
                 record=record.model_copy(update={"status":ProjectStatus.FAILED,
                     "failure_stage":ProjectFailureStage.VIDEO_PROVIDER_CONFIGURATION,
-                    "failure_category":"video_provider_configuration_invalid",
-                    "safe_message":"Kling provider configuration is invalid.","updated_at":datetime.now(timezone.utc)})
+                    "failure_category":category,"safe_message":message,"updated_at":datetime.now(timezone.utc)})
                 registry.update(record)
             except Exception: pass
             print("Project resume failed at a safe orchestration boundary.")
-            print("Kling configuration is invalid:")
-            for field,category in configuration_error.diagnostics: print(f"- {field}: {category}")
+            if getattr(configuration_error,"diagnostics",None):
+                print("Kling configuration is invalid:")
+                for field,value in configuration_error.diagnostics: print(f"- {field}: {value}")
             try: _failure(registry.load(args.project_id))
             except Exception: pass
             return 1
-        generation=ProjectGenerationService(build_services(video_runtime=video_runtime),registry)
+        generation=ProjectGenerationService(build_services(selected_provider,video_runtime=video_runtime,
+            identity_validation_mode=existing.identity_validation_mode),registry)
         print("Resuming...")
         record=ProjectResumeService(generation,registry).resume(args.project_id,
             VideoPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),

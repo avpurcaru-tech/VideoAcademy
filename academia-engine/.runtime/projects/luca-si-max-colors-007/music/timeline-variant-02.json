@@ -1,0 +1,31 @@
+{
+  "timeline_id": "luca-si-max-colors-001-variant-02",
+  "storyboard_id": "luca-si-max-colors-001",
+  "music_duration_seconds": 64.519979,
+  "segments": [
+    {
+      "start_seconds": 0.0,
+      "end_seconds": 14.17,
+      "storyboard_section_id": "culori-rosu-01",
+      "estimated_confidence": 0.72
+    },
+    {
+      "start_seconds": 14.17,
+      "end_seconds": 27.45,
+      "storyboard_section_id": "culori-galben-02",
+      "estimated_confidence": 0.7
+    },
+    {
+      "start_seconds": 27.45,
+      "end_seconds": 45.58,
+      "storyboard_section_id": "culori-verde-albastru-03",
+      "estimated_confidence": 0.68
+    },
+    {
+      "start_seconds": 45.58,
+      "end_seconds": 64.519979,
+      "storyboard_section_id": "jocul-culorilor-04",
+      "estimated_confidence": 0.71
+    }
+  ]
+}

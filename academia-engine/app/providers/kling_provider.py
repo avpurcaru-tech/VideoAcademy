@@ -44,6 +44,13 @@ _RETENTION_NOTE = "Kling generated result URLs may be cleared after 30 days; dow
 
 class KlingProvider:
     """Kling provider with authentication connectivity support."""
+    provider_key="kling"
+    @staticmethod
+    def capability_snapshot(cost_per_generated_second=None):
+        from app.video_coverage import VideoProviderCapabilities
+        return VideoProviderCapabilities(provider_name="kling",supported_clip_durations=(15,),selected_clip_duration=15,
+            supports_reference_images=False,supports_multiple_references=False,
+            cost_per_generated_second=cost_per_generated_second)
 
     def __init__(
         self,
@@ -175,7 +182,7 @@ class KlingProvider:
         return GenerationTask(
             request_id=internal_request_id,
             external_task_id=data.id,
-            provider_name="kling",
+            provider_name=self.provider_key,
             provider_status=data.status,
             normalized_status=normalized_status,
             provider_request_id=provider_request_id,

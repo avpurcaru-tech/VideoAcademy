@@ -1,0 +1,169 @@
+{
+  "project_id": "luca-si-max-colors-007",
+  "episode_id": "luca-si-max-colors-001",
+  "series_id": "luca-si-max",
+  "status": "failed",
+  "orchestration_version": "storyboard_first",
+  "video_production_id": "luca-si-max-colors-007-video",
+  "video_provider": "kling_image_to_video",
+  "music_task_id": "9da514613aefeafaf173df99bd416242",
+  "lyrics_path": ".runtime\\projects\\luca-si-max-colors-007\\lyrics\\lyrics.json",
+  "music_directory": ".runtime\\projects\\luca-si-max-colors-007\\music",
+  "video_directory": ".runtime\\projects\\luca-si-max-colors-007\\video",
+  "final_directory": ".runtime\\projects\\luca-si-max-colors-007\\final",
+  "video_coverage_plan_path": ".runtime\\projects\\luca-si-max-colors-007\\input\\video-coverage-plan.json",
+  "failure_stage": "video_download",
+  "failure_category": "visual_identity_validator_unavailable",
+  "safe_message": "Storyboard-first project generation failed at a safe boundary.",
+  "failure_details": [],
+  "provider_http_status": null,
+  "provider_request_id": null,
+  "provider_model": null,
+  "provider_retry_after": null,
+  "video_plan_diagnostics": [
+    {
+      "scene_id": "scene-0001",
+      "storyboard_section_id": "culori-rosu-01",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-scene-0001",
+      "prompt_character_count": 2154
+    },
+    {
+      "scene_id": "scene-0002",
+      "storyboard_section_id": "culori-galben-02",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-scene-0002",
+      "prompt_character_count": 2167
+    },
+    {
+      "scene_id": "scene-0003",
+      "storyboard_section_id": "culori-galben-02",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-scene-0003",
+      "prompt_character_count": 2159
+    },
+    {
+      "scene_id": "scene-0004",
+      "storyboard_section_id": "culori-verde-albastru-03",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-scene-0004",
+      "prompt_character_count": 2246
+    },
+    {
+      "scene_id": "scene-0005",
+      "storyboard_section_id": "culori-verde-albastru-03",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-scene-0005",
+      "prompt_character_count": 2250
+    },
+    {
+      "scene_id": "scene-0006",
+      "storyboard_section_id": "jocul-culorilor-04",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-scene-0006",
+      "prompt_character_count": 2458
+    },
+    {
+      "scene_id": "scene-0007",
+      "storyboard_section_id": "jocul-culorilor-04",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-scene-0007",
+      "prompt_character_count": 1275
+    },
+    {
+      "scene_id": "scene-0008",
+      "storyboard_section_id": "culori-rosu-01",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-coverage-0008",
+      "prompt_character_count": 2154
+    },
+    {
+      "scene_id": "scene-0009",
+      "storyboard_section_id": "culori-galben-02",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-coverage-0009",
+      "prompt_character_count": 2159
+    },
+    {
+      "scene_id": "scene-0010",
+      "storyboard_section_id": "culori-verde-albastru-03",
+      "timeline_segment_count": 2,
+      "requested_duration": 10,
+      "canonical_character_ids": [
+        "luca",
+        "max"
+      ],
+      "request_reference_id": "luca-si-max-colors-007-video-coverage-0010",
+      "prompt_character_count": 2246
+    }
+  ],
+  "composition_variants": [],
+  "failed_variant_id": null,
+  "composition_master_video_present": null,
+  "composition_master_video_duration": null,
+  "composition_audio_present": null,
+  "composition_audio_duration": null,
+  "composition_timeline_present": null,
+  "composition_timeline_duration": null,
+  "composition_expected_output_path": null,
+  "composition_ffmpeg_exit_code": null,
+  "composition_ffmpeg_error_category": null,
+  "failed_scene_id": "scene-0001",
+  "submit_http_status": null,
+  "submit_provider_code": null,
+  "submit_provider_message": null,
+  "submit_request_id": null,
+  "submit_provider_task_id": null,
+  "submit_response_shape": [],
+  "query_http_status": null,
+  "query_provider_code": null,
+  "query_provider_task_id": null,
+  "query_response_shape": [],
+  "created_at": "2026-07-23T11:48:04.019204Z",
+  "updated_at": "2026-07-23T18:25:40.799398Z"
+}

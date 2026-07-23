@@ -107,7 +107,8 @@ class StoryboardRecoveryDiagnosticTests(unittest.TestCase):
                 "app.cli.project_retry_storyboard.retry_storyboard",side_effect=lambda *a: events.append("storyboard")),patch(
                 "app.cli.project_resume.KlingProviderRegistry") as kling,patch(
                 "app.cli.project_resume.build_services",side_effect=RuntimeError("stop after construction")),patch("builtins.print"):
-            kling.return_value.construct.side_effect=lambda *a:(events.append("downstream") or (None,Mock()))
+            runtime=Mock(); runtime.provider_key="kling"; runtime.provider=Mock()
+            kling.return_value.construct_runtime.side_effect=lambda *a:(events.append("downstream") or (None,runtime))
             self.assertEqual(1,resume_main())
         self.assertEqual(["storyboard","downstream"],events)
 

@@ -31,13 +31,18 @@ def _semantic_song_inputs(episode,project_id):
     return brief,music
 
 
-def build_services(video_provider="kling",lyrics_provider="openai",music_provider="sunoapi_org",preflight=False,video_runtime=None):
-    duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
+def build_services(video_provider="kling",lyrics_provider="openai",music_provider="sunoapi_org",preflight=False,video_runtime=None,
+                   identity_validation_mode=None):
+    capabilities=__import__("app.providers",fromlist=["KlingProviderRegistry"]).KlingProviderRegistry.capabilities(video_provider)
+    duration_policy=SceneDurationPolicy(capabilities.selected_clip_duration)
     director=DirectorEngine(); planner=EpisodeProductionPlanner(PromptBuilder(KlingPromptAdapter()),GenerationRequestStore(),duration_policy)
     if preflight: return ProjectServices(director,planner,None,None,None,None,None,None)
     if lyrics_provider!="openai": raise RuntimeError("Lyrics provider is unsupported.")
     from app.cli.episode_produce import build_orchestrator
-    orchestrator=build_orchestrator(video_runtime); episode=EpisodeGenerationService(planner,orchestrator)
+    if video_runtime is None:
+        from app.providers import KlingProviderRegistry
+        _,video_runtime=KlingProviderRegistry().construct_runtime(video_provider)
+    orchestrator=build_orchestrator(video_runtime,video_provider,identity_validation_mode); episode=EpisodeGenerationService(planner,orchestrator)
     lyrics=LyricsGenerationService(OpenAILyricsGenerator())
     runtime=MusicProviderRegistry().resolve(music_provider); music_registry=MusicTaskRegistry()
     music=MusicEngine({music_provider:runtime.provider},music_registry,runtime.downloader,default_provider=music_provider)
@@ -52,7 +57,7 @@ def build_services(video_provider="kling",lyrics_provider="openai",music_provide
 def main() -> int:
     load_application_environment(); parser=argparse.ArgumentParser(description="Generate one durable educational media project.")
     parser.add_argument("--episode",required=True,type=Path); parser.add_argument("--project-id",required=True)
-    parser.add_argument("--video-provider",default="kling"); parser.add_argument("--lyrics-provider",default="openai")
+    parser.add_argument("--video-provider",default="kling",choices=("kling","kling_image_to_video")); parser.add_argument("--lyrics-provider",default="openai")
     parser.add_argument("--music-provider",default="sunoapi_org"); parser.add_argument("--output",required=True,type=Path)
     parser.add_argument("--interval",type=float,default=5); parser.add_argument("--timeout",type=float,default=900)
     parser.add_argument("--confirm",action="store_true"); args=parser.parse_args()

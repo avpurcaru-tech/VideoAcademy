@@ -28,6 +28,7 @@ class PublishedVisualReference(BaseModel):
 
 class CanonicalReferenceUrlUnavailableError(RuntimeError): pass
 class VisualReferenceIntegrityError(RuntimeError): pass
+class VisualReferencePublisherUnavailableError(RuntimeError): pass
 
 
 class VisualReferencePublisher(Protocol):
@@ -54,17 +55,35 @@ class VisualReferencePublicationRegistry:
         result=PublishedVisualReference.model_validate(publisher.publish(reference.local_path,reference.sha256,reference.content_type))
         if result.sha256!=reference.sha256: raise VisualReferenceIntegrityError("Published visual reference hash differs.")
         self._validate_https(result.https_url); values[reference.sha256]=result.model_dump(mode="json")
+        self._save(values)
+        return result
+
+    def register_existing(self,reference:SceneVisualReference,https_url:str)->PublishedVisualReference:
+        """Register an already-public durable asset without performing an upload."""
+        self._verify(reference); self._validate_https(https_url); values=self._load()
+        if reference.sha256 in values:
+            result=PublishedVisualReference.model_validate(values[reference.sha256])
+            self._validate_https(result.https_url)
+            return result
+        result=PublishedVisualReference(sha256=reference.sha256,https_url=https_url,
+            remote_asset_id=reference.reference_id)
+        values[reference.sha256]=result.model_dump(mode="json")
+        self._save(values)
+        return result
+
+    def _save(self,values):
         self._path.parent.mkdir(parents=True,exist_ok=True); part=self._path.with_suffix(self._path.suffix+".part")
         try:
             part.write_text(json.dumps(values,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
             with part.open("r+b") as stream: os.fsync(stream.fileno())
             os.replace(part,self._path)
         finally: part.unlink(missing_ok=True)
-        return result
 
     def _load(self):
         if not self._path.is_file(): return {}
-        value=json.loads(self._path.read_text(encoding="utf-8"))
+        try: value=json.loads(self._path.read_text(encoding="utf-8"))
+        except OSError as error: raise VisualReferencePublisherUnavailableError("Visual reference publication registry is unavailable.") from error
+        except json.JSONDecodeError as error: raise VisualReferencePublisherUnavailableError("Visual reference publication registry is invalid.") from error
         if not isinstance(value,dict): raise CanonicalReferenceUrlUnavailableError("Visual reference publication registry is invalid.")
         return value
 

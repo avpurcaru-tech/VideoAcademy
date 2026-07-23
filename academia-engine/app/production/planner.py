@@ -37,19 +37,19 @@ class EpisodeProductionPlanner:
 
     def plan(self, director_plan: DirectorPlan, production_id: str, scene_output_directory: Path,
              workspace: Path, destination: Path, *, provider: str = "default",
-             transition: EpisodeTransitionPolicy | None = None) -> EpisodeProductionRequest:
+             transition: EpisodeTransitionPolicy | None = None,coverage_plan=None) -> EpisodeProductionRequest:
         request = self.preflight(director_plan, production_id, scene_output_directory, workspace, destination,
-                                 provider=provider, transition=transition)
+                                 provider=provider, transition=transition,coverage_plan=coverage_plan)
         self.persist(request)
         return request
 
     def preflight(self, director_plan: DirectorPlan, production_id: str, scene_output_directory: Path,
                   workspace: Path, destination: Path, *, provider: str = "default",
-                  transition: EpisodeTransitionPolicy | None = None) -> EpisodeProductionRequest:
+                  transition: EpisodeTransitionPolicy | None = None,coverage_plan=None) -> EpisodeProductionRequest:
         from app.storyboard import CreativeStoryboard
         if isinstance(director_plan,CreativeStoryboard):
             return self._preflight_storyboard(director_plan,production_id,scene_output_directory,workspace,
-                destination,provider=provider,transition=transition)
+                destination,provider=provider,transition=transition,coverage_plan=coverage_plan)
         numbers = [scene.scene_number for scene in director_plan.scenes]
         if len(numbers) != len(set(numbers)):
             raise EpisodeProductionDuplicateSceneOrderError("Director scene numbers must be unique.")
@@ -97,18 +97,43 @@ class EpisodeProductionPlanner:
         return request
 
     def _preflight_storyboard(self,storyboard,production_id,scene_output_directory,workspace,destination,
-                              *,provider,transition):
+                              *,provider,transition,coverage_plan=None):
         from .storyboard_video_planner import StoryboardVideoPlanner,StoryboardVideoPlanningError
-        try: generation_requests=StoryboardVideoPlanner(self._duration_policy).build(storyboard,production_id)
+        try: generation_requests=StoryboardVideoPlanner(self._duration_policy).build(storyboard,production_id,coverage_plan)
         except StoryboardVideoPlanningError as error:
             raise EpisodeProductionPlanningError("Storyboard could not construct semantic video requests.") from error
+        reuse_source_indices=()
+        source_scene_ids=(tuple(shot.source_storyboard_section_id for shot in coverage_plan.unique_shots)
+            if coverage_plan else tuple(section.section_id for section in storyboard.sections))
+        if coverage_plan is not None and coverage_plan.shared_usage_plan!=tuple(
+                coverage_plan.shared_usage_plan[:len(generation_requests)]):
+            by_shot={shot.shot_id:(index,request) for index,(shot,request) in enumerate(
+                zip(coverage_plan.unique_shots,generation_requests,strict=True))}
+            expanded=[]; reuse=[]; first_usage={}
+            for usage in coverage_plan.shared_usage_plan:
+                _unique_index,base=by_shot[usage.shot_id]
+                if usage.shot_id not in first_usage:
+                    first_usage[usage.shot_id]=len(expanded); expanded.append(base); reuse.append(None)
+                else:
+                    expanded.append(base.model_copy(update={"request_id":f"{production_id}-coverage-{usage.order:04d}",
+                        "planned_shot_id":f"coverage-slot-{usage.order:04d}"}))
+                    reuse.append(first_usage[usage.shot_id])
+            generation_requests=tuple(expanded); reuse_source_indices=tuple(reuse)
+            source_scene_ids=tuple(usage.source_storyboard_section_id for usage in coverage_plan.shared_usage_plan)
         referenced=tuple(request.scene_visual_reference is not None for request in generation_requests)
         if any(referenced) and not all(referenced):
             raise EpisodeProductionPlanningError("Mixed text-only and image-reference scenes require separate productions.")
-        if all(referenced):
-            provider="kling_image_to_video"
+        if coverage_plan is not None:
+            capabilities=coverage_plan.provider_capabilities; provider=capabilities.provider_name
+            if any(referenced) and not capabilities.supports_reference_images:
+                raise EpisodeProductionPlanningError("Selected provider cannot consume required visual references.")
             generation_requests=tuple(request.model_copy(update={"video_request":request.video_request.model_copy(
-                update={"duration_seconds":10})}) for request in generation_requests)
+                update={"duration_seconds":capabilities.selected_clip_duration})}) for request in generation_requests)
+        elif all(referenced):
+            from app.providers import KlingProviderRegistry
+            capabilities=KlingProviderRegistry.capabilities("kling_image_to_video"); provider=capabilities.provider_name
+            generation_requests=tuple(request.model_copy(update={"video_request":request.video_request.model_copy(
+                update={"duration_seconds":capabilities.selected_clip_duration})}) for request in generation_requests)
         references=tuple(GenerationRequestReference(reference_id=request.request_id) for request in generation_requests)
         for reference,request in zip(references,generation_requests,strict=True):
             try: existing=self._request_store.resolve(reference)
@@ -120,7 +145,7 @@ class EpisodeProductionPlanner:
             if existing!=request: raise EpisodeProductionRequestConflictError("A deterministic generation request reference conflicts.")
         try:
             return EpisodeProductionRequest(production_id=production_id,video_requests=generation_requests,
-                generation_request_references=references,source_scene_ids=tuple(section.section_id for section in storyboard.sections),
+                generation_request_references=references,source_scene_ids=source_scene_ids,reuse_source_indices=reuse_source_indices,
                 provider=provider,scene_output_directory=scene_output_directory,final_output_path=destination,
                 media_workspace=workspace,transition_policy=transition or EpisodeTransitionPolicy(kind="cut"))
         except ValidationError as error: raise EpisodeProductionContractError(error) from error

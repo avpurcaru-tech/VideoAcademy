@@ -1,0 +1,482 @@
+{
+  "production_id": "luca-si-max-colors-007-video",
+  "status": "failed",
+  "provider": "kling_image_to_video",
+  "identity_validation_mode": "required",
+  "scenes": [
+    {
+      "scene_id": "scene-0001",
+      "source_scene_id": "culori-rosu-01",
+      "order": 0,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-scene-0001"
+      },
+      "provider_task_id": "909335284062490626",
+      "external_correlation_id": null,
+      "normalized_status": "succeeded",
+      "production_status": "awaiting_identity_review",
+      "local_path": ".runtime\\projects\\luca-si-max-colors-007\\video\\scenes\\scene-0001.mp4",
+      "artifact_id": "909335306560737379",
+      "byte_size": 29510945,
+      "sha256": "c84c14ee520e8ca32f4b5c6da7ea4e8c3bb7d81386e76ead390678b2c909b25a",
+      "content_type": "video/mp4",
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": "pending_manual_review",
+      "identity_validator_implementation": "manual_review",
+      "identity_validator_version": "1",
+      "identity_validation_reasons": [],
+      "identity_review_status": "pending",
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": "2026-07-23T18:42:18.048319Z",
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": null
+    },
+    {
+      "scene_id": "scene-0002",
+      "source_scene_id": "culori-galben-02",
+      "order": 1,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-scene-0002"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": null
+    },
+    {
+      "scene_id": "scene-0003",
+      "source_scene_id": "culori-galben-02",
+      "order": 2,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-scene-0003"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": null
+    },
+    {
+      "scene_id": "scene-0004",
+      "source_scene_id": "culori-verde-albastru-03",
+      "order": 3,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-scene-0004"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": null
+    },
+    {
+      "scene_id": "scene-0005",
+      "source_scene_id": "culori-verde-albastru-03",
+      "order": 4,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-scene-0005"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": null
+    },
+    {
+      "scene_id": "scene-0006",
+      "source_scene_id": "jocul-culorilor-04",
+      "order": 5,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-scene-0006"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": null
+    },
+    {
+      "scene_id": "scene-0007",
+      "source_scene_id": "jocul-culorilor-04",
+      "order": 6,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-scene-0007"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": null
+    },
+    {
+      "scene_id": "scene-0008",
+      "source_scene_id": "culori-rosu-01",
+      "order": 7,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-coverage-0008"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": "scene-0001"
+    },
+    {
+      "scene_id": "scene-0009",
+      "source_scene_id": "culori-galben-02",
+      "order": 8,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-coverage-0009"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": "scene-0003"
+    },
+    {
+      "scene_id": "scene-0010",
+      "source_scene_id": "culori-verde-albastru-03",
+      "order": 9,
+      "generation_request_reference": {
+        "reference_id": "luca-si-max-colors-007-video-coverage-0010"
+      },
+      "provider_task_id": null,
+      "external_correlation_id": null,
+      "normalized_status": null,
+      "production_status": "pending",
+      "local_path": null,
+      "artifact_id": null,
+      "byte_size": null,
+      "sha256": null,
+      "content_type": null,
+      "character_reference_images": [
+        {
+          "character_id": "luca",
+          "local_path": "assets\\characters\\luca-canonical.png",
+          "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+          "content_type": "image/png"
+        },
+        {
+          "character_id": "max",
+          "local_path": "assets\\characters\\max-canonical.png",
+          "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+          "content_type": "image/png"
+        }
+      ],
+      "identity_validation_attempts": 0,
+      "identity_validated": null,
+      "identity_validation_status": null,
+      "identity_validator_implementation": null,
+      "identity_validator_version": null,
+      "identity_validation_reasons": [],
+      "identity_review_status": null,
+      "identity_review_reason": null,
+      "identity_reviewed_at": null,
+      "review_requested_at": null,
+      "identity_warning": null,
+      "rejected_artifact_path": null,
+      "rejected_artifact_sha256": null,
+      "derived_from_scene_id": "scene-0004"
+    }
+  ],
+  "scene_output_directory": ".runtime\\projects\\luca-si-max-colors-007\\video\\scenes",
+  "final_output_path": ".runtime\\projects\\luca-si-max-colors-007\\video\\master.mp4",
+  "media_workspace": ".runtime\\projects\\luca-si-max-colors-007\\video\\workspace",
+  "transition_policy": {
+    "kind": "cut",
+    "duration_seconds": null
+  },
+  "final_artifact": null,
+  "failed_scene_id": "scene-0001",
+  "failure_stage": "visual_identity_validation",
+  "failure_category": "visual_identity_review_required",
+  "safe_message": "Manual visual identity review is required.",
+  "submit_http_status": null,
+  "submit_provider_code": null,
+  "submit_provider_message": null,
+  "submit_request_id": null,
+  "submit_provider_task_id": null,
+  "submit_response_shape": [],
+  "query_http_status": null,
+  "query_provider_code": null,
+  "query_provider_task_id": null,
+  "query_response_shape": [],
+  "created_at": "2026-07-23T11:50:19.183197Z",
+  "updated_at": "2026-07-23T18:42:18.048319Z"
+}

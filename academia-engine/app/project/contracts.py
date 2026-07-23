@@ -33,6 +33,7 @@ class ProjectFailureStage(str,Enum):
     VIDEO_SUBMISSION="video_submission"
     VIDEO_POLLING="video_polling"
     VIDEO_DOWNLOAD="video_download"
+    VISUAL_IDENTITY_VALIDATION="visual_identity_validation"
     LYRICS_GENERATION="lyrics_generation"
     MUSIC_GENERATION="music_generation"
     COMPOSITION="composition"
@@ -65,11 +66,14 @@ class ProjectRecord(BaseModel):
     status: ProjectStatus
     orchestration_version: str=Field(default="legacy",pattern=r"^(legacy|storyboard_first)$")
     video_production_id: str=Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
+    video_provider: str|None=Field(default=None,pattern=r"^[a-z0-9][a-z0-9_-]*$")
+    identity_validation_mode: str=Field(default="required",pattern=r"^(required|advisory|disabled)$")
     music_task_id: str|None=Field(default=None,pattern=r"^[A-Za-z0-9_-]+$")
     lyrics_path: Path
     music_directory: Path
     video_directory: Path
     final_directory: Path
+    video_coverage_plan_path: Path|None=None
     failure_stage: ProjectFailureStage|None=None
     failure_category: str|None=Field(default=None,max_length=100)
     safe_message: str|None=Field(default=None,max_length=500)

@@ -8,16 +8,20 @@ from app.production import (EpisodeProductionError, EpisodeProductionOrchestrato
 from app.providers import KlingProviderRegistry, KlingVideoArtifactDownloader
 from app.services import TaskRegistry, VideoEngine, VideoPollingPolicy
 from app.timeline import FFmpegTimelineRenderer
+from app.production.visual_identity import VisualIdentityValidatorFactory
 
 
-def build_orchestrator(provider=None) -> EpisodeProductionOrchestrator:
+def build_orchestrator(provider_runtime=None,provider_name="kling",identity_validation_mode=None) -> EpisodeProductionOrchestrator:
     load_application_environment()
     runner = SubprocessProcessRunner()
     probe = FFprobeAdapter(runner)
-    if provider is None: _,provider=KlingProviderRegistry().construct("kling")
-    engine = VideoEngine({"kling": provider}, TaskRegistry(), KlingVideoArtifactDownloader())
+    if provider_runtime is None: _,provider_runtime=KlingProviderRegistry().construct_runtime(provider_name)
+    engine = VideoEngine({provider_runtime.provider_key: provider_runtime.provider},
+        provider_runtime.task_registry or TaskRegistry(),provider_runtime.downloader or KlingVideoArtifactDownloader())
+    identity=VisualIdentityValidatorFactory().construct_runtime(identity_validation_mode)
     return EpisodeProductionOrchestrator(engine, FFmpegTimelineRenderer(runner, probe), ProductionRegistry(), probe,
-                                         GenerationRequestStore())
+                                         GenerationRequestStore(), identity_validator=identity.validator,
+                                         identity_validation_mode=identity.mode.value)
 
 
 def _policy(args) -> VideoPollingPolicy:

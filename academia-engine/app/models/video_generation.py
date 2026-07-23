@@ -61,6 +61,7 @@ class VideoGenerationRequest(BaseModel):
     video_request: VideoRequest
     character_reference_images: tuple[CharacterReferenceImage, ...] = ()
     scene_visual_reference: SceneVisualReference | None = None
+    planned_shot_id: str|None=Field(default=None,pattern=r"^[a-z0-9][a-z0-9_-]*$")
 
     @model_validator(mode="after")
     def references_match_characters(self):

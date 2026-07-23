@@ -74,14 +74,22 @@ class KlingImageToVideoMapper:
 
 class KlingImageToVideoProvider(KlingProvider):
     endpoint="/image-to-video/kling-3.0"
+    provider_key="kling_image_to_video"
     supports_text_prompt=True; supports_first_frame=True; supports_single_image_reference=True
     supports_multiple_character_references=False; supports_element_references=False
 
-    def __init__(self,client,mapper=None):
-        self._client=client; self._mapper=mapper or KlingImageToVideoMapper()
+    @staticmethod
+    def capability_snapshot(cost_per_generated_second=None):
+        from app.video_coverage import VideoProviderCapabilities
+        return VideoProviderCapabilities(provider_name="kling_image_to_video",supported_clip_durations=(10,),
+            selected_clip_duration=10,supports_reference_images=True,supports_multiple_references=False,
+            cost_per_generated_second=cost_per_generated_second)
+
+    def __init__(self,client,mapper=None,callback_url=None):
+        self._client=client; self._mapper=mapper or KlingImageToVideoMapper(); self._callback_url=callback_url
 
     def submit_generation(self,request):
-        correlation_id=uuid4().hex; mapped=self._mapper.map(request,correlation_id)
+        correlation_id=uuid4().hex; mapped=self._mapper.map(request,correlation_id,self._callback_url)
         payload=self._client.post_json(self.endpoint,mapped.to_payload())
         response=KlingCreateTaskResponse.parse(payload)
         if response.data is None: raise KlingMalformedResponseError("Kling Create Task success response is missing data.")

@@ -86,6 +86,7 @@ class StoryboardFirstOrchestrationTests(unittest.TestCase):
             self.assertEqual(["music","timeline-21","timeline-23","video","compose-21","compose-23"],events)
             self.assertTrue((root/"music"/"timeline-variant-01.json").is_file())
             self.assertTrue((root/"music"/"timeline-variant-02.json").is_file())
+            self.assertTrue((root/"input"/"video-coverage-plan.json").is_file())
             self.assertEqual(1,video.produce_planned.call_count)
 
 

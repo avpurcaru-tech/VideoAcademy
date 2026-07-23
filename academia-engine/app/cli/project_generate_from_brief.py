@@ -22,7 +22,7 @@ def main():
     configure_utf8_output(); load_application_environment(); parser=argparse.ArgumentParser(description="Generate a complete project from an educational creative brief.")
     parser.add_argument("--brief",required=True,type=Path); parser.add_argument("--project-id",required=True)
     parser.add_argument("--episode-generator",required=True,choices=("deterministic","openai"))
-    parser.add_argument("--video-provider",default="kling"); parser.add_argument("--lyrics-provider",default="openai")
+    parser.add_argument("--video-provider",default="kling",choices=("kling","kling_image_to_video")); parser.add_argument("--lyrics-provider",default="openai")
     parser.add_argument("--music-provider",default="sunoapi_org"); parser.add_argument("--output",required=True,type=Path)
     parser.add_argument("--interval",type=float,default=5); parser.add_argument("--timeout",type=float,default=900)
     parser.add_argument("--confirm",action="store_true"); args=parser.parse_args()
@@ -38,7 +38,7 @@ def main():
             CreativeProjectGenerationService(local_episode,project,registry,storyboards).preflight(brief,args.project_id,args.output,args.video_provider)
             print("Creative project preflight passed."); print("No external provider was constructed or called.")
             print("Use --confirm to authorize Episode, video, lyrics, and music generation costs."); return 2
-        ProjectGenerationService.create_planned(registry,args.project_id,args.output,brief.brief_id,brief.series_id)
+        ProjectGenerationService.create_planned(registry,args.project_id,args.output,brief.brief_id,brief.series_id,args.video_provider)
         series_registry=SeriesRegistry(); character_registry=CharacterRegistry()
         resolved_character_ids=()
         if brief.series_id:
@@ -64,10 +64,17 @@ def main():
                     from app.characters import CharacterRegistryError
                     from app.series import SeriesRegistryError
                     from app.project import ProjectFailureStage
+                    from app.providers import KlingProviderCredentialsMissingError,KlingReferencePublisherUnavailableError,KlingProviderRegistryError
                     if isinstance(error,CharacterRegistryError):
                         failure=(ProjectFailureStage.CHARACTER_RESOLUTION,"character_resolution_failed","Character resolution failed at a safe boundary.")
                     elif isinstance(error,SeriesRegistryError):
                         failure=(ProjectFailureStage.SERIES_RESOLUTION,"series_resolution_failed","Series resolution failed at a safe boundary.")
+                    elif isinstance(error,KlingProviderCredentialsMissingError):
+                        failure=(ProjectFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_credentials_missing","Video provider credentials are missing.")
+                    elif isinstance(error,KlingReferencePublisherUnavailableError):
+                        failure=(ProjectFailureStage.VIDEO_PROVIDER_CONFIGURATION,"canonical_reference_publisher_unavailable","Canonical reference publisher is unavailable.")
+                    elif isinstance(error,KlingProviderRegistryError):
+                        failure=(ProjectFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_unavailable","Selected video provider is unavailable.")
                     else:
                         failure=(ProjectFailureStage.EPISODE_GENERATION,"provider_configuration_failed","Provider configuration failed at a safe boundary.")
                     ProjectGenerationService.fail_planned(registry,args.project_id,

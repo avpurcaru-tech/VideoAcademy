@@ -23,6 +23,7 @@ class EpisodeSceneStatus(str, Enum):
     GENERATING = "generating"
     READY = "ready"
     FAILED = "failed"
+    AWAITING_IDENTITY_REVIEW = "awaiting_identity_review"
 
 
 class ProductionFailureStage(str, Enum):
@@ -31,6 +32,7 @@ class ProductionFailureStage(str, Enum):
     VIDEO_SUBMISSION = "video_submission"
     VIDEO_POLLING = "video_polling"
     VIDEO_DOWNLOAD = "video_download"
+    VISUAL_IDENTITY_VALIDATION = "visual_identity_validation"
     VIDEO_ASSEMBLY = "video_assembly"
     REGISTRY_PERSISTENCE = "registry_persistence"
 
@@ -57,6 +59,7 @@ class EpisodeProductionRequest(BaseModel):
     video_requests: tuple[VideoGenerationRequest, ...] = Field(min_length=2)
     generation_request_references: tuple[GenerationRequestReference, ...] = Field(min_length=2)
     source_scene_ids: tuple[str, ...] = ()
+    reuse_source_indices: tuple[int|None,...] = ()
     provider: str = Field(min_length=1, max_length=100)
     scene_output_directory: Path
     final_output_path: Path
@@ -72,6 +75,11 @@ class EpisodeProductionRequest(BaseModel):
             raise ValueError("Every episode scene requires one generation request reference.")
         if self.source_scene_ids and len(self.source_scene_ids) != len(self.video_requests):
             raise ValueError("Source scene traceability must align with episode scenes.")
+        if self.reuse_source_indices and len(self.reuse_source_indices)!=len(self.video_requests):
+            raise ValueError("Coverage reuse mapping must align with episode scenes.")
+        for index,source in enumerate(self.reuse_source_indices):
+            if source is not None and (source<0 or source>=index):
+                raise ValueError("Coverage reuse must reference an earlier generated scene.")
         references = [reference.reference_id for reference in self.generation_request_references]
         if len(references) != len(set(references)):
             raise ValueError("Episode generation request references must be unique.")
@@ -103,6 +111,19 @@ class EpisodeSceneResult(BaseModel):
     character_reference_images: tuple[CharacterReferenceImage, ...] = ()
     identity_validation_attempts: int = Field(default=0, ge=0)
     identity_validated: bool | None = None
+    identity_validation_status: str | None = Field(default=None,
+        pattern=r"^(pending_manual_review|approved|rejected|automatic_passed|automatic_failed|disabled|advisory_unavailable)$")
+    identity_validator_implementation: str | None = None
+    identity_validator_version: str | None = None
+    identity_validation_reasons: tuple[str, ...] = ()
+    identity_review_status: str | None = Field(default=None, pattern=r"^(pending|approved|rejected)$")
+    identity_review_reason: str | None = Field(default=None, max_length=100)
+    identity_reviewed_at: datetime | None = None
+    review_requested_at: datetime | None = None
+    identity_warning: str | None = Field(default=None, max_length=200)
+    rejected_artifact_path: Path | None = None
+    rejected_artifact_sha256: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    derived_from_scene_id: str|None=None
 
     @model_validator(mode="before")
     @classmethod
@@ -136,6 +157,7 @@ class ProductionRecord(BaseModel):
     production_id: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
     status: EpisodeProductionStatus
     provider: str
+    identity_validation_mode: str = Field(default="required", pattern=r"^(required|advisory|disabled)$")
     scenes: tuple[EpisodeSceneResult, ...]
     scene_output_directory: Path
     final_output_path: Path

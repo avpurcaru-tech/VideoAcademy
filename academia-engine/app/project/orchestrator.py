@@ -47,7 +47,9 @@ class ProjectGenerationService:
             record=self._registry.load(project_id)
             if record.status != ProjectStatus.PLANNED: raise ProjectOrchestrationError("Project already exists; use resume.")
         else:
-            record=self._new_record(episode.id,project_id,Path(output_root),series_id); self._registry.create(record)
+            record=self._new_record(episode.id,project_id,Path(output_root),series_id,video_provider); self._registry.create(record)
+        if record.video_provider is None: record=self._update(record,video_provider=video_provider)
+        else: video_provider=record.video_provider
         try: self._persist_inputs(record,episode,brief,music_plan)
         except Exception:
             try: self._update(record,status=ProjectStatus.FAILED,failure_stage=ProjectFailureStage.EPISODE_GENERATION,
@@ -59,6 +61,8 @@ class ProjectGenerationService:
     def generate_storyboard(self,storyboard,project_id,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org"):
         from app.storyboard import CreativeStoryboard
         record=self._registry.load(project_id); storyboard=CreativeStoryboard.model_validate(storyboard)
+        if record.video_provider is None: record=self._update(record,video_provider=video_provider)
+        else: video_provider=record.video_provider
         self._persist_model(record.lyrics_path.parent.parent/"input"/"storyboard.json",storyboard)
         record=self._status(record,ProjectStatus.STORYBOARD_READY)
         return self._run_storyboard(record,storyboard,video_policy,music_policy,video_provider,music_provider)
@@ -106,6 +110,28 @@ class ProjectGenerationService:
                 timelines.append(timeline)
             self._validate_timeline_mapping(storyboard,timelines)
             record=self._status(record,ProjectStatus.TIMELINES_READY)
+            from app.providers import KlingProviderRegistry
+            from app.video_coverage import (VideoCoverageConfiguration,VideoCoveragePlan,VideoCoveragePlanner)
+            coverage_path=record.video_coverage_plan_path or record.music_directory.parent/"input"/"video-coverage-plan.json"
+            if coverage_path.is_file():
+                coverage_plan=VideoCoveragePlan.model_validate_json(coverage_path.read_text(encoding="utf-8"))
+            else:
+                policy=os.environ.get("VIDEO_COVERAGE_POLICY","balanced")
+                ratio=float(os.environ.get("VIDEO_BALANCED_UNIQUE_RATIO","0.65"))
+                maximum_scenes=int(os.environ["VIDEO_MAXIMUM_SCENE_COUNT"]) if os.environ.get("VIDEO_MAXIMUM_SCENE_COUNT") else None
+                maximum_budget=float(os.environ["VIDEO_MAXIMUM_GENERATION_BUDGET"]) if os.environ.get("VIDEO_MAXIMUM_GENERATION_BUDGET") else None
+                configuration=VideoCoverageConfiguration(policy=policy,balanced_unique_coverage_ratio=ratio,
+                    maximum_scene_count=maximum_scenes,maximum_generation_budget=maximum_budget,
+                    selected_variant_id=os.environ.get("VIDEO_SELECTED_MUSIC_VARIANT") or None)
+                durations={f"variant-{index:02d}":timeline.music_duration_seconds for index,timeline in enumerate(timelines,1)}
+                timeline_map={f"variant-{index:02d}":timeline for index,timeline in enumerate(timelines,1)}
+                capabilities=KlingProviderRegistry.capabilities(video_provider,os.environ)
+                coverage_plan=VideoCoveragePlanner().plan(durations,storyboard,capabilities,configuration,timeline_map)
+                self._persist_model(coverage_path,coverage_plan)
+                record=self._update(record,video_coverage_plan_path=coverage_path)
+            if coverage_plan.confirmation_required:
+                raise ProjectOrchestrationError("Video coverage plan exceeds configured generation limits and requires confirmation.")
+            video_provider=coverage_plan.provider_capabilities.provider_name
             production=None
             try: production=ProductionRegistry().load(record.video_production_id)
             except Exception: pass
@@ -119,7 +145,7 @@ class ProjectGenerationService:
                     request=self._services.episode_generation_service.plan_only(storyboard,
                         production_id=record.video_production_id,scene_output_directory=record.video_directory/"scenes",
                         workspace=record.video_directory/"workspace",destination=record.video_directory/"master.mp4",
-                        provider=video_provider,transition=EpisodeTransitionPolicy(kind="cut"))
+                        provider=video_provider,transition=EpisodeTransitionPolicy(kind="cut"),coverage_plan=coverage_plan)
                     record=self._update(record,video_plan_diagnostics=self._video_plan_diagnostics(request,timelines))
                     record=self._status(record,ProjectStatus.VIDEO_GENERATING)
                     self._services.episode_generation_service.produce_planned(request,video_policy)
@@ -131,8 +157,10 @@ class ProjectGenerationService:
                 safe_message=None,failure_details=(),failed_scene_id=None,submit_http_status=None,submit_provider_code=None,
                 submit_provider_message=None,submit_request_id=None,submit_provider_task_id=None,submit_response_shape=(),
                 query_http_status=None,query_provider_code=None,query_provider_task_id=None,query_response_shape=())
-            clips=tuple(StoryboardVideoClip(storyboard_section_id=scene.source_scene_id,
-                local_path=scene.local_path) for scene in production.scenes)
+            clip_by_section={}
+            for scene in production.scenes: clip_by_section.setdefault(scene.source_scene_id,scene.local_path)
+            clips=tuple(StoryboardVideoClip(storyboard_section_id=section.section_id,
+                local_path=clip_by_section[section.section_id]) for section in storyboard.sections)
             self._progress("Composition..."); record=self._status(record,ProjectStatus.COMPOSING)
             for index,(audio,timeline) in enumerate(zip(music_record.artifact_set.artifacts,timelines,strict=True),start=1):
                 failed_variant_id=f"variant-{index:02d}"
@@ -384,16 +412,19 @@ class ProjectGenerationService:
         except Exception:
             return {}
 
-    def _new_record(self,episode_id,project_id,root,series_id=None):
+    def _new_record(self,episode_id,project_id,root,series_id=None,video_provider=None):
         now=datetime.now(timezone.utc)
         return ProjectRecord(project_id=project_id,episode_id=episode_id,series_id=series_id,status=ProjectStatus.PLANNED,
-            video_production_id=f"{project_id}-video",lyrics_path=root/"lyrics"/"lyrics.json",
+            video_production_id=f"{project_id}-video",video_provider=video_provider,lyrics_path=root/"lyrics"/"lyrics.json",
             music_directory=root/"music",video_directory=root/"video",final_directory=root/"final",
             created_at=now,updated_at=now)
     @classmethod
-    def create_planned(cls,registry,project_id,root,episode_id,series_id=None):
+    def create_planned(cls,registry,project_id,root,episode_id,series_id=None,video_provider=None):
         """Create the confirmed project's durable boundary before any provider or creative resolution."""
-        record=cls(None,registry)._new_record(episode_id,project_id,Path(root),series_id).model_copy(update={"orchestration_version":"storyboard_first"})
+        from app.production import VisualIdentityValidatorFactory
+        identity_mode=VisualIdentityValidatorFactory().construct_runtime().mode.value
+        record=cls(None,registry)._new_record(episode_id,project_id,Path(root),series_id,video_provider).model_copy(update={
+            "orchestration_version":"storyboard_first","identity_validation_mode":identity_mode})
         registry.create(record)
         project_root=record.lyrics_path.parent.parent
         for directory in (project_root/"input",project_root/"lyrics",record.music_directory,record.video_directory,
@@ -442,6 +473,7 @@ class ProjectResumeService:
         self._generation=generation_service; self._registry=registry
     def resume(self,project_id,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org"):
         record=self._registry.load(project_id)
+        if record.video_provider is not None: video_provider=record.video_provider
         if record.status==ProjectStatus.COMPLETED: return record
         root=record.lyrics_path.parent.parent; inputs=root/"input"
         if record.orchestration_version=="storyboard_first":
