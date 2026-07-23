@@ -1,8 +1,12 @@
-import os
+import hashlib,os
 from datetime import datetime,timezone
 from pathlib import Path
 
-from app.media import AudioVideoDurationPolicy
+from app.media import (AudioVideoDurationPolicy,AudioCompositionSourceInvalidError,AudioCompositionSourceMissingError,
+    CompositionCodecMismatchError,CompositionDurationIncompatibleError,CompositionDurationMismatchError,
+    CompositionFFmpegError,CompositionOutputEmptyError,CompositionOutputMissingError,CompositionProbeError,
+    CompositionPublicationError,CompositionVideoStreamMissingError,VideoCompositionSourceInvalidError,
+    VideoCompositionSourceMissingError)
 from app.music import MusicGenerationRequest
 from app.production import EpisodeTransitionPolicy
 from app.production import (EpisodeGenerationRequestResolutionError,EpisodeProviderConfigurationError,
@@ -65,6 +69,7 @@ class ProjectGenerationService:
         from app.music_timeline import MusicTimeline
         from app.production import ProductionRegistry
         from app.storyboard import StoryboardLyricsAdapter,StoryboardMusicAdapter
+        failed_variant_id=None; composition_context={}
         try:
             self._progress("Lyrics...")
             if record.lyrics_path.is_file(): lyrics=LyricsPlan.model_validate_json(record.lyrics_path.read_text(encoding="utf-8"))
@@ -130,19 +135,41 @@ class ProjectGenerationService:
                 local_path=scene.local_path) for scene in production.scenes)
             self._progress("Composition..."); record=self._status(record,ProjectStatus.COMPOSING)
             for index,(audio,timeline) in enumerate(zip(music_record.artifact_set.artifacts,timelines,strict=True),start=1):
+                failed_variant_id=f"variant-{index:02d}"
                 destination=record.final_directory/f"final-variant-{index:02d}.mp4"
-                if destination.is_file(): continue
-                self._services.music_timeline_composer.compose(MusicTimelineCompositionRequest(
+                composition_context={"failed_variant_id":failed_variant_id,"composition_master_video_present":production.final_artifact.local_path.is_file(),
+                    "composition_master_video_duration":production.final_artifact.media_info.duration_seconds,
+                    "composition_audio_present":audio.local_path.is_file(),"composition_audio_duration":timeline.music_duration_seconds,
+                    "composition_timeline_present":(record.music_directory/f"timeline-variant-{index:02d}.json").is_file(),
+                    "composition_timeline_duration":timeline.music_duration_seconds,"composition_expected_output_path":destination,
+                    "composition_ffmpeg_exit_code":None,"composition_ffmpeg_error_category":None}
+                record=self._update(record,**composition_context)
+                if destination.is_file():
+                    record=self._composition_checkpoint(record,failed_variant_id,destination); continue
+                result=self._services.music_timeline_composer.compose(MusicTimelineCompositionRequest(
                     composition_id=f"{record.project_id}-variant-{index:02d}",timeline=timeline,video_clips=clips,
                     shared_master_path=production.final_artifact.local_path,
                     music_source=audio.local_path,destination=destination,
                     workspace=record.final_directory/f"workspace-variant-{index:02d}",resume=True))
-            return self._status(record,ProjectStatus.COMPLETED)
+                record=self._composition_checkpoint(record,failed_variant_id,result.local_path,result.byte_size,result.sha256)
+            return self._update(record,status=ProjectStatus.COMPLETED,failed_variant_id=None,
+                composition_ffmpeg_exit_code=None,composition_ffmpeg_error_category=None,failure_stage=None,
+                failure_category=None,safe_message=None)
         except Exception as error:
             try:
                 values={"status":ProjectStatus.FAILED,"failure_stage":self._storyboard_run_failure_stage(record),
                     "failure_category":self._storyboard_run_failure_category(error,record),
-                    "safe_message":"Storyboard-first project generation failed at a safe boundary."}
+                    "safe_message":self._composition_safe_message(error,record)}
+                if record.status==ProjectStatus.COMPOSING:
+                    values.update(composition_context); values["failed_variant_id"]=failed_variant_id
+                    values["composition_ffmpeg_exit_code"]=getattr(error,"exit_code",None)
+                    values["composition_ffmpeg_error_category"]=getattr(error,"safe_category",None)
+                    if failed_variant_id and composition_context.get("composition_expected_output_path"):
+                        from .contracts import ProjectCompositionVariant
+                        failed=ProjectCompositionVariant(variant_id=failed_variant_id,status="failed",
+                            output_path=composition_context["composition_expected_output_path"])
+                        checkpoints={item.variant_id:item for item in record.composition_variants}; checkpoints[failed_variant_id]=failed
+                        values["composition_variants"]=tuple(checkpoints[key] for key in sorted(checkpoints))
                 values.update(self._storyboard_video_diagnostic(record,error)); self._update(record,**values)
             except Exception: pass
             raise
@@ -172,8 +199,45 @@ class ProjectGenerationService:
         for kind,category in mappings:
             if isinstance(error,kind): return category
         if record.status in (ProjectStatus.TIMELINES_GENERATING,ProjectStatus.TIMELINES_READY): return "video_timeline_load_failed"
-        if record.status==ProjectStatus.COMPOSING: return "composition_failed"
+        if record.status==ProjectStatus.COMPOSING:
+            mappings=((VideoCompositionSourceMissingError,"composition_master_video_missing"),
+                (VideoCompositionSourceInvalidError,"composition_master_video_invalid"),
+                (AudioCompositionSourceMissingError,"composition_audio_variant_missing"),
+                (AudioCompositionSourceInvalidError,"composition_audio_invalid"),
+                (CompositionDurationIncompatibleError,"composition_duration_mismatch"),
+                (CompositionDurationMismatchError,"composition_duration_mismatch"),
+                (CompositionFFmpegError,"composition_ffmpeg_unavailable" if getattr(error,"safe_category",None)=="ffmpeg_not_installed" else "composition_ffmpeg_failed"),
+                (CompositionOutputMissingError,"composition_output_missing"),(CompositionOutputEmptyError,"composition_output_invalid"),
+                (CompositionProbeError,"composition_output_invalid"),(CompositionVideoStreamMissingError,"composition_output_invalid"),
+                (CompositionCodecMismatchError,"composition_output_invalid"),(CompositionPublicationError,"composition_output_persistence_failed"))
+            for kind,category in mappings:
+                if isinstance(error,kind): return category
+            return "composition_variant_mapping_failed"
         return "video_stage_failed"
+
+    @staticmethod
+    def _composition_safe_message(error,record):
+        if record.status!=ProjectStatus.COMPOSING: return "Storyboard-first project generation failed at a safe boundary."
+        category=ProjectGenerationService._storyboard_run_failure_category(error,record)
+        return {"composition_master_video_missing":"Master video is missing.","composition_master_video_invalid":"Master video is invalid.",
+            "composition_audio_variant_missing":"Composition audio variant is missing.","composition_audio_invalid":"Composition audio is invalid.",
+            "composition_duration_mismatch":"Composition durations are incompatible.","composition_ffmpeg_unavailable":"FFmpeg is unavailable.",
+            "composition_ffmpeg_failed":"FFmpeg composition failed safely.","composition_output_missing":"Composition output was not created.",
+            "composition_output_invalid":"Composition output is invalid.","composition_output_persistence_failed":"Composition output could not be published atomically."}.get(
+                category,"Composition variant mapping is invalid.")
+
+    def _composition_checkpoint(self,record,variant_id,path,byte_size=None,sha256=None):
+        from .contracts import ProjectCompositionVariant
+        path=Path(path); byte_size=byte_size or path.stat().st_size
+        if sha256 is None:
+            digest=hashlib.sha256()
+            with path.open("rb") as stream:
+                while chunk:=stream.read(1024*1024): digest.update(chunk)
+            sha256=digest.hexdigest()
+        checkpoint=ProjectCompositionVariant(variant_id=variant_id,status="completed",output_path=path,
+            byte_size=byte_size,sha256=sha256)
+        values={item.variant_id:item for item in record.composition_variants}; values[variant_id]=checkpoint
+        return self._update(record,composition_variants=tuple(values[key] for key in sorted(values)))
 
     @staticmethod
     def _storyboard_video_diagnostic(record,error):

@@ -1,35 +1,52 @@
 import argparse
 
-from app.production import EpisodeProductionStatus,EpisodeSceneStatus,ProductionIntegrityService,ProductionRegistry
-from app.project import ProjectRegistry
+from app.cli.video_probe import build_probe
+from app.project.composition_preflight import CompositionPreflightService
 
 
-def inspect(project_id,projects=None,productions=None):
-    project=(projects or ProjectRegistry()).load(project_id)
-    production=(productions or ProductionRegistry()).load(project.video_production_id)
-    report=ProductionIntegrityService().verify_production(production)
-    ready=sum(1 for scene,item in zip(production.scenes,report.scenes,strict=True)
-        if scene.production_status==EpisodeSceneStatus.READY and item.artifact.valid)
-    master_present=production.final_artifact is not None and production.final_artifact.local_path.is_file()
-    master_valid=report.final_artifact.valid
-    names=("failed_scene_id","failure_stage","failure_category","safe_message","submit_http_status","submit_provider_code",
-        "submit_provider_message","submit_request_id","submit_provider_task_id","submit_response_shape","query_http_status",
-        "query_provider_code","query_provider_task_id","query_response_shape")
-    stale=production.status==EpisodeProductionStatus.SUCCEEDED and any(getattr(production,name) not in (None,()) for name in names)
-    return production,ready,master_present,master_valid,stale
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Inspect both composition variants without HTTP or FFmpeg execution.")
+    parser.add_argument("--project-id", required=True)
+    args = parser.parse_args()
+    try:
+        report = CompositionPreflightService(probe=build_probe()).inspect(args.project_id)
+    except Exception as exc:
+        category = getattr(exc, "failure_category", "composition_variant_mapping_failed")
+        print(f"Project ID: {args.project_id}")
+        print(f"Failure category: {category}")
+        print("Provider calls: 0")
+        print("FFmpeg calls: 0")
+        return 1
+
+    print(f"Project ID: {report.project_id}")
+    for variant in report.variants:
+        print()
+        print(f"Variant: {variant.variant_id}")
+        print("Master video: " + ("present" if variant.master_present else "missing"))
+        print(f"Master path: {variant.master_path}")
+        print(f"Master duration: {_duration(variant.master_duration)}")
+        print("Audio: " + ("present" if variant.audio_present else "missing"))
+        print(f"Audio path: {variant.audio_path}")
+        print(f"Audio duration: {_duration(variant.audio_duration)}")
+        print("Timeline: " + ("present" if variant.timeline_present else "missing"))
+        print(f"Timeline path: {variant.timeline_path}")
+        print(f"Timeline duration: {_duration(variant.timeline_duration)}")
+        print("Timeline-to-variant mapping: " + ("valid" if variant.mapping_valid else "invalid"))
+        print("Duration policy: " + ("valid" if variant.duration_valid else "invalid"))
+        print(f"Expected output: {variant.expected_output_path}")
+        print("Composition contract: " + ("valid" if variant.valid else "invalid"))
+        if variant.failure_category:
+            print(f"Failure category: {variant.failure_category}")
+            print(f"Failed variant: {variant.variant_id}")
+    print()
+    print("Provider calls: 0")
+    print("FFmpeg calls: 0")
+    return 0 if report.valid else 1
 
 
-def main():
-    parser=argparse.ArgumentParser(description="Inspect composition readiness without provider or FFmpeg calls.")
-    parser.add_argument("--project-id",required=True); args=parser.parse_args()
-    try: production,ready,present,valid,stale=inspect(args.project_id)
-    except Exception:
-        print("Composition preflight failed at a safe boundary."); print("Provider calls: 0"); print("FFmpeg calls: 0"); return 1
-    print(f"Video production status: {production.status.value}"); print(f"Ready scenes: {ready}/{len(production.scenes)}")
-    print("Master video present: " + ("yes" if present else "no")); print("Master video valid: " + ("yes" if valid else "no"))
-    print("Stale video diagnostics detected: " + ("yes" if stale else "no"))
-    print("Resume reconciliation required: " + ("yes" if stale else "no"))
-    print("Provider calls: 0"); print("FFmpeg calls: 0"); return 0 if valid and ready==len(production.scenes) else 1
+def _duration(value: float | None) -> str:
+    return str(value) if value is not None else "unavailable"
 
 
-if __name__=="__main__": raise SystemExit(main())
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -16,7 +16,8 @@ from .ffprobe import MediaProbeError
 from .process_runner import ProcessRunner
 
 
-DURATION_TOLERANCE_SECONDS=0.25
+COMPOSITION_DURATION_TOLERANCE_SECONDS=0.25
+DURATION_TOLERANCE_SECONDS=COMPOSITION_DURATION_TOLERANCE_SECONDS
 FRAME_RATE_TOLERANCE=0.01
 
 
@@ -97,7 +98,9 @@ class FFmpegAudioVideoComposer:
                                    suffix=".part.mp4",delete=False) as stream: temporary=Path(stream.name)
             result=self._runner.run(self._arguments(video,audio,temporary,video_info,audio_info,loop),
                                     timeout_seconds=self._timeout)
-            if result.exit_code!=0: raise CompositionFFmpegError("Audio/video composition failed.")
+            if result.exit_code!=0:
+                error=CompositionFFmpegError("Audio/video composition failed."); error.exit_code=result.exit_code
+                error.safe_category=_safe_ffmpeg_category(result.stderr); raise error
             if not temporary.is_file(): raise CompositionOutputMissingError("Composition output is missing.")
             size=temporary.stat().st_size
             if size<=0: raise CompositionOutputEmptyError("Composition output is empty.")
@@ -115,7 +118,11 @@ class FFmpegAudioVideoComposer:
                 media_info=output_info.model_copy(update={"local_path":destination}),video_source_path=video,
                 audio_source_path=audio,duration_policy=request.duration_policy)
         except AudioVideoCompositionError: raise
-        except Exception as error: raise CompositionFFmpegError("Audio/video composition could not be executed.") from error
+        except Exception as error:
+            failure=CompositionFFmpegError("Audio/video composition could not be executed.")
+            failure.exit_code=getattr(error,"exit_code",None)
+            failure.safe_category="ffmpeg_not_installed" if isinstance(error,FileNotFoundError) else "unknown_ffmpeg_failure"
+            raise failure from error
         finally:
             if temporary is not None: temporary.unlink(missing_ok=True)
 
@@ -187,6 +194,14 @@ class AudioVariantVideoComposer:
                 overwrite=overwrite)))
             except Exception as error: raise AudioVariantCompositionPartialError(tuple(completed),index) from error
         return tuple(completed)
+
+def _safe_ffmpeg_category(stderr):
+    value=(stderr or "").casefold()
+    if "no such file" in value or "not found" in value: return "input_not_found"
+    if "unknown decoder" in value or "unsupported codec" in value: return "unsupported_codec"
+    if "filter" in value: return "invalid_filter_graph"
+    if "permission denied" in value or "could not write" in value: return "output_write_failed"
+    return "unknown_ffmpeg_failure"
 
 
 def _sha256(path):

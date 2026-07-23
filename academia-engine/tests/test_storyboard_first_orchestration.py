@@ -63,7 +63,7 @@ class StoryboardFirstOrchestrationTests(unittest.TestCase):
             timelines.generate.side_effect=timeline
             scenes=tuple(SimpleNamespace(source_scene_id=section.section_id,local_path=root/"video"/f"{section.section_id}.mp4") for section in storyboard.sections)
             production=SimpleNamespace(scenes=scenes,status=SimpleNamespace(value="succeeded"),
-                final_artifact=SimpleNamespace(local_path=root/"video"/"master.mp4"))
+                final_artifact=SimpleNamespace(local_path=root/"video"/"master.mp4",media_info=SimpleNamespace(duration_seconds=20)))
             generated=StoryboardVideoPlanner().build(storyboard,"project-video")
             planned=SimpleNamespace(video_requests=generated,source_scene_ids=tuple(s.section_id for s in storyboard.sections),
                 generation_request_references=tuple(SimpleNamespace(reference_id=value.request_id) for value in generated))
@@ -73,6 +73,8 @@ class StoryboardFirstOrchestrationTests(unittest.TestCase):
             def compose(request):
                 events.append(f"compose-{request.timeline.music_duration_seconds:g}")
                 request.destination.parent.mkdir(parents=True,exist_ok=True); request.destination.write_bytes(b"final")
+                import hashlib
+                return SimpleNamespace(local_path=request.destination,byte_size=5,sha256=hashlib.sha256(b"final").hexdigest())
             composer.compose.side_effect=compose
             services=ProjectServices(Mock(),Mock(),video,Mock(),Mock(),music,Mock(),Mock(),probe,timelines,composer)
             service=ProjectGenerationService(services,registry)

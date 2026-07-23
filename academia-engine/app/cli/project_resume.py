@@ -59,7 +59,9 @@ def main() -> int:
 def _failure(record):
     print(f"Project failure stage: {record.failure_stage.value if record.failure_stage else 'unavailable'}")
     print(f"Project failure category: {record.failure_category or 'unavailable'}")
-    print(f"Failed scene: {record.failed_scene_id or 'unavailable'}")
+    if record.failure_stage==ProjectFailureStage.COMPOSITION:
+        print(f"Failed variant: {record.failed_variant_id or 'unavailable'}")
+    else: print(f"Failed scene: {record.failed_scene_id or 'unavailable'}")
     print(f"Safe message: {record.safe_message or 'No durable diagnostic is available for this legacy failure.'}")
     if record.failure_details:
         print("Storyboard validation failed:")

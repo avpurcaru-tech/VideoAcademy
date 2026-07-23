@@ -76,19 +76,22 @@ class MusicTimelineComposer:
             expected=tuple(segment.storyboard_section_id for segment in request.timeline.segments)
             if set(clip_by_id)!=set(expected):
                 raise MusicTimelineClipMismatchError("Video clips do not match music timeline storyboard sections.")
-            aligned=Path(request.workspace)/"timeline-aligned-video.mp4"
-            if not (request.resume and aligned.is_file()):
-                semantic=VideoTimeline(timeline_id=f"{request.composition_id}-video",
-                    scenes=tuple(TimelineScene(scene_id=segment.storyboard_section_id,
-                        source_path=clip_by_id[segment.storyboard_section_id].local_path,order=index,
-                        trim_start_seconds=0,trim_end_seconds=segment.end_seconds-segment.start_seconds)
-                        for index,segment in enumerate(request.timeline.segments)),
-                    output=TimelineOutput(destination=aligned,workspace=Path(request.workspace)/"video-render"))
-                self._video_renderer.render(semantic)
-            video_source=aligned
+            if request.shared_master_path is not None: video_source=request.shared_master_path
+            else:
+                aligned=Path(request.workspace)/"timeline-aligned-video.mp4"
+                if not (request.resume and aligned.is_file()):
+                    semantic=VideoTimeline(timeline_id=f"{request.composition_id}-video",
+                        scenes=tuple(TimelineScene(scene_id=segment.storyboard_section_id,
+                            source_path=clip_by_id[segment.storyboard_section_id].local_path,order=index,
+                            trim_start_seconds=0,trim_end_seconds=segment.end_seconds-segment.start_seconds)
+                            for index,segment in enumerate(request.timeline.segments)),
+                        output=TimelineOutput(destination=aligned,workspace=Path(request.workspace)/"video-render"))
+                    self._video_renderer.render(semantic)
+                video_source=aligned
         artifact=self._composer.compose(AudioVideoCompositionRequest(video_source=video_source,
             audio_source=request.music_source,destination=destination,workspace=Path(request.workspace)/"audio-mux",
-            duration_policy=AudioVideoDurationPolicy.TRIM_VIDEO_TO_AUDIO,overwrite=request.overwrite))
+            duration_policy=(AudioVideoDurationPolicy.EXTEND_VIDEO_TO_AUDIO if request.shared_master_path is not None
+                else AudioVideoDurationPolicy.TRIM_VIDEO_TO_AUDIO),overwrite=request.overwrite))
         return MusicTimelineCompositionResult(composition_id=request.composition_id,local_path=artifact.local_path,
             byte_size=artifact.byte_size,sha256=artifact.sha256,used_music_timeline=used_timeline)
 

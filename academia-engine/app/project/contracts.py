@@ -47,6 +47,14 @@ class ProjectVideoSceneDiagnostic(BaseModel):
     request_reference_id: str
     prompt_character_count: int=Field(ge=0)
 
+class ProjectCompositionVariant(BaseModel):
+    model_config=ConfigDict(extra="forbid",frozen=True)
+    variant_id: str=Field(pattern=r"^variant-[0-9]{2}$")
+    status: str=Field(pattern=r"^(completed|failed)$")
+    output_path: Path
+    byte_size: int|None=Field(default=None,gt=0)
+    sha256: str|None=Field(default=None,pattern=r"^[a-f0-9]{64}$")
+
 
 class ProjectRecord(BaseModel):
     """Prompt-free durable coordination state; provider payloads and URLs are forbidden."""
@@ -71,6 +79,17 @@ class ProjectRecord(BaseModel):
     provider_model: str|None=Field(default=None,max_length=200)
     provider_retry_after: str|None=Field(default=None,max_length=100)
     video_plan_diagnostics: tuple[ProjectVideoSceneDiagnostic,...]=()
+    composition_variants: tuple[ProjectCompositionVariant,...]=()
+    failed_variant_id: str|None=Field(default=None,pattern=r"^variant-[0-9]{2}$")
+    composition_master_video_present: bool|None=None
+    composition_master_video_duration: float|None=Field(default=None,gt=0)
+    composition_audio_present: bool|None=None
+    composition_audio_duration: float|None=Field(default=None,gt=0)
+    composition_timeline_present: bool|None=None
+    composition_timeline_duration: float|None=Field(default=None,gt=0)
+    composition_expected_output_path: Path|None=None
+    composition_ffmpeg_exit_code: int|None=None
+    composition_ffmpeg_error_category: str|None=Field(default=None,max_length=100)
     failed_scene_id: str|None=None
     submit_http_status: int|None=None
     submit_provider_code: int|None=None
