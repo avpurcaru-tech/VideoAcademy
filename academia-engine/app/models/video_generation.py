@@ -7,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .video_request import VideoRequest
 from app.visual_references import SceneVisualReference
+from app.scene_first_frames import SceneFirstFramePlan
 
 
 class GenerationTaskStatus(str, Enum):
@@ -60,6 +61,9 @@ class VideoGenerationRequest(BaseModel):
     request_id: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
     video_request: VideoRequest
     character_reference_images: tuple[CharacterReferenceImage, ...] = ()
+    # Durable identity source; never submitted as the provider's literal opening frame.
+    identity_visual_reference: SceneVisualReference | None = None
+    scene_first_frame_plan: SceneFirstFramePlan | None = None
     scene_visual_reference: SceneVisualReference | None = None
     planned_shot_id: str|None=Field(default=None,pattern=r"^[a-z0-9][a-z0-9_-]*$")
 

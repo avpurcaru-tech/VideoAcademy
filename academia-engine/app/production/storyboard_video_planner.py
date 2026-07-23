@@ -6,6 +6,7 @@ from app.storyboard.contracts import CreativeStoryboard
 
 from .duration_policy import SceneDurationPolicy
 from app.visual_references import LUCA_MAX_SCENE_REFERENCE,LUCA_SCENE_REFERENCE,MAX_SCENE_REFERENCE
+from app.scene_first_frames import SceneFirstFramePlan
 
 
 class StoryboardVideoPlanningError(RuntimeError): pass
@@ -52,7 +53,8 @@ class StoryboardVideoPlanner:
                     f"{section.environment}\nVisual goal: {section.visual_goal}\nObjects: {objects}"
                 )
                 specific=coverage_shot.action_variation if coverage_shot else " ".join((*section.actions,*section.gestures))
-                action = f"{section.visual_goal} {specific} Objects in the scene: {objects}."
+                # Motion is stored separately from the educational goal and object inventory.
+                action = specific or "Hold the opening pose and continue with gentle preschool motion."
                 video_request = VideoRequest(scene_number=scene_number,
                     duration_seconds=self._duration_policy.execution_duration_seconds,
                     environment=VideoEnvironment(location_name=section.environment[:150],
@@ -65,9 +67,23 @@ class StoryboardVideoPlanner:
                 # Applying the shared policy here keeps execution duration behavior identical to the legacy planner.
                 video_request = self._duration_policy.apply_execution_duration(video_request)
                 if coverage_shot: video_request=video_request.model_copy(update={"duration_seconds":int(coverage_shot.duration_seconds)})
+                identity_reference=self._scene_reference(section.characters)
+                shot_id=coverage_shot.shot_id if coverage_shot else f"shot-{scene_number:04d}"
+                first_frame_plan=None
+                if identity_reference is not None:
+                    first_frame_plan=SceneFirstFramePlan(first_frame_id=f"{production_id}-{shot_id}-first-frame",
+                        shot_id=shot_id,source_storyboard_section_id=section.section_id,
+                        recurring_character_ids=tuple(section.characters),
+                        canonical_reference_sha256=tuple(value.sha256 for value in references),
+                        background=section.environment,required_objects=tuple(section.objects),
+                        character_positions=specific or "Characters hold the opening pose specified by the storyboard.",
+                        camera_framing=coverage_shot.camera_variation if coverage_shot else section.camera_direction,
+                        visual_style="high-quality stylized 3D preschool animation with soft rounded forms and warm cinematic lighting",
+                        width=1920,height=1080)
                 requests.append(VideoGenerationRequest(
                     request_id=f"{production_id}-scene-{scene_number:04d}", video_request=video_request,
-                    character_reference_images=tuple(references),scene_visual_reference=self._scene_reference(section.characters),
+                    character_reference_images=tuple(references),identity_visual_reference=identity_reference,
+                    scene_first_frame_plan=first_frame_plan,scene_visual_reference=None,
                     planned_shot_id=coverage_shot.shot_id if coverage_shot else None))
             return tuple(requests)
         except Exception as error:

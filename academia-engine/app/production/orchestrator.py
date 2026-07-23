@@ -48,6 +48,11 @@ class EpisodeCharacterReferenceUnsupportedError(EpisodeGenerationRequestResoluti
 class EpisodeCanonicalReferenceUrlUnavailableError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeCanonicalReferencePublisherUnavailableError(EpisodeGenerationRequestResolutionError): pass
 class EpisodePromptTooLongError(EpisodeGenerationRequestResolutionError): pass
+class EpisodeSceneFirstFrameError(EpisodeGenerationRequestResolutionError):
+    failure_category="scene_first_frame_generation_failed"
+    def __init__(self,message,category=None):
+        super().__init__(message)
+        if category: self.failure_category=category
 class EpisodeProviderUnavailableError(EpisodeProductionError): pass
 class EpisodeProviderConfigurationError(EpisodeProductionError): pass
 class EpisodeSubmitRejectedError(EpisodeSceneSubmissionError): pass
@@ -222,6 +227,10 @@ class EpisodeProductionOrchestrator:
                                 f"Scene {scene.scene_id} request is incompatible with provider generation settings.") from error
                         if isinstance(cause,KlingPromptTooLongError):
                             raise EpisodePromptTooLongError(f"Scene {scene.scene_id} prompt exceeds the provider limit.") from error
+                        from app.scene_first_frames import SceneFirstFrameFailure
+                        if isinstance(cause,SceneFirstFrameFailure):
+                            raise EpisodeSceneFirstFrameError(f"Scene {scene.scene_id} contextual first frame failed.",
+                                cause.failure_category) from error
                         if isinstance(cause,(ValueError,KeyError)):
                             raise EpisodeProviderConfigurationError(f"Scene {scene.scene_id} provider configuration is missing or invalid.") from error
                         category=type(cause).__name__.lower() if cause is not None else ""
@@ -393,6 +402,8 @@ class EpisodeProductionOrchestrator:
             (EpisodeSceneIdentityValidationError,(ProductionFailureStage.VISUAL_IDENTITY_VALIDATION,"visual_identity_validation_failed")),
             (EpisodeProductionRegistryError,(ProductionFailureStage.REGISTRY_PERSISTENCE,"registry_persistence_failed")),
         )
+        if isinstance(error,EpisodeSceneFirstFrameError):
+            return ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,error.failure_category
         for kind,value in mapping:
             if isinstance(error,kind): return value
         return ProductionFailureStage.VIDEO_ASSEMBLY,"video_stage_failed"

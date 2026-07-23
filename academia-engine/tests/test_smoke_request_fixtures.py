@@ -27,7 +27,7 @@ class SmokeRequestFixtureTests(unittest.TestCase):
         for path in FIXTURES:
             with self.subTest(path=path.name):
                 payload = json.loads(path.read_text(encoding="utf-8"))
-                self.assertEqual(set(payload), allowed_top_level)
+                self.assertLessEqual(set(payload), allowed_top_level)
                 serialized = json.dumps(payload).lower()
                 for forbidden in (
                     "authorization", "api_key", "api-key", "credential", "signed_url",

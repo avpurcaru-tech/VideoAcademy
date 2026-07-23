@@ -13,3 +13,4 @@ from .duration_policy import *
 from .storyboard_video_planner import *
 from .visual_identity import *
 from .identity_review import *
+from app.scene_first_frames import *

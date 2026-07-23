@@ -43,7 +43,8 @@ class KlingProviderRegistry:
             return KlingTextToVideoMapper(generation_settings or KlingProviderConfiguration.from_environment().generation)
         raise KlingProviderRegistryError("Video provider is unsupported.")
     def construct_runtime(self,provider_name="kling",environment: Mapping[str,str]|None=None,
-                          publication_registry=None,visual_reference_publisher=None,task_registry=None,downloader=None):
+                          publication_registry=None,visual_reference_publisher=None,task_registry=None,downloader=None,
+                          scene_first_frame_workflow=None,scene_first_frame_generator=None,scene_first_frame_store=None):
         if provider_name not in ("kling","kling_image_to_video"): raise KlingProviderRegistryError("Video provider is unsupported.")
         try: configuration=KlingProviderConfiguration.from_environment(environment).validate_configuration()
         except Exception as error:
@@ -60,11 +61,16 @@ class KlingProviderRegistry:
         mapper=KlingTextToVideoMapper(configuration.generation)
         if provider_name=="kling_image_to_video":
             publications=publication_registry or VisualReferencePublicationRegistry()
+            if scene_first_frame_workflow is None and scene_first_frame_generator is not None:
+                from app.scene_first_frames import SceneFirstFrameWorkflow
+                scene_first_frame_workflow=SceneFirstFrameWorkflow(scene_first_frame_generator,scene_first_frame_store,
+                    publications,visual_reference_publisher)
             callback=(environment or {}).get("KLING_CALLBACK_URL") if environment is not None else None
             if callback:
                 parsed=urlparse(callback)
                 if parsed.scheme!="https" or not parsed.netloc: raise KlingProviderRegistryError("Kling callback URL is invalid.")
-            provider=KlingImageToVideoProvider(client=client,mapper=self.request_mapper(provider_name,publications),callback_url=callback)
+            provider=KlingImageToVideoProvider(client=client,mapper=self.request_mapper(provider_name,publications),
+                callback_url=callback,first_frame_workflow=scene_first_frame_workflow)
             return configuration,KlingProviderRuntime(provider_name,provider,publications,task_registry,downloader)
         return configuration,KlingProviderRuntime(provider_name,
             KlingProvider(client=client,mapper=mapper,generation_settings=configuration.generation),None,task_registry,downloader)

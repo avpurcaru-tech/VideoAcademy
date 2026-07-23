@@ -6,14 +6,15 @@
   "orchestration_version": "storyboard_first",
   "video_production_id": "luca-si-max-colors-007-video",
   "video_provider": "kling_image_to_video",
+  "identity_validation_mode": "required",
   "music_task_id": "9da514613aefeafaf173df99bd416242",
   "lyrics_path": ".runtime\\projects\\luca-si-max-colors-007\\lyrics\\lyrics.json",
   "music_directory": ".runtime\\projects\\luca-si-max-colors-007\\music",
   "video_directory": ".runtime\\projects\\luca-si-max-colors-007\\video",
   "final_directory": ".runtime\\projects\\luca-si-max-colors-007\\final",
   "video_coverage_plan_path": ".runtime\\projects\\luca-si-max-colors-007\\input\\video-coverage-plan.json",
-  "failure_stage": "video_download",
-  "failure_category": "visual_identity_validator_unavailable",
+  "failure_stage": "visual_identity_validation",
+  "failure_category": "visual_identity_review_required",
   "safe_message": "Storyboard-first project generation failed at a safe boundary.",
   "failure_details": [],
   "provider_http_status": null,
@@ -153,7 +154,7 @@
   "composition_expected_output_path": null,
   "composition_ffmpeg_exit_code": null,
   "composition_ffmpeg_error_category": null,
-  "failed_scene_id": "scene-0001",
+  "failed_scene_id": "scene-0002",
   "submit_http_status": null,
   "submit_provider_code": null,
   "submit_provider_message": null,
@@ -165,5 +166,5 @@
   "query_provider_task_id": null,
   "query_response_shape": [],
   "created_at": "2026-07-23T11:48:04.019204Z",
-  "updated_at": "2026-07-23T18:25:40.799398Z"
+  "updated_at": "2026-07-23T18:49:24.518680Z"
 }

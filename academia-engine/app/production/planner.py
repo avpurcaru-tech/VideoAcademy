@@ -120,7 +120,8 @@ class EpisodeProductionPlanner:
                     reuse.append(first_usage[usage.shot_id])
             generation_requests=tuple(expanded); reuse_source_indices=tuple(reuse)
             source_scene_ids=tuple(usage.source_storyboard_section_id for usage in coverage_plan.shared_usage_plan)
-        referenced=tuple(request.scene_visual_reference is not None for request in generation_requests)
+        referenced=tuple(request.identity_visual_reference is not None or request.scene_first_frame_plan is not None
+            for request in generation_requests)
         if any(referenced) and not all(referenced):
             raise EpisodeProductionPlanningError("Mixed text-only and image-reference scenes require separate productions.")
         if coverage_plan is not None:
