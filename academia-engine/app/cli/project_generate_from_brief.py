@@ -25,12 +25,14 @@ def main():
     parser.add_argument("--video-provider",default="kling",choices=("kling","kling_image_to_video")); parser.add_argument("--lyrics-provider",default="openai")
     parser.add_argument("--music-provider",default="sunoapi_org"); parser.add_argument("--output",required=True,type=Path)
     parser.add_argument("--interval",type=float,default=5); parser.add_argument("--timeout",type=float,default=900)
-    parser.add_argument("--confirm",action="store_true"); args=parser.parse_args()
+    parser.add_argument("--confirm",action="store_true")
+    modes=parser.add_mutually_exclusive_group(); modes.add_argument("--plan-only",action="store_true")
+    modes.add_argument("--offline-plan-only",action="store_true"); args=parser.parse_args()
     try:
         if args.output.name!=args.project_id: raise ValueError("Project output directory must match project ID.")
         brief=load_brief(args.brief); registry=ProjectRegistry(args.output.parent)
         if registry.exists(args.project_id): print("Project already exists. Use project_resume to continue it."); return 1
-        if not args.confirm:
+        if not args.confirm and not args.plan_only and not args.offline_plan_only:
             duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
             local_episode=EpisodeGenerationService(DeterministicEpisodeGenerator(),duration_policy)
             project=ProjectGenerationService(build_services(preflight=True),registry)
@@ -46,6 +48,9 @@ def main():
             resolved_character_ids=series_bible.resolved_character_ids
             character_registry.require_many(resolved_character_ids)
         ProjectGenerationService.persist_creative_brief(registry.load(args.project_id),brief,resolved_character_ids)
+        if args.offline_plan_only:
+            record=_offline_plan(registry,args.project_id,args.output,args.video_provider)
+            _print_plan_summary(record); return 0
         duration_policy=SceneDurationPolicy(KlingGenerationSettings.from_environment().duration)
         episode_service=EpisodeGenerationService(EpisodeGeneratorRegistry().resolve(args.episode_generator),duration_policy)
         project=ProjectGenerationService(build_services(args.video_provider,args.lyrics_provider,args.music_provider),registry,progress=print)
@@ -53,7 +58,12 @@ def main():
         print("Storyboard...")
         record=CreativeProjectGenerationService(episode_service,project,registry,storyboards,StoryboardRepository()).generate(brief,args.project_id,args.output,
             VideoPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),
-            MusicPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),args.video_provider,args.music_provider)
+            MusicPollingPolicy(interval_seconds=args.interval,timeout_seconds=args.timeout),args.video_provider,args.music_provider,args.plan_only)
+        if args.plan_only:
+            counts=dict(record.actual_external_call_counts)
+            if args.episode_generator=="openai": counts["openai_calls"]=counts.get("openai_calls",0)+1
+            record=project._update(record,actual_external_call_counts=counts)
+            _print_plan_summary(record); return 0
     except ValidationError:
         print("Creative brief validation failed."); return 1
     except Exception as error:
@@ -81,11 +91,78 @@ def main():
                         *failure)
         except Exception: pass
         diagnostic=_safe_generation_error(error)
-        print(diagnostic if not diagnostic.startswith("Episode generation failed") else
-              "Creative project generation failed at a safe orchestration boundary."); return 1
+        category=getattr(error,"failure_category",None)
+        if category: print(f"Failure category: {category}")
+        else: print(diagnostic if not diagnostic.startswith("Episode generation failed") else
+              "Creative project generation failed at a safe orchestration boundary.")
+        return 1
     print("Completed"); print("Final outputs:")
     for value in sorted(record.final_directory.glob("final-variant-*.mp4")): print(value.name)
     return 0
+
+
+def _offline_plan(registry,project_id,root,video_provider):
+    from datetime import datetime,timezone
+    from app.storyboard import CreativeStoryboard
+    from app.video_coverage import VideoCoveragePlan
+    from app.production import (EpisodeProductionPlanner,EpisodeTransitionPolicy,GenerationRequestStore,SceneDurationPolicy)
+    from app.prompts import PromptBuilder
+    from app.prompts.adapters import KlingPromptAdapter
+    record=registry.load(project_id); inputs=Path(root)/"input"
+    required=((inputs/"storyboard.json","storyboard_missing"),(record.lyrics_path,"lyrics_missing"),
+        (inputs/"video-coverage-plan.json","video_coverage_plan_missing"))
+    for path,category in required:
+        if not path.is_file(): raise OfflinePlanMissingError(category)
+    music=tuple(record.music_directory.glob("variant-*.mp3"))
+    if not music: raise OfflinePlanMissingError("music_variants_missing")
+    timelines=tuple(record.music_directory.glob("timeline-variant-*.json"))
+    if len(timelines)<len(music): raise OfflinePlanMissingError("timelines_missing")
+    storyboard=CreativeStoryboard.model_validate_json((inputs/"storyboard.json").read_text(encoding="utf-8"))
+    coverage=VideoCoveragePlan.model_validate_json((inputs/"video-coverage-plan.json").read_text(encoding="utf-8"))
+    planner=EpisodeProductionPlanner(PromptBuilder(KlingPromptAdapter()),GenerationRequestStore(),
+        SceneDurationPolicy(coverage.provider_capabilities.selected_clip_duration))
+    request=planner.plan(storyboard,record.video_production_id,record.video_directory/"scenes",
+        record.video_directory/"workspace",record.video_directory/"master.mp4",provider=video_provider,
+        transition=EpisodeTransitionPolicy(kind="cut"),coverage_plan=coverage)
+    plans={}
+    for item in request.video_requests:
+        if item.scene_first_frame_plan: plans.setdefault(item.scene_first_frame_plan.shot_id,item.scene_first_frame_plan)
+    if not plans: raise OfflinePlanMissingError("scene_first_frame_plan_missing")
+    plan_path=inputs/"scene-first-frame-plans.json"
+    ProjectGenerationService._persist_json(plan_path,{"plans":[value.model_dump(mode="json") for value in plans.values()]})
+    reused=sum(value is not None for value in request.reuse_source_indices)
+    expected={"unique_contextual_frames":len(plans),"unique_kling_clips":len(plans),"reused_coverage_slots":reused,
+        "image_generation_calls":len(plans),"publication_calls":len(plans),"kling_calls":len(plans),"ffmpeg_calls":0,
+        "confirmation_required":coverage.confirmation_required,"estimated_image_generation_cost":None,
+        "estimated_kling_cost":coverage.estimated_provider_cost}
+    updated=record.model_copy(update={"status":"awaiting_scene_first_frame_generation","video_provider":video_provider,
+        "video_coverage_plan_path":inputs/"video-coverage-plan.json","scene_first_frame_plan_path":plan_path,
+        "provider_capability_snapshot":coverage.provider_capabilities.model_dump(mode="json"),
+        "selected_coverage_policy":coverage.policy.value,"unique_shot_ids":tuple(plans),
+        "expected_external_call_counts":expected,"actual_external_call_counts":{"openai_calls":0,"suno_calls":0},
+        "updated_at":datetime.now(timezone.utc)})
+    registry.update(updated); return updated
+
+
+class OfflinePlanMissingError(RuntimeError):
+    def __init__(self,category): super().__init__(category); self.failure_category=category
+
+
+def _print_plan_summary(record):
+    counts=record.actual_external_call_counts; expected=record.expected_external_call_counts
+    print(f"Project status: {record.status.value}")
+    print(f"Unique contextual frames to generate: {expected.get('unique_contextual_frames',0)}")
+    print(f"Unique Kling clips to submit: {expected.get('unique_kling_clips',0)}")
+    print(f"Reused coverage slots: {expected.get('reused_coverage_slots',0)}")
+    image_cost=expected.get("estimated_image_generation_cost")
+    kling_cost=expected.get("estimated_kling_cost")
+    print(f"Estimated image-generation cost: {image_cost if image_cost is not None else 'unavailable'}")
+    print(f"Estimated Kling cost: {kling_cost if kling_cost is not None else 'unavailable'}")
+    print("Confirmation required: "+("yes" if expected.get("confirmation_required",True) else "no"))
+    print(f"OpenAI calls: {counts.get('openai_calls',0)}")
+    print(f"Suno calls: {counts.get('suno_calls',0)}")
+    print("Image-generation calls: 0"); print("Publication calls: 0")
+    print("Kling calls: 0"); print("FFmpeg calls: 0")
 
 
 if __name__=="__main__": raise SystemExit(main())

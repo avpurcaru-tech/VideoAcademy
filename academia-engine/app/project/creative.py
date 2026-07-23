@@ -20,7 +20,7 @@ class CreativeProjectGenerationService:
     def preflight(self,brief,project_id,output_root,video_provider="kling"):
         episode=self._derive_episode(brief)
         return self._projects.preflight(episode,project_id,output_root,video_provider,series_id=brief.series_id)
-    def generate(self,brief,project_id,output_root,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org"):
+    def generate(self,brief,project_id,output_root,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org",plan_only=False):
         if self._registry.exists(project_id):
             from .contracts import ProjectStatus
             if self._registry.load(project_id).status != ProjectStatus.PLANNED:
@@ -40,7 +40,7 @@ class CreativeProjectGenerationService:
         except Exception as error:
             self._persist_early_failure(project_id,error)
             raise
-        return self._projects.generate_storyboard(storyboard,project_id,video_policy,music_policy,video_provider,music_provider)
+        return self._projects.generate_storyboard(storyboard,project_id,video_policy,music_policy,video_provider,music_provider,plan_only)
     def _persist_early_failure(self,project_id,error):
         from app.characters import CharacterRegistryError
         from app.series import SeriesRegistryError

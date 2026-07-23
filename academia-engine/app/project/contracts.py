@@ -7,6 +7,7 @@ from pydantic import BaseModel,ConfigDict,Field,field_validator
 
 class ProjectStatus(str,Enum):
     PLANNED="planned"
+    AWAITING_SCENE_FIRST_FRAME_GENERATION="awaiting_scene_first_frame_generation"
     STORYBOARD_GENERATING="storyboard_generating"
     STORYBOARD_READY="storyboard_ready"
     LYRICS_READY="lyrics_ready"
@@ -74,6 +75,12 @@ class ProjectRecord(BaseModel):
     video_directory: Path
     final_directory: Path
     video_coverage_plan_path: Path|None=None
+    scene_first_frame_plan_path: Path|None=None
+    provider_capability_snapshot: dict=Field(default_factory=dict)
+    selected_coverage_policy: str|None=None
+    unique_shot_ids: tuple[str,...]=()
+    expected_external_call_counts: dict=Field(default_factory=dict)
+    actual_external_call_counts: dict=Field(default_factory=dict)
     failure_stage: ProjectFailureStage|None=None
     failure_category: str|None=Field(default=None,max_length=100)
     safe_message: str|None=Field(default=None,max_length=500)

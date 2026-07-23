@@ -58,22 +58,22 @@ class ProjectGenerationService:
             raise
         return self._run(record,episode,brief,music_plan,video_policy,music_policy,video_provider,music_provider,False)
 
-    def generate_storyboard(self,storyboard,project_id,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org"):
+    def generate_storyboard(self,storyboard,project_id,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org",plan_only=False):
         from app.storyboard import CreativeStoryboard
         record=self._registry.load(project_id); storyboard=CreativeStoryboard.model_validate(storyboard)
         if record.video_provider is None: record=self._update(record,video_provider=video_provider)
         else: video_provider=record.video_provider
         self._persist_model(record.lyrics_path.parent.parent/"input"/"storyboard.json",storyboard)
         record=self._status(record,ProjectStatus.STORYBOARD_READY)
-        return self._run_storyboard(record,storyboard,video_policy,music_policy,video_provider,music_provider)
+        return self._run_storyboard(record,storyboard,video_policy,music_policy,video_provider,music_provider,plan_only,not plan_only)
 
-    def _run_storyboard(self,record,storyboard,video_policy,music_policy,video_provider,music_provider):
+    def _run_storyboard(self,record,storyboard,video_policy,music_policy,video_provider,music_provider,plan_only=False,confirmed=False):
         from app.composition import MusicTimelineCompositionRequest,StoryboardVideoClip
         from app.music import MusicGenerationRequest
         from app.music_timeline import MusicTimeline
         from app.production import ProductionRegistry
         from app.storyboard import StoryboardLyricsAdapter,StoryboardMusicAdapter
-        failed_variant_id=None; composition_context={}
+        failed_variant_id=None; composition_context={}; call_counts=dict(record.actual_external_call_counts)
         try:
             self._progress("Lyrics...")
             if record.lyrics_path.is_file(): lyrics=LyricsPlan.model_validate_json(record.lyrics_path.read_text(encoding="utf-8"))
@@ -96,6 +96,7 @@ class ProjectGenerationService:
                 record=self._status(record,ProjectStatus.MUSIC_GENERATING)
                 request=MusicGenerationRequest(song_id=lyrics.song_id,title=lyrics.title,lyrics=lyrics,music_plan=music_plan)
                 music_record=self._services.music_engine.generate_all_variants(request,record.music_directory,music_policy,music_provider)
+                call_counts["suno_calls"]=call_counts.get("suno_calls",0)+1
                 record=self._update(record,music_task_id=music_record.provider_task_id)
             record=self._status(record,ProjectStatus.MUSIC_READY)
             timelines=[]; self._progress("Timelines..."); record=self._status(record,ProjectStatus.TIMELINES_GENERATING)
@@ -105,6 +106,7 @@ class ProjectGenerationService:
                 else:
                     duration=self._services.audio_probe.probe_audio(audio.local_path).duration_seconds
                     timeline=self._services.music_timeline_service.generate(storyboard,lyrics,duration)
+                    call_counts["openai_calls"]=call_counts.get("openai_calls",0)+1
                     timeline=timeline.model_copy(update={"timeline_id":f"{storyboard.storyboard_id}-variant-{index:02d}"})
                     self._persist_model(path,timeline)
                 timelines.append(timeline)
@@ -129,7 +131,7 @@ class ProjectGenerationService:
                 coverage_plan=VideoCoveragePlanner().plan(durations,storyboard,capabilities,configuration,timeline_map)
                 self._persist_model(coverage_path,coverage_plan)
                 record=self._update(record,video_coverage_plan_path=coverage_path)
-            if coverage_plan.confirmation_required:
+            if coverage_plan.confirmation_required and not plan_only and not confirmed:
                 raise ProjectOrchestrationError("Video coverage plan exceeds configured generation limits and requires confirmation.")
             video_provider=coverage_plan.provider_capabilities.provider_name
             production=None
@@ -147,6 +149,27 @@ class ProjectGenerationService:
                         workspace=record.video_directory/"workspace",destination=record.video_directory/"master.mp4",
                         provider=video_provider,transition=EpisodeTransitionPolicy(kind="cut"),coverage_plan=coverage_plan)
                     record=self._update(record,video_plan_diagnostics=self._video_plan_diagnostics(request,timelines))
+                    if plan_only:
+                        plans={}
+                        for generation_request in request.video_requests:
+                            plan=generation_request.scene_first_frame_plan
+                            if plan is not None: plans.setdefault(plan.shot_id,plan)
+                        plan_path=record.music_directory.parent/"input"/"scene-first-frame-plans.json"
+                        self._persist_json(plan_path,{"plans":[value.model_dump(mode="json") for value in plans.values()]})
+                        reused=sum(value is not None for value in request.reuse_source_indices)
+                        expected={"unique_contextual_frames":len(plans),"unique_kling_clips":len(plans),
+                            "reused_coverage_slots":reused,"image_generation_calls":len(plans),"publication_calls":len(plans),
+                            "kling_calls":len(plans),"ffmpeg_calls":0,
+                            "confirmation_required":coverage_plan.confirmation_required,
+                            "estimated_image_generation_cost":(len(plans)*float(os.environ["IMAGE_GENERATION_COST_PER_FRAME"])
+                                if os.environ.get("IMAGE_GENERATION_COST_PER_FRAME") else None),
+                            "estimated_kling_cost":coverage_plan.estimated_provider_cost}
+                        record=self._update(record,status=ProjectStatus.AWAITING_SCENE_FIRST_FRAME_GENERATION,
+                            video_provider=video_provider,scene_first_frame_plan_path=plan_path,
+                            provider_capability_snapshot=coverage_plan.provider_capabilities.model_dump(mode="json"),
+                            selected_coverage_policy=coverage_plan.policy.value,unique_shot_ids=tuple(plans),
+                            expected_external_call_counts=expected,actual_external_call_counts=call_counts)
+                        return record
                     record=self._status(record,ProjectStatus.VIDEO_GENERATING)
                     self._services.episode_generation_service.produce_planned(request,video_policy)
                 else:
@@ -467,11 +490,21 @@ class ProjectGenerationService:
                 os.replace(temporary,destination)
             finally: temporary.unlink(missing_ok=True)
 
+    @staticmethod
+    def _persist_json(destination,payload):
+        import json
+        destination.parent.mkdir(parents=True,exist_ok=True); temporary=destination.with_suffix(destination.suffix+".part")
+        try:
+            with temporary.open("w",encoding="utf-8") as stream:
+                json.dump(payload,stream,ensure_ascii=False,indent=2); stream.flush(); os.fsync(stream.fileno())
+            os.replace(temporary,destination)
+        finally: temporary.unlink(missing_ok=True)
+
 
 class ProjectResumeService:
     def __init__(self,generation_service: ProjectGenerationService,registry: ProjectRegistry):
         self._generation=generation_service; self._registry=registry
-    def resume(self,project_id,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org"):
+    def resume(self,project_id,video_policy,music_policy,video_provider="kling",music_provider="sunoapi_org",confirmed=False):
         record=self._registry.load(project_id)
         if record.video_provider is not None: video_provider=record.video_provider
         if record.status==ProjectStatus.COMPLETED: return record
@@ -485,7 +518,7 @@ class ProjectResumeService:
                     failure_category="video_storyboard_load_failed",safe_message="Durable storyboard is unavailable.")
                 except Exception: pass
                 raise ProjectResumeBlockedError("Durable storyboard is unavailable.") from error
-            return self._generation._run_storyboard(record,storyboard,video_policy,music_policy,video_provider,music_provider)
+            return self._generation._run_storyboard(record,storyboard,video_policy,music_policy,video_provider,music_provider,False,confirmed)
         try:
             from app.models import Episode
             episode=Episode.model_validate_json((inputs/"episode.json").read_text(encoding="utf-8"))
