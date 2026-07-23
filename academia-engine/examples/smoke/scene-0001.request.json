@@ -1,6 +1,7 @@
 {
   "request_id": "smoke-ladybug-garden-001",
   "character_reference_images": [],
+  "scene_visual_reference": null,
   "video_request": {
     "scene_number": 1,
     "duration_seconds": 15,

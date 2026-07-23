@@ -24,6 +24,7 @@ from .kling_mapper import (KlingTextToVideoMapper,KlingUnsupportedConfigurationE
 from .kling_downloader import KlingVideoArtifactDownloader
 from .video_provider import VideoProvider
 from .kling_factory import KlingProviderRegistry,KlingProviderRegistryError
+from .kling_image_to_video import *
 
 __all__ = [
     "KlingAuthenticationError",

@@ -102,6 +102,13 @@ class EpisodeProductionPlanner:
         try: generation_requests=StoryboardVideoPlanner(self._duration_policy).build(storyboard,production_id)
         except StoryboardVideoPlanningError as error:
             raise EpisodeProductionPlanningError("Storyboard could not construct semantic video requests.") from error
+        referenced=tuple(request.scene_visual_reference is not None for request in generation_requests)
+        if any(referenced) and not all(referenced):
+            raise EpisodeProductionPlanningError("Mixed text-only and image-reference scenes require separate productions.")
+        if all(referenced):
+            provider="kling_image_to_video"
+            generation_requests=tuple(request.model_copy(update={"video_request":request.video_request.model_copy(
+                update={"duration_seconds":10})}) for request in generation_requests)
         references=tuple(GenerationRequestReference(reference_id=request.request_id) for request in generation_requests)
         for reference,request in zip(references,generation_requests,strict=True):
             try: existing=self._request_store.resolve(reference)

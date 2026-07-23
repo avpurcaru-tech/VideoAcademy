@@ -5,6 +5,7 @@ from app.models import (Camera, CharacterAction, CharacterReferenceImage, Transi
 from app.storyboard.contracts import CreativeStoryboard
 
 from .duration_policy import SceneDurationPolicy
+from app.visual_references import LUCA_MAX_SCENE_REFERENCE,LUCA_SCENE_REFERENCE,MAX_SCENE_REFERENCE
 
 
 class StoryboardVideoPlanningError(RuntimeError): pass
@@ -62,12 +63,21 @@ class StoryboardVideoPlanner:
                 video_request = self._duration_policy.apply_execution_duration(video_request)
                 requests.append(VideoGenerationRequest(
                     request_id=f"{production_id}-scene-{scene_number:04d}", video_request=video_request,
-                    character_reference_images=tuple(references)))
+                    character_reference_images=tuple(references),scene_visual_reference=self._scene_reference(section.characters)))
             return tuple(requests)
         except Exception as error:
             if isinstance(error, StoryboardVideoPlanningError):
                 raise
             raise StoryboardVideoPlanningError("Storyboard could not be projected to video requests.") from error
+
+    @staticmethod
+    def _scene_reference(character_ids):
+        values=tuple(character_ids)
+        recurring=set(values)&{"luca","max"}
+        if recurring=={"luca","max"}: return LUCA_MAX_SCENE_REFERENCE
+        if recurring=={"luca"}: return LUCA_SCENE_REFERENCE
+        if recurring=={"max"}: return MAX_SCENE_REFERENCE
+        return None
 
     @staticmethod
     def _video_character(storyboard, reference, canonical,profiles):
