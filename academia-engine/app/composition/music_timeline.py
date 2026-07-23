@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 from app.media import (AudioVideoCompositionRequest, AudioVideoDurationPolicy,
     FFmpegAudioVideoComposer)
 from app.music_timeline import MusicTimeline
+from app.sync_planning import SynchronizedEditPlan
 from app.timeline import (FFmpegTimelineRenderer, TimelineMediaValidator, TimelineOutput,
     TimelineScene, VideoTimeline, build_render_plan)
 
@@ -13,6 +14,7 @@ from app.timeline import (FFmpegTimelineRenderer, TimelineMediaValidator, Timeli
 class StoryboardVideoClip(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     storyboard_section_id: str=Field(min_length=1,max_length=200)
+    scene_id: str|None=None
     local_path: Path
 
 
@@ -20,6 +22,7 @@ class MusicTimelineCompositionRequest(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     composition_id: str=Field(min_length=1,max_length=200)
     timeline: MusicTimeline|None=None
+    edit_plan: SynchronizedEditPlan|None=None
     video_clips: tuple[StoryboardVideoClip,...]=Field(min_length=1)
     shared_master_path: Path|None=None
     music_source: Path
@@ -30,9 +33,9 @@ class MusicTimelineCompositionRequest(BaseModel):
 
     @model_validator(mode="after")
     def unique_clip_ids(self):
-        ids=[clip.storyboard_section_id for clip in self.video_clips]
-        if len(ids)!=len(set(ids)): raise ValueError("Storyboard video clip IDs must be unique.")
-        if self.timeline is None and len(self.video_clips)!=1:
+        ids=[clip.scene_id or clip.storyboard_section_id for clip in self.video_clips]
+        if len(ids)!=len(set(ids)): raise ValueError("Storyboard video clip identities must be unique.")
+        if self.timeline is None and self.edit_plan is None and len(self.video_clips)!=1:
             raise ValueError("Legacy composition requires one preassembled video source.")
         return self
 
@@ -70,8 +73,26 @@ class MusicTimelineComposer:
         if destination.exists() and not request.overwrite:
             raise MusicTimelineCompositionConflictError("Composition destination already exists.")
         video_source=request.video_clips[0].local_path
-        used_timeline=request.timeline is not None
-        if request.timeline is not None:
+        used_timeline=request.timeline is not None or request.edit_plan is not None
+        if request.edit_plan is not None:
+            clip_by_scene={clip.scene_id:clip for clip in request.video_clips if clip.scene_id}
+            clip_by_section={clip.storyboard_section_id:clip for clip in request.video_clips}
+            aligned=Path(request.workspace)/"timestamp-aligned-video.mp4"
+            if not (request.resume and aligned.is_file()):
+                decisions=request.edit_plan.decisions
+                if len(decisions)==1:
+                    decision=decisions[0]; middle=(decision.source_start+decision.source_end)/2
+                    decisions=(decision.model_copy(update={"destination_end":decision.destination_start+(middle-decision.source_start),"source_end":middle}),
+                        decision.model_copy(update={"destination_start":decision.destination_start+(middle-decision.source_start),"source_start":middle}))
+                semantic=VideoTimeline(timeline_id=f"{request.composition_id}-edl",
+                    scenes=tuple(TimelineScene(scene_id=f"edit-{index:04d}",
+                        source_path=(clip_by_scene.get(decision.source_scene_id) or clip_by_section[decision.storyboard_section_id]).local_path,
+                        order=index,trim_start_seconds=decision.source_start,trim_end_seconds=decision.source_end)
+                        for index,decision in enumerate(decisions)),
+                    output=TimelineOutput(destination=aligned,workspace=Path(request.workspace)/"video-render"))
+                self._video_renderer.render(semantic)
+            video_source=aligned
+        elif request.timeline is not None:
             clip_by_id={clip.storyboard_section_id:clip for clip in request.video_clips}
             expected=tuple(segment.storyboard_section_id for segment in request.timeline.segments)
             if set(clip_by_id)!=set(expected):

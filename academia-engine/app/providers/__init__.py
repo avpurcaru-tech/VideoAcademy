@@ -26,6 +26,7 @@ from .video_provider import VideoProvider
 from .kling_factory import (KlingProviderRegistry,KlingProviderRegistryError,KlingProviderRuntime,
     KlingProviderCredentialsMissingError,KlingReferencePublisherUnavailableError)
 from .kling_image_to_video import *
+from .suno_timestamped_lyrics import *
 
 __all__ = [
     "KlingAuthenticationError",

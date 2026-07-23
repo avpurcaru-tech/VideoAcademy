@@ -14,3 +14,5 @@ class ProjectServices:
     audio_probe: object=None
     music_timeline_service: object=None
     music_timeline_composer: object=None
+    lyrics_alignment_provider: object=None
+    lyrics_alignment_normalizer: object=None

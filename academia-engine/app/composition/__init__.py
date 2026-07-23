@@ -14,6 +14,7 @@ from .executor import (
     CompositionSourceValidationError,
 )
 from .resolver import resolve_manifest, to_assembly_request
+from app.sync_planning import *
 
 _TIMELINE_EXPORTS = {"ExistingTimelineVideoRenderer", "MusicTimelineComposer",
     "MusicTimelineCompositionConflictError", "MusicTimelineCompositionError",

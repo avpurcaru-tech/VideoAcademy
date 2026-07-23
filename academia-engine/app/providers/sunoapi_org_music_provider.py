@@ -473,6 +473,10 @@ class SunoApiOrgMusicProvider:
 
     def download_audio_bytes(self,artifact): return self._transport.download(artifact.download_url)
 
+    def get_timestamped_lyrics(self,provider_task_id,audio_id,*,instrumental=False):
+        from .suno_timestamped_lyrics import SunoTimestampedLyricsAdapter
+        return SunoTimestampedLyricsAdapter(self._transport).retrieve(provider_task_id,audio_id,instrumental=instrumental)
+
 
 class SunoApiOrgAccountClient:
     """Read-only account client; it has no generation method."""

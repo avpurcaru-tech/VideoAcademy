@@ -50,8 +50,10 @@ def build_services(video_provider="kling",lyrics_provider="openai",music_provide
     composer=AudioVariantVideoComposer(mux)
     timeline_service=MusicTimelineGenerationService(MusicTimelineGeneratorRegistry().resolve("openai"))
     timeline_composer=MusicTimelineComposer(ExistingTimelineVideoRenderer(probe,FFmpegTimelineRenderer(runner,probe)),mux)
+    from app.lyrics_alignment import LyricsAlignmentNormalizer
+    alignment_provider=runtime.provider if hasattr(runtime.provider,"get_timestamped_lyrics") else None
     return ProjectServices(director,planner,episode,orchestrator,lyrics,music,composer,music_registry,
-        probe,timeline_service,timeline_composer)
+        probe,timeline_service,timeline_composer,alignment_provider,LyricsAlignmentNormalizer())
 
 
 def main() -> int:
