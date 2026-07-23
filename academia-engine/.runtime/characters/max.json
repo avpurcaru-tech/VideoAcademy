@@ -22,5 +22,10 @@
   "character_type": "dog",
   "age_description": "approximately 6 months old",
   "voice_description": null,
-  "version": null
+  "version": null,
+  "visual_reference": {
+    "local_path": "assets/characters/max-canonical.png",
+    "sha256": "de02c9a85e46489ca64a6ab782a1f321eb9822aab5e48505030c60b09a958587",
+    "content_type": "image/png"
+  }
 }

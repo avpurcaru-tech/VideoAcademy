@@ -11,6 +11,7 @@ from .scene import Scene
 from .transition import Transition
 from .video_request import VideoCharacter, VideoEnvironment, VideoRequest
 from .video_generation import (
+    CharacterReferenceImage,
     GenerationTask,
     GenerationTaskStatus,
     VideoArtifact,
@@ -32,6 +33,7 @@ __all__ = [
     "Scene",
     "Transition",
     "VideoCharacter",
+    "CharacterReferenceImage",
     "VideoEnvironment",
     "GenerationTask",
     "GenerationTaskStatus",

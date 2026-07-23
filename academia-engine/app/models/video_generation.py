@@ -1,8 +1,9 @@
 from datetime import datetime
 from enum import Enum
 from typing import Any, Literal
+from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .video_request import VideoRequest
 
@@ -44,11 +45,28 @@ class GenerationTask(BaseModel):
     completed_at: datetime | None = None
 
 
+class CharacterReferenceImage(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    character_id: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
+    local_path: Path
+    sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    content_type: str = Field(pattern=r"^image/(png|jpeg|webp)$")
+
+
 class VideoGenerationRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     request_id: str = Field(pattern=r"^[a-z0-9][a-z0-9_-]*$")
     video_request: VideoRequest
+    character_reference_images: tuple[CharacterReferenceImage, ...] = ()
+
+    @model_validator(mode="after")
+    def references_match_characters(self):
+        ids=[value.character_id for value in self.character_reference_images]
+        if len(ids)!=len(set(ids)): raise ValueError("Character reference image IDs must be unique.")
+        if not set(ids)<=set(value.id for value in self.video_request.characters):
+            raise ValueError("Character reference image must belong to a scene character.")
+        return self
 
 
 class VideoGenerationResult(BaseModel):

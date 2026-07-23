@@ -5,7 +5,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
-from app.models import GenerationTaskStatus, VideoGenerationRequest
+from app.models import CharacterReferenceImage, GenerationTaskStatus, VideoGenerationRequest
 from app.timeline import RenderedTimelineArtifact, TimelineTransitionKind
 from .request_reference import GenerationRequestReference
 
@@ -100,6 +100,9 @@ class EpisodeSceneResult(BaseModel):
     byte_size: int | None = Field(default=None, gt=0)
     sha256: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
     content_type: str | None = None
+    character_reference_images: tuple[CharacterReferenceImage, ...] = ()
+    identity_validation_attempts: int = Field(default=0, ge=0)
+    identity_validated: bool | None = None
 
     @model_validator(mode="before")
     @classmethod

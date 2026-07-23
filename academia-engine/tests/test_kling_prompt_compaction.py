@@ -47,7 +47,7 @@ class KlingPromptCompactionTests(unittest.TestCase):
             series,characters=setup_registries(temporary)
             storyboard=DeterministicStoryboardGenerator().generate_storyboard(brief,series.load(brief.series_id),profiles())
             generated=StoryboardVideoPlanner(character_registry=characters,series_registry=series).build(storyboard,"production")
-            for value in generated: KlingTextToVideoMapper(KlingGenerationSettings()).map(value,"external")
+            for value in generated: KlingTextToVideoMapper(KlingGenerationSettings()).prompt_with_diagnostic(value)
         self.assertEqual(before,tuple(value.model_dump_json() for value in profiles()))
 
     def test_uncompactable_prompt_fails_locally(self):

@@ -6,7 +6,8 @@ from pydantic import ValidationError
 from app.models import GenerationTaskStatus, VideoGenerationRequest
 from app.services import VideoEngineError, VideoEngineTaskFailedError, VideoPollingPolicy
 from app.services import UnknownVideoProviderError, VideoEngineRegistryError, VideoProviderOperationError
-from app.providers import KlingPromptTooLongError,KlingUnsupportedConfigurationError
+from app.providers import (KlingPromptTooLongError,KlingUnsupportedConfigurationError,
+                           KlingCharacterReferenceUnsupportedError)
 from app.timeline import (TimelineMediaValidationError, TimelineMediaValidator, TimelineOutput,
                           TimelineRendererError, TimelineScene, TimelineTransition, VideoTimeline,
                           build_render_plan)
@@ -30,6 +31,8 @@ class EpisodeSceneSubmissionError(EpisodeProductionError): pass
 class EpisodeScenePollingError(EpisodeProductionError): pass
 class EpisodeProviderSceneFailedError(EpisodeProductionError): pass
 class EpisodeSceneDownloadError(EpisodeProductionError): pass
+class EpisodeIdentityValidatorUnavailableError(EpisodeProductionError): pass
+class EpisodeSceneIdentityValidationError(EpisodeProductionError): pass
 class EpisodeSceneArtifactMissingError(EpisodeProductionError): pass
 class EpisodeTimelineConstructionError(EpisodeProductionError): pass
 class EpisodeTimelineValidationError(EpisodeProductionError): pass
@@ -40,6 +43,7 @@ class EpisodeGenerationRequestResolutionError(EpisodeProductionError): pass
 class EpisodeGenerationRequestMissingError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeGenerationRequestCorruptedError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeGenerationSettingsMismatchError(EpisodeGenerationRequestResolutionError): pass
+class EpisodeCharacterReferenceUnsupportedError(EpisodeGenerationRequestResolutionError): pass
 class EpisodePromptTooLongError(EpisodeGenerationRequestResolutionError): pass
 class EpisodeProviderUnavailableError(EpisodeProductionError): pass
 class EpisodeProviderConfigurationError(EpisodeProductionError): pass
@@ -80,7 +84,8 @@ def reconcile_succeeded_production(registry,integrity,production_id):
 class EpisodeProductionOrchestrator:
     def __init__(self, video_engine, timeline_renderer, production_registry: ProductionRegistry, probe,
                  request_resolver: GenerationRequestResolver, *, clock: Callable = utc_now,
-                 integrity_service: ProductionIntegrityService | None = None) -> None:
+                 integrity_service: ProductionIntegrityService | None = None, identity_validator=None,
+                 identity_retry_policy=None) -> None:
         self._video_engine = video_engine
         self._renderer = timeline_renderer
         self._registry = production_registry
@@ -88,6 +93,9 @@ class EpisodeProductionOrchestrator:
         self._clock = clock
         self._request_resolver = request_resolver
         self._integrity = integrity_service or ProductionIntegrityService()
+        from .visual_identity import VisualConsistencyRetryPolicy
+        self._identity_validator=identity_validator
+        self._identity_retry_policy=identity_retry_policy or VisualConsistencyRetryPolicy()
 
     def produce(self, request: EpisodeProductionRequest, polling_policy: VideoPollingPolicy) -> EpisodeProductionResult:
         try:
@@ -106,7 +114,9 @@ class EpisodeProductionOrchestrator:
         now = self._clock()
         scenes = tuple(EpisodeSceneResult(scene_id=f"scene-{index + 1:04d}", order=index,
             source_scene_id=request.source_scene_ids[index] if request.source_scene_ids else None,
-            generation_request_reference=request.generation_request_references[index]) for index in range(len(request.video_requests)))
+            generation_request_reference=request.generation_request_references[index],
+            character_reference_images=request.video_requests[index].character_reference_images)
+            for index in range(len(request.video_requests)))
         record = ProductionRecord(production_id=request.production_id, status=EpisodeProductionStatus.PENDING,
                                   provider=request.provider, scenes=scenes,
                                   scene_output_directory=request.scene_output_directory,
@@ -176,6 +186,9 @@ class EpisodeProductionOrchestrator:
                         raise EpisodeProductionRegistryError(f"Scene {scene.scene_id} task registry persistence failed.") from error
                     except VideoEngineError as error:
                         cause=getattr(error,"submit_diagnostic",None) or error.__cause__
+                        if isinstance(cause,KlingCharacterReferenceUnsupportedError):
+                            raise EpisodeCharacterReferenceUnsupportedError(
+                                f"Scene {scene.scene_id} provider endpoint does not support canonical visual references.") from error
                         if isinstance(cause,KlingUnsupportedConfigurationError):
                             raise EpisodeGenerationSettingsMismatchError(
                                 f"Scene {scene.scene_id} request is incompatible with provider generation settings.") from error
@@ -211,6 +224,22 @@ class EpisodeProductionOrchestrator:
                 if completed.artifact is None:
                     raise EpisodeSceneDownloadError(f"Scene {scene.scene_id} has no downloaded artifact.")
                 artifact = completed.artifact
+                if scene.character_reference_images:
+                    if self._identity_validator is None:
+                        raise EpisodeIdentityValidatorUnavailableError(
+                            f"Scene {scene.scene_id} canonical identity validation is not configured.")
+                    validation=self._identity_validator.validate(artifact.local_path,scene.character_reference_images)
+                    attempts=scene.identity_validation_attempts+1
+                    if not validation.valid:
+                        if self._identity_retry_policy.can_retry(scene.identity_validation_attempts):
+                            retry=scene.model_copy(update={"provider_task_id":None,"normalized_status":None,
+                                "production_status":EpisodeSceneStatus.PENDING,"local_path":None,
+                                "identity_validation_attempts":attempts,"identity_validated":False})
+                            self._replace_scene(record,index,retry)
+                            return self._execute(production_id,policy)
+                        raise EpisodeSceneIdentityValidationError(
+                            f"Scene {scene.scene_id} failed canonical identity validation.")
+                    scene=scene.model_copy(update={"identity_validation_attempts":attempts,"identity_validated":True})
                 scene = scene.model_copy(update={"normalized_status": completed.normalized_status,
                     "local_path": artifact.local_path, "artifact_id": artifact.artifact_id,
                     "byte_size": artifact.byte_size, "sha256": artifact.sha256, "content_type": artifact.content_type,
@@ -291,6 +320,7 @@ class EpisodeProductionOrchestrator:
             (EpisodeGenerationRequestMissingError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_reference_missing")),
             (EpisodeGenerationRequestCorruptedError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_record_corrupted")),
             (EpisodeGenerationSettingsMismatchError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_generation_settings_mismatch")),
+            (EpisodeCharacterReferenceUnsupportedError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"canonical_reference_provider_unsupported")),
             (EpisodePromptTooLongError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"video_request_prompt_too_long")),
             (EpisodeGenerationRequestResolutionError,(ProductionFailureStage.VIDEO_REQUEST_RESOLUTION,"request_validation_failed")),
             (EpisodeProviderConfigurationError,(ProductionFailureStage.VIDEO_PROVIDER_CONFIGURATION,"provider_configuration_missing")),
@@ -299,6 +329,8 @@ class EpisodeProductionOrchestrator:
             (EpisodeSubmitRejectedError,(ProductionFailureStage.VIDEO_SUBMISSION,"video_request_rejected")),
             (EpisodeScenePollingError,(ProductionFailureStage.VIDEO_POLLING,"provider_polling_failed")),
             (EpisodeSceneDownloadError,(ProductionFailureStage.VIDEO_DOWNLOAD,"artifact_download_failed")),
+            (EpisodeIdentityValidatorUnavailableError,(ProductionFailureStage.VIDEO_DOWNLOAD,"visual_identity_validator_unavailable")),
+            (EpisodeSceneIdentityValidationError,(ProductionFailureStage.VIDEO_DOWNLOAD,"visual_identity_validation_failed")),
             (EpisodeProductionRegistryError,(ProductionFailureStage.REGISTRY_PERSISTENCE,"registry_persistence_failed")),
         )
         for kind,value in mapping:

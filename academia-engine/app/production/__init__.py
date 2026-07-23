@@ -11,3 +11,4 @@ from .integrity import *
 from .cleanup import *
 from .duration_policy import *
 from .storyboard_video_planner import *
+from .visual_identity import *

@@ -10,7 +10,7 @@ from app.cli.character_register import main as register_main
 from app.cli.character_show import main as show_main
 from app.creative import EducationalCreativeBrief
 from app.production import StoryboardVideoPlanner
-from app.providers.kling_mapper import KlingTextToVideoMapper
+from app.providers.kling_mapper import KlingTextToVideoMapper,KlingCharacterReferenceUnsupportedError
 from app.config import KlingGenerationSettings
 from app.series import SeriesBible,SeriesRegistry
 from app.storyboard import DeterministicStoryboardGenerator
@@ -58,9 +58,16 @@ class CanonicalCharacterTests(unittest.TestCase):
             series=SeriesRegistry(Path(temporary)/"series",characters); series.register(bible())
             storyboard=DeterministicStoryboardGenerator().generate_storyboard(brief(),bible(),(profile("luca"),profile("max")))
             requests=StoryboardVideoPlanner(character_registry=characters,series_registry=series).build(storyboard,"video-1")
+            luca_references=[next(reference for reference in request.character_reference_images
+                if reference.character_id=="luca") for request in requests]
+            max_references=[next(reference for reference in request.character_reference_images
+                if reference.character_id=="max") for request in requests]
+            self.assertEqual(1,len({(value.local_path,value.sha256) for value in luca_references}))
+            self.assertEqual(1,len({(value.local_path,value.sha256) for value in max_references}))
             mapper=KlingTextToVideoMapper(KlingGenerationSettings())
-            payloads=[mapper.map(value,external_task_id=f"external-{index}").to_payload()["prompt"]
-                      for index,value in enumerate(requests)]
+            payloads=[mapper.prompt_with_diagnostic(value)[0] for value in requests]
+            with self.assertRaises(KlingCharacterReferenceUnsupportedError):
+                mapper.map(requests[0],external_task_id="external-0")
             luca_description=profile("luca").canonical_description; max_description=profile("max").canonical_description
             self.assertTrue(all("golden-blond" in value and "bright blue eyes" in value for value in payloads))
             self.assertTrue(all("German Shepherd" in value and "red collar" in value and "Max never speaks" in value for value in payloads))
@@ -71,7 +78,7 @@ class CanonicalCharacterTests(unittest.TestCase):
             # Keep duration coherent for the one-section projection contract.
             luca_only=luca_only.model_copy(update={"target_duration_seconds":section.estimated_duration_seconds})
             request=StoryboardVideoPlanner(character_registry=characters,series_registry=series).build(luca_only,"video-2")[0]
-            text=mapper.map(request,external_task_id="external-only").to_payload()["prompt"]
+            text=mapper.prompt_with_diagnostic(request)[0]
             self.assertIn("golden-blond",text); self.assertNotIn("German Shepherd",text)
             self.assertIn("sunny park",text.lower())
 

@@ -6,5 +6,10 @@
   "canonical_description": "A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting.",
   "personality_traits": ["curious", "cheerful", "kind"],
   "behavior_rules": ["Luca behaves like a friendly preschool child.", "Luca remains close to Max.", "Luca reacts with curiosity and positive emotions."],
-  "negative_rules": ["Never change Luca's hair color.", "Never change Luca's eye color.", "Never change Luca's age.", "Never change Luca's clothing.", "Never portray Luca as an adult."]
+  "negative_rules": ["Never change Luca's hair color.", "Never change Luca's eye color.", "Never change Luca's age.", "Never change Luca's clothing.", "Never portray Luca as an adult."],
+  "visual_reference": {
+    "local_path": "assets/characters/luca-canonical.png",
+    "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+    "content_type": "image/png"
+  }
 }

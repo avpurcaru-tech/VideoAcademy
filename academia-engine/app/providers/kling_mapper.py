@@ -11,6 +11,8 @@ from .kling_dtos import KlingOptions, KlingSettings, KlingTextToVideoRequest, Kl
 class KlingUnsupportedConfigurationError(ValueError):
     """Raised when a value is not confirmed by the official request example."""
 class KlingPromptTooLongError(ValueError): pass
+class KlingCharacterReferenceUnsupportedError(KlingUnsupportedConfigurationError):
+    """Configured text-to-video API has no documented character-reference field."""
 
 @dataclass(frozen=True)
 class KlingPromptLengthDiagnostic:
@@ -43,6 +45,9 @@ class KlingTextToVideoMapper:
         callback_url: str | None = None,
     ) -> KlingTextToVideoRequest:
         video_request = request.video_request
+        if request.character_reference_images:
+            raise KlingCharacterReferenceUnsupportedError(
+                "The configured Kling text-to-video endpoint cannot attach canonical character references.")
         if video_request.duration_seconds != self._generation_settings.duration:
             raise KlingUnsupportedConfigurationError(
                 "Video request duration does not match the configured Kling generation duration."

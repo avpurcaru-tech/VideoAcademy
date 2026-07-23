@@ -22,5 +22,10 @@
   "character_type": "child",
   "age_description": "4-5 years old",
   "voice_description": null,
-  "version": null
+  "version": null,
+  "visual_reference": {
+    "local_path": "assets/characters/luca-canonical.png",
+    "sha256": "91028d59fc504ecc0c43e5d5a9034e4cd949fa46b8e4ccab4106f13769bbe1f8",
+    "content_type": "image/png"
+  }
 }

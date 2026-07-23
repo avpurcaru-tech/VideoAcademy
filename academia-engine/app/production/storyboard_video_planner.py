@@ -1,6 +1,6 @@
 import hashlib
 
-from app.models import (Camera, CharacterAction, Transition, VideoCharacter,
+from app.models import (Camera, CharacterAction, CharacterReferenceImage, Transition, VideoCharacter,
     VideoEnvironment, VideoGenerationRequest, VideoRequest)
 from app.storyboard.contracts import CreativeStoryboard
 
@@ -8,6 +8,8 @@ from .duration_policy import SceneDurationPolicy
 
 
 class StoryboardVideoPlanningError(RuntimeError): pass
+class RecurringCharacterReferenceMissingError(StoryboardVideoPlanningError): pass
+class RecurringCharacterReferenceInvalidError(StoryboardVideoPlanningError): pass
 
 
 class StoryboardVideoPlanner:
@@ -29,6 +31,18 @@ class StoryboardVideoPlanner:
             requests = []
             for scene_number, section in enumerate(storyboard.sections, start=1):
                 characters = [self._video_character(storyboard, reference, canonical,profiles) for reference in section.characters]
+                references=[]
+                for character_id in section.characters:
+                    if character_id not in profiles: continue
+                    reference=profiles[character_id].visual_reference
+                    if reference is None or not reference.local_path.is_file():
+                        raise RecurringCharacterReferenceMissingError(
+                            f"Recurring character {character_id} has no available canonical visual reference.")
+                    if hashlib.sha256(reference.local_path.read_bytes()).hexdigest()!=reference.sha256:
+                        raise RecurringCharacterReferenceInvalidError(
+                            f"Recurring character {character_id} canonical visual reference failed integrity validation.")
+                    references.append(CharacterReferenceImage(character_id=character_id,local_path=reference.local_path,
+                        sha256=reference.sha256,content_type=reference.content_type))
                 objects = ", ".join(section.objects) if section.objects else "none specified"
                 semantic_description = (
                     f"{section.environment}\nVisual goal: {section.visual_goal}\nObjects: {objects}"
@@ -47,7 +61,8 @@ class StoryboardVideoPlanner:
                 # Applying the shared policy here keeps execution duration behavior identical to the legacy planner.
                 video_request = self._duration_policy.apply_execution_duration(video_request)
                 requests.append(VideoGenerationRequest(
-                    request_id=f"{production_id}-scene-{scene_number:04d}", video_request=video_request))
+                    request_id=f"{production_id}-scene-{scene_number:04d}", video_request=video_request,
+                    character_reference_images=tuple(references)))
             return tuple(requests)
         except Exception as error:
             if isinstance(error, StoryboardVideoPlanningError):

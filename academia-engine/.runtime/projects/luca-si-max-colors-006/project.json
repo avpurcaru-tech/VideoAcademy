@@ -2,7 +2,7 @@
   "project_id": "luca-si-max-colors-006",
   "episode_id": "luca-si-max-colors-001",
   "series_id": "luca-si-max",
-  "status": "failed",
+  "status": "completed",
   "orchestration_version": "storyboard_first",
   "video_production_id": "luca-si-max-colors-006-video",
   "music_task_id": "2b670863bd81a10f72450247f7b2ef45",
@@ -10,15 +10,41 @@
   "music_directory": ".runtime\\projects\\luca-si-max-colors-006\\music",
   "video_directory": ".runtime\\projects\\luca-si-max-colors-006\\video",
   "final_directory": ".runtime\\projects\\luca-si-max-colors-006\\final",
-  "failure_stage": "composition",
-  "failure_category": "composition_failed",
-  "safe_message": "Storyboard-first project generation failed at a safe boundary.",
+  "failure_stage": null,
+  "failure_category": null,
+  "safe_message": null,
   "failure_details": [],
   "provider_http_status": null,
   "provider_request_id": null,
   "provider_model": null,
   "provider_retry_after": null,
   "video_plan_diagnostics": [],
+  "composition_variants": [
+    {
+      "variant_id": "variant-01",
+      "status": "completed",
+      "output_path": ".runtime\\projects\\luca-si-max-colors-006\\final\\final-variant-01.mp4",
+      "byte_size": 19119047,
+      "sha256": "846628c30078c2f178f9ab2d2f99404bc313fbc8ce185775db8c0bcc2059b8d6"
+    },
+    {
+      "variant_id": "variant-02",
+      "status": "completed",
+      "output_path": ".runtime\\projects\\luca-si-max-colors-006\\final\\final-variant-02.mp4",
+      "byte_size": 15736195,
+      "sha256": "ba77656e1c1f91170375ac0f3ca44968d19b46eb04e43e863c329300051220eb"
+    }
+  ],
+  "failed_variant_id": null,
+  "composition_master_video_present": true,
+  "composition_master_video_duration": 60.133008,
+  "composition_audio_present": true,
+  "composition_audio_duration": 98.439979,
+  "composition_timeline_present": true,
+  "composition_timeline_duration": 98.439979,
+  "composition_expected_output_path": ".runtime\\projects\\luca-si-max-colors-006\\final\\final-variant-02.mp4",
+  "composition_ffmpeg_exit_code": null,
+  "composition_ffmpeg_error_category": null,
   "failed_scene_id": null,
   "submit_http_status": null,
   "submit_provider_code": null,
@@ -31,5 +57,5 @@
   "query_provider_task_id": null,
   "query_response_shape": [],
   "created_at": "2026-07-22T00:26:03.049953Z",
-  "updated_at": "2026-07-22T01:03:48.898417Z"
+  "updated_at": "2026-07-23T00:08:35.227613Z"
 }

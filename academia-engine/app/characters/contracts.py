@@ -1,4 +1,12 @@
+from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+class CanonicalVisualReference(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    local_path: Path
+    sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    content_type: str = Field(default="image/png", pattern=r"^image/(png|jpeg|webp)$")
 
 
 class CanonicalCharacterProfile(BaseModel):
@@ -14,6 +22,7 @@ class CanonicalCharacterProfile(BaseModel):
     age_description: str | None = Field(default=None, max_length=200)
     voice_description: str | None = Field(default=None, max_length=500)
     version: str | None = Field(default=None, max_length=100)
+    visual_reference: CanonicalVisualReference | None = None
 
     @field_validator("name", "canonical_description", "character_type", "age_description", "voice_description", "version")
     @classmethod

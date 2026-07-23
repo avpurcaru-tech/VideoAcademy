@@ -1,4 +1,5 @@
 import os
+import hashlib
 from pathlib import Path
 
 from pydantic import ValidationError
@@ -21,6 +22,12 @@ class CharacterRegistry:
         return self._root/f"{safe}.json"
     def register(self, profile: CanonicalCharacterProfile) -> Path:
         profile=CanonicalCharacterProfile.model_validate(profile); destination=self.path_for(profile.character_id)
+        if profile.visual_reference is not None:
+            reference=profile.visual_reference
+            if not reference.local_path.is_file():
+                raise CharacterRegistryError("Canonical character visual reference is missing.")
+            if hashlib.sha256(reference.local_path.read_bytes()).hexdigest()!=reference.sha256:
+                raise CharacterRegistryError("Canonical character visual reference failed integrity validation.")
         if destination.exists():
             existing=self.get(profile.character_id)
             if existing==profile: return destination
