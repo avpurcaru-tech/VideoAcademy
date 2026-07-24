@@ -20,9 +20,12 @@ class WebResponse:
     def __init__(self,status,body,content_type="text/html; charset=utf-8",headers=None):
         self.status=status; self.body=body.encode("utf-8") if isinstance(body,str) else body; self.content_type=content_type; self.headers=headers or {}
 class LocalWebApplication:
-    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None):
+    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None,services=None):
+        if services is not None:
+            lyrics_provider=services.lyrics_provider; music_provider=services.music_provider; planning_builders=services.planning_builders
+            asset_provider=services.asset_provider; composition_renderer=services.composition_renderer
         self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider; self.music_provider=music_provider
-        self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider; self.composition_renderer=composition_renderer
+        self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider; self.composition_renderer=composition_renderer; self.services=services
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
         if method=="GET" and route=="/projects/new": return WebResponse(200,self._new_project_form())
@@ -171,7 +174,9 @@ class LocalWebApplication:
         return WebResponse(404,"Not found","text/plain; charset=utf-8")
     def _index(self):
         projects="".join(f'<li><a href="/projects/{html.escape(x)}">{html.escape(x)}</a></li>' for x in self.projects.list_projects())
-        return self._page("Proiecte",f'<main><h1>Academia Video Engine</h1><h2>Proiecte</h2><a class="button" href="/projects/new">Episod nou</a><ul>{projects}</ul></main>')
+        availability=""
+        if self.services is not None: availability='<section><h2>Provider availability</h2><ul>'+"".join(f'<li>{html.escape(x.provider_name)}: {html.escape(x.label)}</li>' for x in self.services.availability)+"</ul></section>"
+        return self._page("Proiecte",f'<main><h1>Academia Video Engine</h1><h2>Proiecte</h2><a class="button" href="/projects/new">Episod nou</a><ul>{projects}</ul>{availability}</main>')
     def _new_project_form(self,values=None,errors=()):
         values=values or {}; error_html="" if not errors else '<div class="errors" role="alert">Datele formularului nu sunt valide.</div>'
         def field(name,label,kind="text",required=True):
@@ -309,8 +314,9 @@ class LocalWebApplication:
     @staticmethod
     def _json(status,payload): return WebResponse(status,json.dumps(payload,ensure_ascii=False,sort_keys=True),"application/json; charset=utf-8")
 
-def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None):
-    return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders,asset_provider,composition_renderer)
+def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None,services=None):
+    return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders,asset_provider,composition_renderer,services)
+def create_app(*,settings,services): return create_application(settings.projects_root,services=services)
 def serve(application,host="127.0.0.1",port=8080):
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
