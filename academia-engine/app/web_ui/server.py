@@ -15,6 +15,7 @@ from .composition import (CompositionBlockedError,CompositionReviewService,Compo
     RenderConfirmationRequired)
 from .job_recovery import (DuplicateCostWarningRequired,JobConfirmationRequired,JobNotFound,
     JobRecoveryService)
+from .operational_preflight import ConnectivityConfirmationRequired,OperationalPreflightService
 from pydantic import ValidationError
 
 ROOT=Path(__file__).parent
@@ -31,6 +32,12 @@ class LocalWebApplication:
         self.recovery_service=recovery_service or JobRecoveryService(self.projects.root)
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
+        if method=="GET" and route=="/preflight": return WebResponse(200,self._preflight_page())
+        if method=="POST" and route=="/preflight/run":
+            values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}; connectivity=values.get("provider_connectivity")=="yes"
+            try: report=OperationalPreflightService(self.settings).run(values.get("project_id") or None,check_provider_connectivity=connectivity,confirm_connectivity=values.get("confirm_connectivity")=="yes")
+            except ConnectivityConfirmationRequired as error: return WebResponse(422,self._preflight_page(error=str(error)))
+            return WebResponse(200,self._preflight_page(report))
         job_parts=route.strip("/").split("/")
         if method=="GET" and route=="/jobs": return WebResponse(200,self._jobs_page(self.recovery_service.scan()))
         if method=="GET" and len(job_parts)==3 and job_parts[0]=="projects" and job_parts[2]=="jobs":
@@ -205,6 +212,15 @@ class LocalWebApplication:
             rows.append(f'<article class="stage-card"><h2>{html.escape(job.project_id)} · {html.escape(job.stage)}</h2><dl><dt>Provider</dt><dd>{html.escape(job.provider)}</dd><dt>Status local</dt><dd>{job.status.value}</dd><dt>Status provider</dt><dd>{html.escape(job.last_known_provider_status or "—")}</dd><dt>Provider job ID</dt><dd>{html.escape(provider_id)}</dd><dt>Ultima eroare</dt><dd>{html.escape(job.error_message or "—")}</dd></dl><div class="stage-actions">{actions}</div></article>')
         scope=f" pentru proiectul {html.escape(project_id)}" if project_id else ""
         return self._page("Job recovery",f'<main><a href="/">← Proiecte</a><h1>Joburi întrerupte{scope}</h1>{error_html}{"".join(rows) or "<p>Nu există joburi.</p>"}</main>')
+    def _preflight_page(self,report=None,error=None):
+        error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""; result=""
+        if report:
+            findings="".join(f'<li><strong>{x.severity.value.upper()}</strong> {html.escape(x.check_id)}: {html.escape(x.message)} — {html.escape(x.remediation)}</li>' for x in report.findings)
+            result=f'<section><h2>{report.status.value}</h2><ul>{findings}</ul><p>External HTTP calls: {report.external_http_calls}; AI generation calls: {report.ai_generation_calls}; FFmpeg calls: {report.ffmpeg_calls}; Write operations: {report.write_operations}</p></section>'
+        form=('<form method="post" action="/preflight/run"><label>Project ID (opțional)<input name="project_id"></label>'
+            '<label><input type="checkbox" name="provider_connectivity" value="yes"> Verifică provider connectivity</label>'
+            '<label><input type="checkbox" name="confirm_connectivity" value="yes"> Confirm connectivity check extern read-only</label><button>Rulează preflight</button></form>')
+        return self._page("Operational Preflight",f'<main><a href="/">← Proiecte</a><h1>Operational Preflight</h1>{error_html}{form}{result}</main>')
     def _settings_page(self):
         if self.settings is None: return self._page("Settings","<main><h1>Settings</h1><p>Configuration unavailable.</p></main>")
         settings=self.settings; available={x.provider_name:x.label for x in (self.services.availability if self.services else ())}
