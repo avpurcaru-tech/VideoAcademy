@@ -7,6 +7,7 @@ from .project_service import ReadOnlyProjectService
 from .project_creation import AtomicProjectCreationService,EpisodeCreationInput
 from .workflow import WorkflowActionService,WorkflowStage,WorkflowAction,WorkflowStateRepository
 from .lyrics import LyricsGenerationFailure,LyricsStageService
+from .music import MusicBlockedError,MusicCostConfirmationRequired,MusicStageService,MusicUiError
 from pydantic import ValidationError
 
 ROOT=Path(__file__).parent
@@ -14,7 +15,8 @@ class WebResponse:
     def __init__(self,status,body,content_type="text/html; charset=utf-8",headers=None):
         self.status=status; self.body=body.encode("utf-8") if isinstance(body,str) else body; self.content_type=content_type; self.headers=headers or {}
 class LocalWebApplication:
-    def __init__(self,projects_root=None,lyrics_provider=None): self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider
+    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None):
+        self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider; self.music_provider=music_provider
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
         if method=="GET" and route=="/projects/new": return WebResponse(200,self._new_project_form())
@@ -41,6 +43,29 @@ class LocalWebApplication:
                 except LyricsGenerationFailure: return WebResponse(502,self._lyrics_page(project_id,service,error="Generarea versurilor a eșuat."))
                 except ValueError as error: return WebResponse(422,self._lyrics_page(project_id,service,error=str(error)))
                 return WebResponse(303,"",headers={"Location":f"/projects/{project_id}/lyrics"})
+        music_parts=route.strip("/").split("/")
+        if len(music_parts)>=3 and music_parts[0]=="projects" and music_parts[2]=="music":
+            project_id=music_parts[1]; project=self.projects.root/project_id
+            if not (project/"project.json").is_file(): return WebResponse(404,"Project not found")
+            service=MusicStageService(project,self.music_provider)
+            if method=="GET" and len(music_parts)==3: return WebResponse(200,self._music_page(project_id,service))
+            if method=="GET" and len(music_parts)==7 and music_parts[3]=="assets":
+                try:
+                    version=int(music_parts[4].removeprefix("version-")); variant_id=music_parts[5]
+                    if music_parts[6]!=f"{variant_id}.mp3": raise ValueError()
+                    asset=service.audio_path(version,variant_id); return WebResponse(200,asset.read_bytes(),"audio/mpeg")
+                except (ValueError,OSError): return WebResponse(404,"Audio variant not found")
+            if method=="POST" and len(music_parts)==4:
+                action=music_parts[3]; values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
+                try:
+                    if action in {"generate","regenerate"}: service.generate(confirmed=values.get("confirm_cost")=="yes",feedback=values.get("feedback") if action=="regenerate" else None)
+                    elif action=="select": service.select(int(values["version"]),values["variant_id"])
+                    elif action=="approve": service.approve(int(values["version"]),values.get("variant_id"))
+                    elif action=="reject": service.reject(int(values["version"]))
+                    else: return WebResponse(404,"Invalid music action")
+                except MusicCostConfirmationRequired as error: return WebResponse(422,self._music_page(project_id,service,error=str(error)))
+                except (MusicBlockedError,MusicUiError,ValueError,KeyError) as error: return WebResponse(422,self._music_page(project_id,service,error=str(error)))
+                return WebResponse(303,"",headers={"Location":f"/projects/{project_id}/music"})
         action_prefix="/projects/"
         if method=="POST" and route.startswith(action_prefix) and "/stages/" in route:
             parts=route.strip("/").split("/")
@@ -101,6 +126,7 @@ class LocalWebApplication:
         labels={"lyrics":"Versuri","music":"Muzică","alignment":"Alignment","scene_plan":"Scene Plan","visual_plan":"Visual Plan",
             "prompts":"Prompturi","assets":"Assets","composition":"Compoziție","episode":"Episod"}
         labels["lyrics"]=f'<a href="/projects/{html.escape(state.project_id)}/lyrics">Versuri</a>'
+        labels["music"]=f'<a href="/projects/{html.escape(state.project_id)}/music">Muzică</a>'
         cards="".join(f'<article class="stage-card" data-stage="{x.stage.value}"><h2>{labels[x.stage.value]}</h2>'
             f'<dl><dt>Status</dt><dd>{x.status.value}</dd><dt>Versiune curentă</dt><dd>{x.current_version}</dd>'
             f'<dt>Versiune aprobată</dt><dd>{x.approved_version or "—"}</dd><dt>Motiv blocare</dt><dd>{html.escape(x.blocked_reason or "—")}</dd>'
@@ -124,6 +150,27 @@ class LocalWebApplication:
             f'<form method="post" action="/projects/{project_id}/lyrics/regenerate"><label>Feedback<textarea name="feedback"></textarea></label><button>Regenerare</button></form>'
             f'<div class="stage-actions">{actions}</div><section><h2>Istoric versiuni</h2><ul>{history}</ul></section></main>')
         return self._page("Versuri",content)
+    def _music_page(self,project_id,service,error=None):
+        versions=service.versions(); workflow=WorkflowStateRepository(service.project).resolve(project_id)[0]; stage=workflow.stage("music")
+        error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""
+        blocks=[]
+        for version in reversed(versions):
+            variants=[]
+            for item in version.variants:
+                asset=f"/projects/{project_id}/music/assets/version-{version.version:03d}/{item.variant_id}/{item.variant_id}.mp3"
+                selected=" (selectată)" if item.variant_id==version.selected_variant_id else ""
+                variants.append(f'<article class="music-variant"><h3>{item.variant_id}{selected}</h3><audio controls preload="none" src="{asset}"></audio>'
+                    f'<p>Durată: {item.duration_seconds or "—"}</p><p>Task ID: {html.escape(version.task_id)}</p><p>Audio ID: {html.escape(item.audio_id)}</p>'
+                    f'<form method="post" action="/projects/{project_id}/music/select"><input type="hidden" name="version" value="{version.version}"><input type="hidden" name="variant_id" value="{item.variant_id}"><button>Selectează</button></form></article>')
+            approval=""
+            if version.selected_variant_id and stage.status.value=="generated": approval=(f'<form method="post" action="/projects/{project_id}/music/approve"><input type="hidden" name="version" value="{version.version}"><button>Aprobă</button></form>'
+                f'<form method="post" action="/projects/{project_id}/music/reject"><input type="hidden" name="version" value="{version.version}"><button>Respinge</button></form>')
+            blocks.append(f'<section><h2>Versiunea {version.version} — {version.status.value}</h2>{"".join(variants)}<div class="stage-actions">{approval}</div></section>')
+        confirmation='<p>Această acțiune poate consuma credite Suno.</p><label><input type="checkbox" name="confirm_cost" value="yes" required> Confirmă generarea</label>'
+        content=(f'<main><a href="/projects/{project_id}">← Proiect</a><h1>Muzică</h1>{error_html}<p>Status: {stage.status.value}</p>'
+            f'<form method="post" action="/projects/{project_id}/music/generate">{confirmation}<button>Generează muzică</button></form>'
+            f'<form method="post" action="/projects/{project_id}/music/regenerate"><label>Feedback<input name="feedback"></label>{confirmation}<button>Regenerare</button></form>{"".join(blocks)}</main>')
+        return self._page("Muzică",content)
     @staticmethod
     def _stage_actions(project_id,stage):
         base=f"/projects/{project_id}/stages/{stage.stage.value}"; controls=[]
@@ -137,7 +184,7 @@ class LocalWebApplication:
     @staticmethod
     def _json(status,payload): return WebResponse(status,json.dumps(payload,ensure_ascii=False,sort_keys=True),"application/json; charset=utf-8")
 
-def create_application(projects_root=None,lyrics_provider=None): return LocalWebApplication(projects_root,lyrics_provider)
+def create_application(projects_root=None,lyrics_provider=None,music_provider=None): return LocalWebApplication(projects_root,lyrics_provider,music_provider)
 def serve(application,host="127.0.0.1",port=8080):
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
