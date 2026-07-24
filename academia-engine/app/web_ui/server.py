@@ -9,6 +9,8 @@ from .workflow import WorkflowActionService,WorkflowStage,WorkflowAction,Workflo
 from .lyrics import LyricsGenerationFailure,LyricsStageService
 from .music import MusicBlockedError,MusicCostConfirmationRequired,MusicStageService,MusicUiError
 from .planning_review import PlanningReviewError,PlanningReviewService,PlanningStageBlocked
+from .assets import (AssetBlockedError,AssetCostConfirmationRequired,AssetGenerationFailure,
+    AssetReviewError,AssetReviewService)
 from pydantic import ValidationError
 
 ROOT=Path(__file__).parent
@@ -16,9 +18,9 @@ class WebResponse:
     def __init__(self,status,body,content_type="text/html; charset=utf-8",headers=None):
         self.status=status; self.body=body.encode("utf-8") if isinstance(body,str) else body; self.content_type=content_type; self.headers=headers or {}
 class LocalWebApplication:
-    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None):
+    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None):
         self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider; self.music_provider=music_provider
-        self.planning_builders=planning_builders or {}
+        self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
         if method=="GET" and route=="/projects/new": return WebResponse(200,self._new_project_form())
@@ -85,6 +87,30 @@ class LocalWebApplication:
                 except (PlanningReviewError,PlanningStageBlocked,ValueError,KeyError) as error:
                     return WebResponse(422,self._planning_page(project_id,route_stage,stage,service,error=str(error)))
                 return WebResponse(303,"",headers={"Location":f"/projects/{project_id}/{route_stage}"})
+        asset_parts=route.strip("/").split("/")
+        if len(asset_parts)>=3 and asset_parts[0]=="projects" and (asset_parts[2]=="assets" or (len(asset_parts)>=5 and asset_parts[2]=="scenes" and asset_parts[4]=="assets")):
+            project_id=asset_parts[1]; project=self.projects.root/project_id
+            if not (project/"project.json").is_file(): return WebResponse(404,"Project not found")
+            service=AssetReviewService(project,self.asset_provider)
+            if method=="GET" and len(asset_parts)==3: return WebResponse(200,self._assets_page(project_id,service))
+            if len(asset_parts)>=6 and asset_parts[2]=="scenes":
+                scene_id=asset_parts[3]
+                if method=="POST" and len(asset_parts)==6:
+                    action=asset_parts[5]; values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
+                    try:
+                        if action in {"generate","regenerate"}: service.generate(scene_id,confirmed=values.get("confirm_cost")=="yes",feedback=values.get("feedback"))
+                        elif action=="approve": service.approve(scene_id)
+                        elif action=="reject": service.reject(scene_id)
+                        elif action=="select-version": service.select(scene_id,int(values["version"]))
+                        else: return WebResponse(404,"Invalid asset action")
+                    except (AssetReviewError,AssetBlockedError,AssetCostConfirmationRequired,AssetGenerationFailure,ValueError,KeyError) as error:
+                        return WebResponse(422,self._assets_page(project_id,service,error=str(error)))
+                    return WebResponse(303,"",headers={"Location":f"/projects/{project_id}/assets"})
+                if method=="GET" and len(asset_parts)==7 and asset_parts[6]=="preview":
+                    try:
+                        version=int(asset_parts[5].removeprefix("version-")); path,metadata=service.preview_path(scene_id,version)
+                        return WebResponse(200,path.read_bytes(),metadata.content_type)
+                    except (ValueError,OSError): return WebResponse(404,"Asset preview not found")
         action_prefix="/projects/"
         if method=="POST" and route.startswith(action_prefix) and "/stages/" in route:
             parts=route.strip("/").split("/")
@@ -150,6 +176,7 @@ class LocalWebApplication:
         labels["scene_plan"]=f'<a href="/projects/{html.escape(state.project_id)}/scene-plan">Scene Plan</a>'
         labels["visual_plan"]=f'<a href="/projects/{html.escape(state.project_id)}/visual-plan">Visual Plan</a>'
         labels["prompts"]=f'<a href="/projects/{html.escape(state.project_id)}/prompts">Prompturi</a>'
+        labels["assets"]=f'<a href="/projects/{html.escape(state.project_id)}/assets">Assets</a>'
         cards="".join(f'<article class="stage-card" data-stage="{x.stage.value}"><h2>{labels[x.stage.value]}</h2>'
             f'<dl><dt>Status</dt><dd>{x.status.value}</dd><dt>Versiune curentă</dt><dd>{x.current_version}</dd>'
             f'<dt>Versiune aprobată</dt><dd>{x.approved_version or "—"}</dd><dt>Motiv blocare</dt><dd>{html.escape(x.blocked_reason or "—")}</dd>'
@@ -214,6 +241,23 @@ class LocalWebApplication:
         if stage_state.status.value=="generated": controls+=f'<form method="post" action="{workflow_base}/approve"><button>Aprobă</button></form><form method="post" action="{workflow_base}/reject"><button>Respinge</button></form>'
         content=f'<main><a href="/projects/{project_id}">← Proiect</a><h1>{labels[stage]}</h1>{error_html}<p>Status: {stage_state.status.value}</p><p>Versiune: {stage_state.selected_version or "—"}</p><div class="stage-actions">{controls}</div>{details}</main>'
         return self._page(labels[stage],content)
+    def _assets_page(self,project_id,service,error=None):
+        state=service.state(); error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""; cards=[]
+        for prompt in service.prompts():
+            scene=state.scene(prompt.scene_id); versions=[]
+            for number in reversed(scene.versions):
+                try: metadata=service.metadata(prompt.scene_id,number)
+                except ValueError: continue
+                preview=f"/projects/{project_id}/scenes/{prompt.scene_id}/assets/version-{number:03d}/preview"
+                media=(f'<img class="asset-preview" src="{preview}" alt="Asset {html.escape(prompt.scene_id)}">' if metadata.media_type.value=="image"
+                    else f'<video class="asset-preview" controls preload="none" src="{preview}"></video>')
+                versions.append(f'<div class="asset-version"><h3>Versiunea {number}</h3>{media}<p>Provider: {html.escape(metadata.provider)}</p><p>Durată: {metadata.duration_seconds or "—"}</p>'
+                    f'<form method="post" action="/projects/{project_id}/scenes/{prompt.scene_id}/assets/select-version"><input type="hidden" name="version" value="{number}"><button>Selectează versiune</button></form></div>')
+            base=f"/projects/{project_id}/scenes/{prompt.scene_id}/assets"; confirmation='<label><input type="checkbox" name="confirm_cost" value="yes" required> Confirmă: această acțiune poate consuma credite.</label>'
+            actions=f'<form method="post" action="{base}/generate">{confirmation}<button>Generează asset</button></form><form method="post" action="{base}/regenerate"><label>Feedback<input name="feedback"></label>{confirmation}<button>Regenerează</button></form>'
+            if scene.selected_version is not None: actions+=f'<form method="post" action="{base}/approve"><button>Aprobă</button></form><form method="post" action="{base}/reject"><button>Respinge</button></form>'
+            cards.append(f'<article class="asset-scene"><h2>{html.escape(prompt.scene_id)}</h2><p>Prompt: {html.escape(prompt.positive_prompt)}</p><p>Status: {scene.status.value}</p><p>Versiune: {scene.selected_version or "—"}</p><div class="stage-actions">{actions}</div><details><summary>Vezi istoric</summary>{"".join(versions)}</details></article>')
+        return self._page("Assets",f'<main><a href="/projects/{project_id}">← Proiect</a><h1>Assets</h1>{error_html}{"".join(cards) or "<p>Nu există prompturi.</p>"}</main>')
     @staticmethod
     def _stage_actions(project_id,stage):
         base=f"/projects/{project_id}/stages/{stage.stage.value}"; controls=[]
@@ -227,7 +271,8 @@ class LocalWebApplication:
     @staticmethod
     def _json(status,payload): return WebResponse(status,json.dumps(payload,ensure_ascii=False,sort_keys=True),"application/json; charset=utf-8")
 
-def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None): return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders)
+def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None):
+    return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders,asset_provider)
 def serve(application,host="127.0.0.1",port=8080):
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
