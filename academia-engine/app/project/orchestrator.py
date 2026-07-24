@@ -99,7 +99,7 @@ class ProjectGenerationService:
                 call_counts["suno_calls"]=call_counts.get("suno_calls",0)+1
                 record=self._update(record,music_task_id=music_record.provider_task_id)
             record=self._status(record,ProjectStatus.MUSIC_READY)
-            timelines=[]; alignment_changed=False; self._progress("Timelines..."); record=self._status(record,ProjectStatus.TIMELINES_GENERATING)
+            timelines=[]; alignment_changed=False; changed_variants=set(); self._progress("Timelines..."); record=self._status(record,ProjectStatus.TIMELINES_GENERATING)
             for index,audio in enumerate(music_record.artifact_set.artifacts,start=1):
                 path=record.music_directory/f"timeline-variant-{index:02d}.json"
                 duration=self._services.audio_probe.probe_audio(audio.local_path).duration_seconds
@@ -115,7 +115,7 @@ class ProjectGenerationService:
                             audio_artifact_id=audio.artifact_id,audio_sha256=audio.sha256,provider_task_id=record.music_task_id,
                             provider_audio_id=audio.artifact_id,audio_duration_seconds=duration,language=lyrics.language,
                             source="suno_timestamped_lyrics",provider_words=retrieved.words,lyrics=lyrics,instrumental=retrieved.instrumental)
-                        store.save(alignment); variant_changed=True; alignment_changed=True
+                        store.save(alignment); variant_changed=True; alignment_changed=True; changed_variants.add(variant_id)
                     if alignment.status==AlignmentStatus.REVIEW_REQUIRED:
                         raise LyricsAlignmentReviewRequired("Lyrics alignment requires manual review.")
                 if path.is_file() and not variant_changed: timeline=MusicTimeline.model_validate_json(path.read_text(encoding="utf-8"))
@@ -128,6 +128,21 @@ class ProjectGenerationService:
                     self._persist_model(path,timeline)
                 timelines.append(timeline)
             self._validate_timeline_mapping(storyboard,timelines)
+            from app.lyrics_alignment import LyricsAlignment
+            from app.scene_planning import ScenePlanRepository,SemanticScenePlanner
+            from app.visual_planning import (AspectRatio,ProviderNeutralVisualPlanner,VisualPlanRepository,
+                default_visual_style)
+            scene_plans=ScenePlanRepository(record.music_directory.parent/"visual")
+            scene_planner=SemanticScenePlanner()
+            visual_plans=VisualPlanRepository(record.music_directory.parent/"visual")
+            visual_planner=ProviderNeutralVisualPlanner(); visual_style=default_visual_style(visual_planner.configuration)
+            for index,timeline in enumerate(timelines,1):
+                variant_id=f"variant-{index:02d}"; alignment_path=record.music_directory/f"alignment-{variant_id}.json"
+                if alignment_path.is_file():
+                    alignment=LyricsAlignment.model_validate_json(alignment_path.read_text(encoding="utf-8"))
+                    scene_plan,_reused=scene_plans.resolve_or_build(record.project_id,alignment,lyrics,scene_planner,storyboard,timeline)
+                    visual_plans.resolve_or_build(scene_plan=scene_plan,planner=visual_planner,global_style=visual_style,
+                        aspect_ratio=AspectRatio.LANDSCAPE_16_9)
             record=self._status(record,ProjectStatus.TIMELINES_READY)
             from app.providers import KlingProviderRegistry
             from app.video_coverage import (VideoCoverageConfiguration,VideoCoveragePlan,VideoCoveragePlanner)
@@ -155,7 +170,7 @@ class ProjectGenerationService:
                 keywords=tuple(word for section in storyboard.sections for value in section.objects for word in value.casefold().split())
                 for index,timeline in enumerate(timelines,1):
                     variant_id=f"variant-{index:02d}"; sync_path=sync_store.path(variant_id)
-                    if not sync_path.is_file() or alignment_changed:
+                    if not sync_path.is_file() or variant_id in changed_variants:
                         alignment=LyricsAlignment.model_validate_json((record.music_directory/f"alignment-{variant_id}.json").read_text(encoding="utf-8"))
                         sync_store.save(AudioSynchronizedVideoPlanner().plan(alignment,timeline,coverage_plan,keywords))
             if coverage_plan.confirmation_required and not plan_only and not confirmed:
@@ -223,7 +238,7 @@ class ProjectGenerationService:
                     "composition_timeline_duration":timeline.music_duration_seconds,"composition_expected_output_path":destination,
                     "composition_ffmpeg_exit_code":None,"composition_ffmpeg_error_category":None}
                 record=self._update(record,**composition_context)
-                if destination.is_file():
+                if destination.is_file() and f"variant-{index:02d}" not in changed_variants:
                     record=self._composition_checkpoint(record,failed_variant_id,destination); continue
                 edit_plan=None
                 sync_path=record.music_directory/f"sync-plan-variant-{index:02d}.json"
@@ -235,7 +250,8 @@ class ProjectGenerationService:
                     edit_plan=edit_plan,
                     shared_master_path=production.final_artifact.local_path,
                     music_source=audio.local_path,destination=destination,
-                    workspace=record.final_directory/f"workspace-variant-{index:02d}",resume=True))
+                    workspace=record.final_directory/f"workspace-variant-{index:02d}",
+                    overwrite=f"variant-{index:02d}" in changed_variants,resume=f"variant-{index:02d}" not in changed_variants))
                 record=self._composition_checkpoint(record,failed_variant_id,result.local_path,result.byte_size,result.sha256)
             return self._update(record,status=ProjectStatus.COMPLETED,failed_variant_id=None,
                 composition_ffmpeg_exit_code=None,composition_ffmpeg_error_category=None,failure_stage=None,

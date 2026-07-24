@@ -19,10 +19,12 @@ def main():
         print(f"Variant: {value.variant_id}"); print(f"Audio duration: {value.audio_duration_seconds}")
         print(f"Alignment source: {value.source}"); print(f"Aligned words: {len(value.words)}")
         print(f"Mapped words: {mapped}"); print(f"Unmatched words: {len(value.unmatched_provider_tokens)}")
-        print(f"Aligned lines: {len(value.lines)}"); print(f"Mapped line coverage: {coverage:.3f}")
+        print(f"Aligned lines: {len(value.lines)}"); print(f"Unmatched lines: {len(value.unmatched_lyrics_line_ids)}")
+        print(f"Mapped line coverage: {coverage:.3f}")
         print(f"First lyric timestamp: {value.words[0].start_seconds if value.words else 'unavailable'}")
         print(f"Last lyric timestamp: {value.words[-1].end_seconds if value.words else 'unavailable'}")
         print(f"Instrumental gaps: {gaps}"); print(f"Alignment status: {value.status.value}")
+        print(f"Alignment path: {path}")
         valid=valid and value.status.value in ("valid","valid_with_warnings","instrumental")
     print("HTTP calls: 0"); return 0 if valid else 1
 

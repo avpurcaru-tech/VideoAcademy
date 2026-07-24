@@ -81,6 +81,7 @@ class LyricsAlignment(BaseModel):
     sections:tuple[LyricsSectionTiming,...]=(); confidence:float|None=Field(default=None,ge=0,le=1)
     mapping_confidence:float|None=Field(default=None,ge=0,le=1)
     unmatched_provider_tokens:tuple[str,...]=(); unmatched_lyrics_tokens:tuple[str,...]=()
+    unmatched_lyrics_line_ids:tuple[str,...]=()
     status:AlignmentStatus; retrieval_status:str; created_at:datetime
     @field_validator("created_at")
     @classmethod
@@ -163,6 +164,8 @@ class LyricsAlignmentNormalizer:
                 text=line.text,normalized_text=normalize_lexical(line.text),start_seconds=mapped_words[indices[0]].start_seconds,
                 end_seconds=mapped_words[indices[-1]].end_seconds,word_ids=tuple(ids),section_type=section.kind.value)); mapped_lines+=1
         total_lines=len(line_meta); line_coverage=mapped_lines/total_lines if total_lines else 0
+        mapped_line_ids={line.source_lyrics_line_id for line in lines}
+        unmatched_line_ids=tuple(line.line_id for line,_section,_start,_end in line_meta if line.line_id not in mapped_line_ids)
         unmatched_words=tuple(words[i].text for i in range(len(words)) if i not in matched_provider)
         unmatched_lyrics=tuple(targets[i][0] for i in range(len(targets)) if i not in matched_expected)
         unmatched_word_ratio=len(unmatched_words)/len(words)
@@ -194,7 +197,8 @@ class LyricsAlignmentNormalizer:
             audio_sha256=sha,provider_task_id=task_id,provider_audio_id=audio_id,audio_duration_seconds=duration,
             language=language,source=source,granularity="word",lines=tuple(lines),words=tuple(mapped_words),sections=tuple(sections),
             mapping_confidence=len(matched_expected)/max(1,len(expected)),unmatched_provider_tokens=unmatched_words,
-            unmatched_lyrics_tokens=unmatched_lyrics,status=status,retrieval_status="retrieved",created_at=datetime.now(timezone.utc))
+            unmatched_lyrics_tokens=unmatched_lyrics,unmatched_lyrics_line_ids=unmatched_line_ids,
+            status=status,retrieval_status="retrieved",created_at=datetime.now(timezone.utc))
 
 
 class LyricsAlignmentStore:

@@ -16,6 +16,9 @@ def main():
         alignment=LyricsAlignment.model_validate_json((project.music_directory/f"alignment-{plan.variant_id}.json").read_text(encoding="utf-8"))
         lines={line.line_id:line for line in alignment.lines}; words={word.word_id:word for word in alignment.words}
         print(f"Variant: {plan.variant_id}")
+        print(f"Alignment path: {project.music_directory/f'alignment-{plan.variant_id}.json'}")
+        print(f"EDL path: {path}")
+        print("Sync plan status: "+("valid" if plan.synchronization_valid else "invalid"))
         for decision in plan.decisions:
             lyric=" | ".join(lines[value].text for value in decision.alignment_line_ids if value in lines) or "instrumental"
             important=", ".join(f"{words[value].text}@{words[value].start_seconds:.2f}" for value in decision.alignment_word_ids if value in words)
