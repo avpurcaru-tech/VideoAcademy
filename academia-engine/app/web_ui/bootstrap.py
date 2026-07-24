@@ -1,5 +1,5 @@
-"""Single composition root for local web UI production adapters (Sprint 19.1)."""
-import os,re
+"""Local configuration and the single web-UI composition root."""
+import json,os,re
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -16,20 +16,88 @@ from .planning_review import PlanningBuildResult,PlanningReviewService
 
 class RuntimeMode(str,Enum): TEST="test"; DRY_RUN="dry_run"; PRODUCTION="production"
 class VisualAssetProviderKind(str,Enum): KLING="kling"; FAKE="fake"; DISABLED="disabled"
+
+class SecretValue:
+    """A deliberately non-serializable secret requiring explicit access."""
+    __slots__=("__value",)
+    def __init__(self,value): self.__value=str(value)
+    def reveal(self): return self.__value
+    def __repr__(self): return "SecretValue(***)"
+    __str__=__repr__
+
 @dataclass(frozen=True)
+class ServerSettings: host:str="127.0.0.1"; port:int=8080; open_browser:bool=True; allow_non_loopback:bool=False
+@dataclass(frozen=True)
+class SunoSettings: enabled:bool=False; base_url:str="https://api.sunoapi.org"; api_key:SecretValue|None=None; timeout_seconds:float=30; model:str="V4_5"; callback_url:str|None=None
+@dataclass(frozen=True)
+class LyricsProviderSettings: provider:str="openai"; enabled:bool=False; api_key:SecretValue|None=None; model:str|None="gpt-5-mini"
+@dataclass(frozen=True)
+class AssetProviderSettings: provider:str="disabled"; enabled:bool=False; api_key:SecretValue|None=None; base_url:str|None=None
+@dataclass(frozen=True)
+class FFmpegSettings: enabled:bool=True; executable:str="ffmpeg"; timeout_seconds:float=300
+
+@dataclass(frozen=True,init=False)
 class ApplicationSettings:
-    projects_root:Path=Path(".runtime/projects"); openai_api_key:str|None=None; openai_lyrics_model:str="gpt-5-mini"
-    suno_api_key:str|None=None; suno_base_url:str="https://api.sunoapi.org"; suno_model:str="V4_5"
-    suno_callback_url:str|None=None; request_timeout_seconds:float=30; asset_provider_kind:VisualAssetProviderKind=VisualAssetProviderKind.DISABLED
-    ffmpeg_executable:str="ffmpeg"
+    runtime_mode:RuntimeMode; projects_root:Path; server:ServerSettings; suno:SunoSettings; lyrics:LyricsProviderSettings; assets:AssetProviderSettings; ffmpeg:FFmpegSettings
+    def __init__(self,runtime_mode=RuntimeMode.DRY_RUN,projects_root=Path(".runtime/projects"),server=None,suno=None,lyrics=None,assets=None,ffmpeg=None,**legacy):
+        def secret(value): return value if isinstance(value,SecretValue) else SecretValue(value) if value else None
+        if server is None: server=ServerSettings()
+        if lyrics is None: lyrics=LyricsProviderSettings(enabled=bool(legacy.get("openai_api_key")),api_key=secret(legacy.get("openai_api_key")),model=legacy.get("openai_lyrics_model","gpt-5-mini"))
+        if suno is None: suno=SunoSettings(enabled=bool(legacy.get("suno_api_key")),api_key=secret(legacy.get("suno_api_key")),base_url=legacy.get("suno_base_url","https://api.sunoapi.org"),model=legacy.get("suno_model","V4_5"),callback_url=legacy.get("suno_callback_url"),timeout_seconds=float(legacy.get("request_timeout_seconds",30)))
+        if assets is None: assets=AssetProviderSettings(provider=str(getattr(legacy.get("asset_provider_kind","disabled"),"value",legacy.get("asset_provider_kind","disabled"))))
+        if ffmpeg is None: ffmpeg=FFmpegSettings(executable=legacy.get("ffmpeg_executable","ffmpeg"))
+        for name,value in (("runtime_mode",RuntimeMode(runtime_mode)),("projects_root",Path(projects_root)),("server",server),("suno",suno),("lyrics",lyrics),("assets",assets),("ffmpeg",ffmpeg)): object.__setattr__(self,name,value)
+        self.validate()
+    @property
+    def openai_api_key(self): return self.lyrics.api_key.reveal() if self.lyrics.api_key else None
+    @property
+    def openai_lyrics_model(self): return self.lyrics.model
+    @property
+    def suno_api_key(self): return self.suno.api_key.reveal() if self.suno.api_key else None
+    @property
+    def suno_base_url(self): return self.suno.base_url
+    @property
+    def suno_model(self): return self.suno.model
+    @property
+    def suno_callback_url(self): return self.suno.callback_url
+    @property
+    def request_timeout_seconds(self): return self.suno.timeout_seconds
+    @property
+    def asset_provider_kind(self):
+        try: return VisualAssetProviderKind(self.assets.provider)
+        except ValueError: return VisualAssetProviderKind.DISABLED
+    @property
+    def ffmpeg_executable(self): return self.ffmpeg.executable
+    def validate(self):
+        if self.server.host not in {"127.0.0.1","localhost","::1"} and not self.server.allow_non_loopback: raise ValueError("non-loopback host requires --allow-non-loopback")
+        if not 1<=self.server.port<=65535: raise ValueError("server port must be between 1 and 65535")
+        for name,value in (("Suno",self.suno.timeout_seconds),("FFmpeg",self.ffmpeg.timeout_seconds)):
+            if value<=0: raise ValueError(f"{name} timeout must be positive")
+        for name,url in (("Suno",self.suno.base_url),("asset",self.assets.base_url)):
+            if url and not re.match(r"^https?://[^\s/]+",url): raise ValueError(f"{name} base URL is invalid")
+        if self.suno.enabled and (not self.suno.api_key or not self.suno.callback_url): raise ValueError("enabled Suno provider requires API key and callback URL")
+        if self.lyrics.enabled and (not self.lyrics.provider or not self.lyrics.api_key): raise ValueError("enabled lyrics provider requires provider and API key")
+        if self.assets.enabled and (not self.assets.provider or not self.assets.api_key): raise ValueError("enabled asset provider requires provider and API key")
+        if not str(self.projects_root): raise ValueError("projects root is required")
+        return self
     @classmethod
-    def from_environment(cls,environ=None):
-        values=dict(os.environ if environ is None else environ)
-        return cls(projects_root=Path(values.get("ACADEMIA_PROJECTS_ROOT",".runtime/projects")),openai_api_key=values.get("OPENAI_API_KEY"),
-            openai_lyrics_model=values.get("OPENAI_LYRICS_MODEL","gpt-5-mini"),suno_api_key=values.get("SUNOAPI_ORG_API_KEY"),
-            suno_base_url=values.get("SUNOAPI_ORG_BASE_URL","https://api.sunoapi.org"),suno_model=values.get("SUNOAPI_ORG_MODEL","V4_5"),
-            suno_callback_url=values.get("SUNOAPI_ORG_CALLBACK_URL"),request_timeout_seconds=float(values.get("SUNOAPI_ORG_TIMEOUT_SECONDS","30")),
-            asset_provider_kind=VisualAssetProviderKind(values.get("VISUAL_ASSET_PROVIDER","disabled")),ffmpeg_executable=values.get("FFMPEG_EXECUTABLE","ffmpeg"))
+    def load(cls,config_path=None,environ=None,cli=None):
+        env=dict(os.environ if environ is None else environ); data={}
+        if config_path:
+            data=json.loads(Path(config_path).read_text(encoding="utf-8"))
+        cli={k:v for k,v in (cli or {}).items() if v is not None}
+        def choose(section,key,env_key,default=None): return cli.get(key,env.get(env_key,data.get(section,{}).get(key,default)))
+        def boolean(value): return value if isinstance(value,bool) else str(value).casefold() in {"1","true","yes","on"}
+        lyrics_key=choose("lyrics","api_key","ACADEMIA_LYRICS_API_KEY",env.get("OPENAI_API_KEY")); suno_key=choose("suno","api_key","ACADEMIA_SUNO_API_KEY",env.get("SUNOAPI_ORG_API_KEY")); asset_key=choose("assets","api_key","ACADEMIA_ASSET_API_KEY")
+        settings=cls(runtime_mode=choose("application","runtime_mode","ACADEMIA_RUNTIME_MODE","dry_run"),projects_root=choose("application","projects_root","ACADEMIA_PROJECTS_ROOT",".runtime/projects"),
+            server=ServerSettings(host=choose("server","host","ACADEMIA_SERVER_HOST","127.0.0.1"),port=int(choose("server","port","ACADEMIA_SERVER_PORT",8080)),open_browser=boolean(choose("server","open_browser","ACADEMIA_OPEN_BROWSER",True)),allow_non_loopback=boolean(cli.get("allow_non_loopback",False))),
+            suno=SunoSettings(enabled=boolean(choose("suno","enabled","ACADEMIA_SUNO_ENABLED",False)),base_url=choose("suno","base_url","ACADEMIA_SUNO_BASE_URL","https://api.sunoapi.org"),api_key=SecretValue(suno_key) if suno_key else None,timeout_seconds=float(choose("suno","timeout_seconds","ACADEMIA_SUNO_TIMEOUT_SECONDS",30)),model=choose("suno","model","ACADEMIA_SUNO_MODEL","V4_5"),callback_url=choose("suno","callback_url","ACADEMIA_SUNO_CALLBACK_URL")),
+            lyrics=LyricsProviderSettings(provider=choose("lyrics","provider","ACADEMIA_LYRICS_PROVIDER","openai"),enabled=boolean(choose("lyrics","enabled","ACADEMIA_LYRICS_ENABLED",False)),api_key=SecretValue(lyrics_key) if lyrics_key else None,model=choose("lyrics","model","ACADEMIA_LYRICS_MODEL","gpt-5-mini")),
+            assets=AssetProviderSettings(provider=choose("assets","provider","ACADEMIA_ASSET_PROVIDER","disabled"),enabled=boolean(choose("assets","enabled","ACADEMIA_ASSET_ENABLED",False)),api_key=SecretValue(asset_key) if asset_key else None,base_url=choose("assets","base_url","ACADEMIA_ASSET_BASE_URL")),
+            ffmpeg=FFmpegSettings(enabled=boolean(choose("ffmpeg","enabled","ACADEMIA_FFMPEG_ENABLED",True)),executable=choose("ffmpeg","executable","ACADEMIA_FFMPEG_EXECUTABLE","ffmpeg"),timeout_seconds=float(choose("ffmpeg","timeout_seconds","ACADEMIA_FFMPEG_TIMEOUT_SECONDS",300))))
+        return settings
+    @classmethod
+    def from_environment(cls,environ=None): return cls.load(environ=environ)
 @dataclass(frozen=True)
 class ProviderAvailability:
     provider_name:str; configured:bool; available:bool; reason:str|None=None

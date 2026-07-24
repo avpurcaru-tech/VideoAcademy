@@ -25,7 +25,7 @@ class LocalWebApplication:
             lyrics_provider=services.lyrics_provider; music_provider=services.music_provider; planning_builders=services.planning_builders
             asset_provider=services.asset_provider; composition_renderer=services.composition_renderer
         self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider; self.music_provider=music_provider
-        self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider; self.composition_renderer=composition_renderer; self.services=services
+        self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider; self.composition_renderer=composition_renderer; self.services=services; self.settings=None
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
         if method=="GET" and route=="/projects/new": return WebResponse(200,self._new_project_form())
@@ -153,6 +153,7 @@ class LocalWebApplication:
             return WebResponse(303,"",headers={"Location":f"/projects/{project_id}"})
         if route=="/health": return self._json(200,{"status":"ok"})
         if route=="/": return WebResponse(200,self._index())
+        if route=="/settings": return WebResponse(200,self._settings_page())
         if route.startswith("/static/"):
             name=route.removeprefix("/static/")
             if "/" in name or "\\" in name: return WebResponse(404,"Not found","text/plain")
@@ -177,6 +178,18 @@ class LocalWebApplication:
         availability=""
         if self.services is not None: availability='<section><h2>Provider availability</h2><ul>'+"".join(f'<li>{html.escape(x.provider_name)}: {html.escape(x.label)}</li>' for x in self.services.availability)+"</ul></section>"
         return self._page("Proiecte",f'<main><h1>Academia Video Engine</h1><h2>Proiecte</h2><a class="button" href="/projects/new">Episod nou</a><ul>{projects}</ul>{availability}</main>')
+    def _settings_page(self):
+        if self.settings is None: return self._page("Settings","<main><h1>Settings</h1><p>Configuration unavailable.</p></main>")
+        settings=self.settings; available={x.provider_name:x.label for x in (self.services.availability if self.services else ())}
+        rows=(("Lyrics",settings.lyrics.provider,settings.lyrics.enabled,bool(settings.lyrics.api_key),available.get("lyrics","Unavailable")),
+            ("Suno","sunoapi.org",settings.suno.enabled,bool(settings.suno.api_key),available.get("music","Unavailable")),
+            ("Assets",settings.assets.provider,settings.assets.enabled,bool(settings.assets.api_key),available.get("assets","Unavailable")),
+            ("FFmpeg",settings.ffmpeg.executable,settings.ffmpeg.enabled,True,available.get("composition","Unavailable")))
+        providers="".join(f'<tr><th>{html.escape(label)}</th><td>{html.escape(name)}</td><td>{"yes" if enabled else "no"}</td><td>{"yes" if configured else "no"}</td><td>{html.escape(status)}</td></tr>' for label,name,enabled,configured,status in rows)
+        content=(f'<main><a href="/">← Proiecte</a><h1>Settings</h1><dl><dt>Runtime mode</dt><dd>{html.escape(settings.runtime_mode.value)}</dd>'
+            f'<dt>Projects root</dt><dd>{html.escape(str(settings.projects_root))}</dd><dt>Server</dt><dd>{html.escape(settings.server.host)}:{settings.server.port}</dd></dl>'
+            f'<table><thead><tr><th>Type</th><th>Provider</th><th>Enabled</th><th>Configured</th><th>Availability</th></tr></thead><tbody>{providers}</tbody></table></main>')
+        return self._page("Settings",content)
     def _new_project_form(self,values=None,errors=()):
         values=values or {}; error_html="" if not errors else '<div class="errors" role="alert">Datele formularului nu sunt valide.</div>'
         def field(name,label,kind="text",required=True):
@@ -316,7 +329,8 @@ class LocalWebApplication:
 
 def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None,services=None):
     return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders,asset_provider,composition_renderer,services)
-def create_app(*,settings,services): return create_application(settings.projects_root,services=services)
+def create_app(*,settings,services):
+    application=create_application(settings.projects_root,services=services); application.settings=settings; return application
 def serve(application,host="127.0.0.1",port=8080):
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):

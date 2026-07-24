@@ -1,0 +1,31 @@
+{
+  "application": {
+    "runtime_mode": "dry_run",
+    "projects_root": ".runtime/projects"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8080,
+    "open_browser": true
+  },
+  "lyrics": {
+    "provider": "openai",
+    "enabled": false,
+    "model": "gpt-5-mini"
+  },
+  "suno": {
+    "enabled": false,
+    "base_url": "https://api.sunoapi.org",
+    "timeout_seconds": 30,
+    "model": "V4_5"
+  },
+  "assets": {
+    "provider": "disabled",
+    "enabled": false
+  },
+  "ffmpeg": {
+    "enabled": true,
+    "executable": "ffmpeg",
+    "timeout_seconds": 300
+  }
+}
