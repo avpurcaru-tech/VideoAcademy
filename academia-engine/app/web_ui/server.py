@@ -13,6 +13,8 @@ from .assets import (AssetBlockedError,AssetCostConfirmationRequired,AssetGenera
     AssetReviewError,AssetReviewService)
 from .composition import (CompositionBlockedError,CompositionReviewService,CompositionUiError,
     RenderConfirmationRequired)
+from .job_recovery import (DuplicateCostWarningRequired,JobConfirmationRequired,JobNotFound,
+    JobRecoveryService)
 from pydantic import ValidationError
 
 ROOT=Path(__file__).parent
@@ -20,14 +22,29 @@ class WebResponse:
     def __init__(self,status,body,content_type="text/html; charset=utf-8",headers=None):
         self.status=status; self.body=body.encode("utf-8") if isinstance(body,str) else body; self.content_type=content_type; self.headers=headers or {}
 class LocalWebApplication:
-    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None,services=None):
+    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None,services=None,recovery_service=None):
         if services is not None:
             lyrics_provider=services.lyrics_provider; music_provider=services.music_provider; planning_builders=services.planning_builders
             asset_provider=services.asset_provider; composition_renderer=services.composition_renderer
         self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider; self.music_provider=music_provider
         self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider; self.composition_renderer=composition_renderer; self.services=services; self.settings=None
+        self.recovery_service=recovery_service or JobRecoveryService(self.projects.root)
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
+        job_parts=route.strip("/").split("/")
+        if method=="GET" and route=="/jobs": return WebResponse(200,self._jobs_page(self.recovery_service.scan()))
+        if method=="GET" and len(job_parts)==3 and job_parts[0]=="projects" and job_parts[2]=="jobs":
+            return WebResponse(200,self._jobs_page(self.recovery_service.scan(job_parts[1]),job_parts[1]))
+        if method=="POST" and len(job_parts)==3 and job_parts[0]=="jobs" and job_parts[2] in {"refresh","resume","fail","abandon"}:
+            values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}; action=job_parts[2]
+            try:
+                if action=="refresh": self.recovery_service.refresh_job(job_parts[1],confirm_external_check=values.get("confirm") == "yes")
+                elif action=="resume": self.recovery_service.resume_job(job_parts[1],confirm_resume=values.get("confirm") == "yes")
+                elif action=="fail": self.recovery_service.mark_failed(job_parts[1],values.get("reason") or "Marked failed by user.")
+                else: self.recovery_service.abandon(job_parts[1])
+            except (JobConfirmationRequired,DuplicateCostWarningRequired) as error: return WebResponse(422,self._jobs_page(self.recovery_service.scan(),error=str(error)))
+            except JobNotFound: return WebResponse(404,"Job not found")
+            return WebResponse(303,"",headers={"Location":"/jobs"})
         if method=="GET" and route=="/projects/new": return WebResponse(200,self._new_project_form())
         if method=="POST" and route=="/projects":
             values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
@@ -178,6 +195,16 @@ class LocalWebApplication:
         availability=""
         if self.services is not None: availability='<section><h2>Provider availability</h2><ul>'+"".join(f'<li>{html.escape(x.provider_name)}: {html.escape(x.label)}</li>' for x in self.services.availability)+"</ul></section>"
         return self._page("Proiecte",f'<main><h1>Academia Video Engine</h1><h2>Proiecte</h2><a class="button" href="/projects/new">Episod nou</a><ul>{projects}</ul>{availability}</main>')
+    def _jobs_page(self,report,project_id=None,error=None):
+        error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""; rows=[]
+        for job in report.jobs:
+            provider_id="—" if not job.provider_job_id else (job.provider_job_id[:4]+"…"+job.provider_job_id[-3:] if len(job.provider_job_id)>9 else "***")
+            base=f"/jobs/{job.job_id}"; actions=(f'<form method="post" action="{base}/refresh"><input type="hidden" name="confirm" value="yes"><button>Verifică status</button></form>'
+                f'<form method="post" action="{base}/resume"><input type="hidden" name="confirm" value="yes"><button>Reia jobul</button></form>'
+                f'<form method="post" action="{base}/fail"><button>Marchează eșuat</button></form><form method="post" action="{base}/abandon"><button>Abandonează jobul</button></form>')
+            rows.append(f'<article class="stage-card"><h2>{html.escape(job.project_id)} · {html.escape(job.stage)}</h2><dl><dt>Provider</dt><dd>{html.escape(job.provider)}</dd><dt>Status local</dt><dd>{job.status.value}</dd><dt>Status provider</dt><dd>{html.escape(job.last_known_provider_status or "—")}</dd><dt>Provider job ID</dt><dd>{html.escape(provider_id)}</dd><dt>Ultima eroare</dt><dd>{html.escape(job.error_message or "—")}</dd></dl><div class="stage-actions">{actions}</div></article>')
+        scope=f" pentru proiectul {html.escape(project_id)}" if project_id else ""
+        return self._page("Job recovery",f'<main><a href="/">← Proiecte</a><h1>Joburi întrerupte{scope}</h1>{error_html}{"".join(rows) or "<p>Nu există joburi.</p>"}</main>')
     def _settings_page(self):
         if self.settings is None: return self._page("Settings","<main><h1>Settings</h1><p>Configuration unavailable.</p></main>")
         settings=self.settings; available={x.provider_name:x.label for x in (self.services.availability if self.services else ())}
@@ -327,8 +354,8 @@ class LocalWebApplication:
     @staticmethod
     def _json(status,payload): return WebResponse(status,json.dumps(payload,ensure_ascii=False,sort_keys=True),"application/json; charset=utf-8")
 
-def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None,services=None):
-    return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders,asset_provider,composition_renderer,services)
+def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None,services=None,recovery_service=None):
+    return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders,asset_provider,composition_renderer,services,recovery_service)
 def create_app(*,settings,services):
     application=create_application(settings.projects_root,services=services); application.settings=settings; return application
 def serve(application,host="127.0.0.1",port=8080):
