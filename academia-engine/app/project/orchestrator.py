@@ -136,13 +136,19 @@ class ProjectGenerationService:
             scene_planner=SemanticScenePlanner()
             visual_plans=VisualPlanRepository(record.music_directory.parent/"visual")
             visual_planner=ProviderNeutralVisualPlanner(); visual_style=default_visual_style(visual_planner.configuration)
+            from app.prompt_generation import (PromptBuilder,PromptProvider,PromptRepository,
+                default_prompt_capabilities)
+            prompt_builder=PromptBuilder(); prompt_repository=PromptRepository(record.music_directory.parent/"visual"/"prompts")
             for index,timeline in enumerate(timelines,1):
                 variant_id=f"variant-{index:02d}"; alignment_path=record.music_directory/f"alignment-{variant_id}.json"
                 if alignment_path.is_file():
                     alignment=LyricsAlignment.model_validate_json(alignment_path.read_text(encoding="utf-8"))
                     scene_plan,_reused=scene_plans.resolve_or_build(record.project_id,alignment,lyrics,scene_planner,storyboard,timeline)
-                    visual_plans.resolve_or_build(scene_plan=scene_plan,planner=visual_planner,global_style=visual_style,
-                        aspect_ratio=AspectRatio.LANDSCAPE_16_9)
+                    visual_plan,_visual_reused=visual_plans.resolve_or_build(scene_plan=scene_plan,planner=visual_planner,
+                        global_style=visual_style,aspect_ratio=AspectRatio.LANDSCAPE_16_9)
+                    for prompt_provider in (PromptProvider.GENERIC_IMAGE,PromptProvider.GENERIC_VIDEO):
+                        prompt_repository.resolve_or_build(visual_plan=visual_plan,builder=prompt_builder,
+                            provider=prompt_provider,capabilities=default_prompt_capabilities(prompt_provider))
             record=self._status(record,ProjectStatus.TIMELINES_READY)
             from app.providers import KlingProviderRegistry
             from app.video_coverage import (VideoCoverageConfiguration,VideoCoveragePlan,VideoCoveragePlanner)
