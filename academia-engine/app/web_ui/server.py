@@ -11,6 +11,8 @@ from .music import MusicBlockedError,MusicCostConfirmationRequired,MusicStageSer
 from .planning_review import PlanningReviewError,PlanningReviewService,PlanningStageBlocked
 from .assets import (AssetBlockedError,AssetCostConfirmationRequired,AssetGenerationFailure,
     AssetReviewError,AssetReviewService)
+from .composition import (CompositionBlockedError,CompositionReviewService,CompositionUiError,
+    RenderConfirmationRequired)
 from pydantic import ValidationError
 
 ROOT=Path(__file__).parent
@@ -18,9 +20,9 @@ class WebResponse:
     def __init__(self,status,body,content_type="text/html; charset=utf-8",headers=None):
         self.status=status; self.body=body.encode("utf-8") if isinstance(body,str) else body; self.content_type=content_type; self.headers=headers or {}
 class LocalWebApplication:
-    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None):
+    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None):
         self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider; self.music_provider=music_provider
-        self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider
+        self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider; self.composition_renderer=composition_renderer
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
         if method=="GET" and route=="/projects/new": return WebResponse(200,self._new_project_form())
@@ -111,6 +113,26 @@ class LocalWebApplication:
                         version=int(asset_parts[5].removeprefix("version-")); path,metadata=service.preview_path(scene_id,version)
                         return WebResponse(200,path.read_bytes(),metadata.content_type)
                     except (ValueError,OSError): return WebResponse(404,"Asset preview not found")
+        composition_parts=route.strip("/").split("/")
+        if len(composition_parts)>=3 and composition_parts[0]=="projects" and composition_parts[2]=="composition":
+            project_id=composition_parts[1]; project=self.projects.root/project_id
+            if not (project/"project.json").is_file(): return WebResponse(404,"Project not found")
+            service=CompositionReviewService(project,self.composition_renderer)
+            if method=="GET" and len(composition_parts)==3: return WebResponse(200,self._composition_page(project_id,service))
+            if method=="GET" and len(composition_parts)==6 and composition_parts[3]=="versions" and composition_parts[5]=="preview":
+                try: path=service.preview_path(int(composition_parts[4])); return WebResponse(200,path.read_bytes(),"video/mp4")
+                except (ValueError,OSError): return WebResponse(404,"Final preview not found")
+            if method=="POST" and len(composition_parts)==4:
+                action=composition_parts[3]; values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
+                try:
+                    if action=="preflight": service.preflight()
+                    elif action=="render": service.render(confirmed=values.get("confirm_render")=="yes")
+                    elif action=="approve": service.approve(int(values["version"]))
+                    elif action=="reject": service.reject(int(values["version"]))
+                    else: return WebResponse(404,"Invalid composition action")
+                except (CompositionUiError,CompositionBlockedError,RenderConfirmationRequired,ValueError,KeyError) as error:
+                    return WebResponse(422,self._composition_page(project_id,service,error=str(error)))
+                return WebResponse(303,"",headers={"Location":f"/projects/{project_id}/composition"})
         action_prefix="/projects/"
         if method=="POST" and route.startswith(action_prefix) and "/stages/" in route:
             parts=route.strip("/").split("/")
@@ -177,6 +199,7 @@ class LocalWebApplication:
         labels["visual_plan"]=f'<a href="/projects/{html.escape(state.project_id)}/visual-plan">Visual Plan</a>'
         labels["prompts"]=f'<a href="/projects/{html.escape(state.project_id)}/prompts">Prompturi</a>'
         labels["assets"]=f'<a href="/projects/{html.escape(state.project_id)}/assets">Assets</a>'
+        labels["composition"]=f'<a href="/projects/{html.escape(state.project_id)}/composition">Compoziție</a>'
         cards="".join(f'<article class="stage-card" data-stage="{x.stage.value}"><h2>{labels[x.stage.value]}</h2>'
             f'<dl><dt>Status</dt><dd>{x.status.value}</dd><dt>Versiune curentă</dt><dd>{x.current_version}</dd>'
             f'<dt>Versiune aprobată</dt><dd>{x.approved_version or "—"}</dd><dt>Motiv blocare</dt><dd>{html.escape(x.blocked_reason or "—")}</dd>'
@@ -258,6 +281,21 @@ class LocalWebApplication:
             if scene.selected_version is not None: actions+=f'<form method="post" action="{base}/approve"><button>Aprobă</button></form><form method="post" action="{base}/reject"><button>Respinge</button></form>'
             cards.append(f'<article class="asset-scene"><h2>{html.escape(prompt.scene_id)}</h2><p>Prompt: {html.escape(prompt.positive_prompt)}</p><p>Status: {scene.status.value}</p><p>Versiune: {scene.selected_version or "—"}</p><div class="stage-actions">{actions}</div><details><summary>Vezi istoric</summary>{"".join(versions)}</details></article>')
         return self._page("Assets",f'<main><a href="/projects/{project_id}">← Proiect</a><h1>Assets</h1>{error_html}{"".join(cards) or "<p>Nu există prompturi.</p>"}</main>')
+    def _composition_page(self,project_id,service,error=None):
+        error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""; preflight=service.last_preflight()
+        if preflight:
+            checks="".join(f'<li class="{"pass" if x.passed else "fail"}">{html.escape(x.name)}: {"OK" if x.passed else "FAIL"} — {html.escape(x.detail)}</li>' for x in preflight.checks)
+            preflight_html=f'<section><h2>Preflight: {"READY" if preflight.ready else "BLOCKED"}</h2><ul>{checks}</ul><pre>{html.escape(json.dumps({"assets":preflight.asset_summary,"music":preflight.music_summary,"edl":[x.model_dump(mode="json") for x in (preflight.request.edl if preflight.request else ())]},ensure_ascii=False,sort_keys=True,indent=2))}</pre></section>'
+        else: preflight_html="<p>Preflight nu a fost rulat.</p>"
+        versions=[]
+        for value in reversed(service.versions()):
+            preview=f"/projects/{project_id}/composition/versions/{value.version}/preview"
+            actions=f'<form method="post" action="/projects/{project_id}/composition/approve"><input type="hidden" name="version" value="{value.version}"><button>Aprobă final</button></form><form method="post" action="/projects/{project_id}/composition/reject"><input type="hidden" name="version" value="{value.version}"><button>Respinge</button></form>'
+            versions.append(f'<section><h2>Randare {value.version} — {value.status.value}</h2><p>Durată: {value.duration_seconds}</p><video controls preload="none" src="{preview}"></video><div class="stage-actions">{actions}</div></section>')
+        controls=(f'<form method="post" action="/projects/{project_id}/composition/preflight"><button>Preflight</button></form>'
+            f'<form method="post" action="/projects/{project_id}/composition/render"><label><input type="checkbox" name="confirm_render" value="yes" required> Confirmă randarea FFmpeg</label><button>Compune videoclipul</button></form>')
+        if versions: controls+=f'<form method="post" action="/projects/{project_id}/composition/render"><input type="hidden" name="confirm_render" value="yes"><button>Randează din nou</button></form>'
+        return self._page("Compoziție",f'<main><a href="/projects/{project_id}">← Proiect</a><h1>Compoziție finală</h1>{error_html}<div class="stage-actions">{controls}</div>{preflight_html}{"".join(versions)}</main>')
     @staticmethod
     def _stage_actions(project_id,stage):
         base=f"/projects/{project_id}/stages/{stage.stage.value}"; controls=[]
@@ -271,8 +309,8 @@ class LocalWebApplication:
     @staticmethod
     def _json(status,payload): return WebResponse(status,json.dumps(payload,ensure_ascii=False,sort_keys=True),"application/json; charset=utf-8")
 
-def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None):
-    return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders,asset_provider)
+def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None,asset_provider=None,composition_renderer=None):
+    return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders,asset_provider,composition_renderer)
 def serve(application,host="127.0.0.1",port=8080):
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):

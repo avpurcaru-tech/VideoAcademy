@@ -8,7 +8,7 @@ from pydantic import BaseModel,ConfigDict,Field
 
 from app.scene_planning import semantic_sha256
 from .planning_review import AssetStalenessState,PlanningReviewService
-from .workflow import WorkflowActionService,WorkflowStageStatus,WorkflowStateMachine,WorkflowStateRepository
+from .workflow import ArtifactVersion,WorkflowActionService,WorkflowStageStatus,WorkflowStateMachine,WorkflowStateRepository
 
 class AssetReviewError(RuntimeError): pass
 class AssetBlockedError(AssetReviewError): pass
@@ -89,7 +89,7 @@ class AssetReviewService:
     def approve(self,scene_id):
         scene=self.state().scene(scene_id)
         if scene.selected_version is None: raise ValueError("An asset version must be selected.")
-        self.metadata(scene_id,scene.selected_version); updated=scene.model_copy(update={"approved_version":scene.selected_version,"status":AssetJobStatus.APPROVED}); self._update(updated); return updated
+        self.metadata(scene_id,scene.selected_version); updated=scene.model_copy(update={"approved_version":scene.selected_version,"status":AssetJobStatus.APPROVED}); self._update(updated); self._approve_global_if_complete(); return updated
     def reject(self,scene_id):
         scene=self.state().scene(scene_id)
         if scene.selected_version is None: raise ValueError("An asset version must be selected.")
@@ -108,6 +108,16 @@ class AssetReviewService:
         repository=WorkflowStateRepository(self.project); state,_=repository.resolve(self.project.name); current=state.stage("assets")
         changed=current.model_copy(update={"status":WorkflowStageStatus.GENERATED,"blocked_reason":None})
         repository.save(WorkflowStateMachine()._state(state.project_id,tuple(changed if x.stage.value=="assets" else x for x in state.stages),state.warnings))
+    def _approve_global_if_complete(self):
+        required={x.scene_id for x in self.prompts()}; state_assets=self.state()
+        if not required or any(state_assets.scene(x).status!=AssetJobStatus.APPROVED for x in required): return
+        repository=WorkflowStateRepository(self.project); workflow,_=repository.resolve(self.project.name); current=workflow.stage("assets")
+        number=max(current.current_version,1); digest=semantic_sha256(state_assets)
+        versions=current.versions or (ArtifactVersion(version=number,artifact_path="assets/state.json",semantic_sha256=digest),)
+        changed=current.model_copy(update={"status":WorkflowStageStatus.APPROVED,"current_version":number,
+            "selected_version":number,"approved_version":number,"versions":versions,"blocked_reason":None})
+        updated=WorkflowStateMachine()._state(workflow.project_id,tuple(changed if x.stage.value=="assets" else x for x in workflow.stages),workflow.warnings)
+        repository.save(WorkflowStateMachine().recalculate(updated))
     def _clear_prompt_stale(self,scene_id):
         path=self.project/"workflow"/"asset-staleness.json"
         if not path.is_file(): return
