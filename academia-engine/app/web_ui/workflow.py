@@ -54,7 +54,7 @@ class ProjectWorkflowState(BaseModel):
     def stage(self,value): return next(x for x in self.stages if x.stage==WorkflowStage(value))
 
 DEPENDENCY_PAIRS=((WorkflowStage.EPISODE,WorkflowStage.LYRICS,"approved"),(WorkflowStage.LYRICS,WorkflowStage.MUSIC,"approved"),
-    (WorkflowStage.MUSIC,WorkflowStage.ALIGNMENT,"approved"),(WorkflowStage.ALIGNMENT,WorkflowStage.SCENE_PLAN,"valid"),
+    (WorkflowStage.MUSIC,WorkflowStage.ALIGNMENT,"approved"),(WorkflowStage.ALIGNMENT,WorkflowStage.SCENE_PLAN,"approved"),
     (WorkflowStage.SCENE_PLAN,WorkflowStage.VISUAL_PLAN,"approved"),(WorkflowStage.VISUAL_PLAN,WorkflowStage.PROMPTS,"approved"),
     (WorkflowStage.PROMPTS,WorkflowStage.ASSETS,"approved"),(WorkflowStage.ASSETS,WorkflowStage.COMPOSITION,"approved"))
 WORKFLOW_DEPENDENCIES=tuple(WorkflowDependency(upstream=a,downstream=b,requirement=c) for a,b,c in DEPENDENCY_PAIRS)

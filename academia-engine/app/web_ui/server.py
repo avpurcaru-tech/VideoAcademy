@@ -8,6 +8,7 @@ from .project_creation import AtomicProjectCreationService,EpisodeCreationInput
 from .workflow import WorkflowActionService,WorkflowStage,WorkflowAction,WorkflowStateRepository
 from .lyrics import LyricsGenerationFailure,LyricsStageService
 from .music import MusicBlockedError,MusicCostConfirmationRequired,MusicStageService,MusicUiError
+from .planning_review import PlanningReviewError,PlanningReviewService,PlanningStageBlocked
 from pydantic import ValidationError
 
 ROOT=Path(__file__).parent
@@ -15,8 +16,9 @@ class WebResponse:
     def __init__(self,status,body,content_type="text/html; charset=utf-8",headers=None):
         self.status=status; self.body=body.encode("utf-8") if isinstance(body,str) else body; self.content_type=content_type; self.headers=headers or {}
 class LocalWebApplication:
-    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None):
+    def __init__(self,projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None):
         self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider; self.music_provider=music_provider
+        self.planning_builders=planning_builders or {}
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
         if method=="GET" and route=="/projects/new": return WebResponse(200,self._new_project_form())
@@ -66,6 +68,23 @@ class LocalWebApplication:
                 except MusicCostConfirmationRequired as error: return WebResponse(422,self._music_page(project_id,service,error=str(error)))
                 except (MusicBlockedError,MusicUiError,ValueError,KeyError) as error: return WebResponse(422,self._music_page(project_id,service,error=str(error)))
                 return WebResponse(303,"",headers={"Location":f"/projects/{project_id}/music"})
+        planning_parts=route.strip("/").split("/"); route_stages={"alignment":"alignment","scene-plan":"scene_plan","visual-plan":"visual_plan","prompts":"prompts"}
+        if len(planning_parts)>=3 and planning_parts[0]=="projects" and planning_parts[2] in route_stages:
+            project_id=planning_parts[1]; route_stage=planning_parts[2]; stage=route_stages[route_stage]; project=self.projects.root/project_id
+            if not (project/"project.json").is_file(): return WebResponse(404,"Project not found")
+            service=PlanningReviewService(project,self.planning_builders)
+            if method=="GET" and len(planning_parts)==3: return WebResponse(200,self._planning_page(project_id,route_stage,stage,service))
+            if method=="POST" and len(planning_parts)==4:
+                action=planning_parts[3]; values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
+                try:
+                    if action in {"build","rebuild"}: service.build(stage,rebuild=action=="rebuild")
+                    elif stage=="prompts" and action=="edit": service.edit_prompt(values["scene_id"],values.get("positive_prompt",""),values.get("negative_prompt",""))
+                    elif stage=="prompts" and action=="regenerate-scene": service.regenerate_prompt(values["scene_id"],values.get("feedback"))
+                    elif stage=="prompts" and action=="regenerate-all": service.build("prompts",rebuild=True)
+                    else: return WebResponse(404,"Invalid planning action")
+                except (PlanningReviewError,PlanningStageBlocked,ValueError,KeyError) as error:
+                    return WebResponse(422,self._planning_page(project_id,route_stage,stage,service,error=str(error)))
+                return WebResponse(303,"",headers={"Location":f"/projects/{project_id}/{route_stage}"})
         action_prefix="/projects/"
         if method=="POST" and route.startswith(action_prefix) and "/stages/" in route:
             parts=route.strip("/").split("/")
@@ -127,6 +146,10 @@ class LocalWebApplication:
             "prompts":"Prompturi","assets":"Assets","composition":"Compoziție","episode":"Episod"}
         labels["lyrics"]=f'<a href="/projects/{html.escape(state.project_id)}/lyrics">Versuri</a>'
         labels["music"]=f'<a href="/projects/{html.escape(state.project_id)}/music">Muzică</a>'
+        labels["alignment"]=f'<a href="/projects/{html.escape(state.project_id)}/alignment">Alignment</a>'
+        labels["scene_plan"]=f'<a href="/projects/{html.escape(state.project_id)}/scene-plan">Scene Plan</a>'
+        labels["visual_plan"]=f'<a href="/projects/{html.escape(state.project_id)}/visual-plan">Visual Plan</a>'
+        labels["prompts"]=f'<a href="/projects/{html.escape(state.project_id)}/prompts">Prompturi</a>'
         cards="".join(f'<article class="stage-card" data-stage="{x.stage.value}"><h2>{labels[x.stage.value]}</h2>'
             f'<dl><dt>Status</dt><dd>{x.status.value}</dd><dt>Versiune curentă</dt><dd>{x.current_version}</dd>'
             f'<dt>Versiune aprobată</dt><dd>{x.approved_version or "—"}</dd><dt>Motiv blocare</dt><dd>{html.escape(x.blocked_reason or "—")}</dd>'
@@ -171,6 +194,26 @@ class LocalWebApplication:
             f'<form method="post" action="/projects/{project_id}/music/generate">{confirmation}<button>Generează muzică</button></form>'
             f'<form method="post" action="/projects/{project_id}/music/regenerate"><label>Feedback<input name="feedback"></label>{confirmation}<button>Regenerare</button></form>{"".join(blocks)}</main>')
         return self._page("Muzică",content)
+    def _planning_page(self,project_id,route_stage,stage,service,error=None):
+        state=WorkflowStateRepository(service.project).resolve(project_id)[0]; stage_state=state.stage(stage); selected=service.selected(stage)
+        labels={"alignment":"Alignment","scene_plan":"Scene Plan","visual_plan":"Visual Plan","prompts":"Prompturi"}; error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""
+        details="<p>Nicio versiune construită.</p>"
+        if stage=="prompts" and selected:
+            rows=[]
+            for prompt in service.effective_prompts():
+                scene_id=html.escape(prompt.scene_id); positive=html.escape(prompt.positive_prompt); negative=html.escape(prompt.negative_prompt)
+                rows.append(f'<article class="prompt-scene"><h2>{scene_id}</h2><form method="post" action="/projects/{project_id}/prompts/edit"><input type="hidden" name="scene_id" value="{scene_id}"><label>Prompt pozitiv<textarea name="positive_prompt">{positive}</textarea></label><label>Prompt negativ<textarea name="negative_prompt">{negative}</textarea></label><pre>{html.escape(json.dumps(prompt.structured_parameters,ensure_ascii=False,sort_keys=True,indent=2))}</pre><button>Salvează versiune nouă</button></form>'
+                    f'<form method="post" action="/projects/{project_id}/prompts/regenerate-scene"><input type="hidden" name="scene_id" value="{scene_id}"><label>Feedback<input name="feedback"></label><button>Regenerează scena</button></form></article>')
+            details="".join(rows)
+        elif selected:
+            review='<strong>Review required</strong>' if selected.review_required else ""
+            details=f'{review}<pre>{html.escape(json.dumps(selected.data,ensure_ascii=False,sort_keys=True,indent=2))}</pre><h2>Warnings</h2><ul>{"".join(f"<li>{html.escape(x)}</li>" for x in selected.warnings)}</ul>'
+        base=f"/projects/{project_id}/{route_stage}"; workflow_base=f"/projects/{project_id}/stages/{stage}"
+        controls=f'<form method="post" action="{base}/build"><button>Construiește</button></form><form method="post" action="{base}/rebuild"><button>Reconstruiește</button></form>'
+        if stage=="prompts": controls+=f'<form method="post" action="{base}/regenerate-all"><button>Regenerează toate prompturile</button></form>'
+        if stage_state.status.value=="generated": controls+=f'<form method="post" action="{workflow_base}/approve"><button>Aprobă</button></form><form method="post" action="{workflow_base}/reject"><button>Respinge</button></form>'
+        content=f'<main><a href="/projects/{project_id}">← Proiect</a><h1>{labels[stage]}</h1>{error_html}<p>Status: {stage_state.status.value}</p><p>Versiune: {stage_state.selected_version or "—"}</p><div class="stage-actions">{controls}</div>{details}</main>'
+        return self._page(labels[stage],content)
     @staticmethod
     def _stage_actions(project_id,stage):
         base=f"/projects/{project_id}/stages/{stage.stage.value}"; controls=[]
@@ -184,7 +227,7 @@ class LocalWebApplication:
     @staticmethod
     def _json(status,payload): return WebResponse(status,json.dumps(payload,ensure_ascii=False,sort_keys=True),"application/json; charset=utf-8")
 
-def create_application(projects_root=None,lyrics_provider=None,music_provider=None): return LocalWebApplication(projects_root,lyrics_provider,music_provider)
+def create_application(projects_root=None,lyrics_provider=None,music_provider=None,planning_builders=None): return LocalWebApplication(projects_root,lyrics_provider,music_provider,planning_builders)
 def serve(application,host="127.0.0.1",port=8080):
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):

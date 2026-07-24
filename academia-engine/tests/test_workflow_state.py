@@ -22,10 +22,11 @@ class WorkflowStateTests(unittest.TestCase):
         a=self.root/"a.json"; b=self.root/"b.json"; write_workflow_state(a,self.state); write_workflow_state(b,self.state); self.assertEqual(a.read_bytes(),b.read_bytes())
     def test_workflow_state_is_reused(self):
         repo=WorkflowStateRepository(self.root); first,reused=repo.resolve("008"); self.assertFalse(reused); second,reused=repo.resolve("008"); self.assertTrue(reused); self.assertEqual(first,second)
-    def test_alignment_valid_makes_scene_plan_ready(self):
+    def test_alignment_requires_approval_before_scene_plan_ready(self):
         state=self.state
         for stage in ("episode","lyrics","music"): state,_=self.machine.approve(state,stage)
-        state,_=self.machine.set_status(state,"alignment","generated"); self.assertEqual(WorkflowStageStatus.READY,state.stage("scene_plan").status)
+        state,_=self.machine.set_status(state,"alignment","generated"); self.assertEqual(WorkflowStageStatus.BLOCKED,state.stage("scene_plan").status)
+        state,_=self.machine.approve(state,"alignment"); self.assertEqual(WorkflowStageStatus.READY,state.stage("scene_plan").status)
     def test_stage_transition_does_not_execute_next_stage(self):
         state,_=self.machine.approve(self.state,"episode"); self.assertEqual(WorkflowStageStatus.READY,state.stage("lyrics").status); self.assertEqual(0,state.stage("lyrics").current_version)
 
