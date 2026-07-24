@@ -1,5 +1,6 @@
 """Deterministic project workflow state and downstream invalidation."""
 import json,os
+from datetime import datetime,timezone
 from enum import Enum
 from pathlib import Path
 
@@ -20,10 +21,28 @@ class WorkflowWarning(BaseModel):
 class WorkflowDependency(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     upstream:WorkflowStage; downstream:WorkflowStage; requirement:str="approved"
+class ArtifactVersion(BaseModel):
+    model_config=ConfigDict(extra="forbid",frozen=True)
+    version:int=Field(ge=1); artifact_path:str; semantic_sha256:str=Field(pattern=r"^[a-f0-9]{64}$")
+class StageVersionState(BaseModel):
+    model_config=ConfigDict(extra="forbid",frozen=True)
+    current_version:int=Field(default=0,ge=0); approved_version:int|None=Field(default=None,ge=1)
+    selected_version:int|None=Field(default=None,ge=1); versions:tuple[ArtifactVersion,...]=()
+class ApprovalRecord(BaseModel):
+    model_config=ConfigDict(extra="forbid",frozen=True)
+    stage:WorkflowStage; version:int=Field(ge=1); reason:str
+class WorkflowAction(str,Enum):
+    APPROVE="approve"; REJECT="reject"; UNLOCK="unlock"; MARK_GENERATED="mark_generated"
+    MARK_FAILED="mark_failed"; MARK_STALE="mark_stale"; SELECT_VERSION="select_version"
+class WorkflowActionResult(BaseModel):
+    model_config=ConfigDict(extra="forbid",frozen=True)
+    action:WorkflowAction; stage:WorkflowStage; from_status:WorkflowStageStatus; to_status:WorkflowStageStatus
+    version:int|None=None; state:"ProjectWorkflowState"
 class WorkflowStageState(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     stage:WorkflowStage; status:WorkflowStageStatus; current_version:int=Field(default=0,ge=0)
     approved_version:int|None=Field(default=None,ge=1); blocked_reason:str|None=None; last_error:str|None=None
+    selected_version:int|None=Field(default=None,ge=1); versions:tuple[ArtifactVersion,...]=()
 class WorkflowTransition(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     stage:WorkflowStage; previous_status:WorkflowStageStatus; new_status:WorkflowStageStatus; reason:str
@@ -66,6 +85,46 @@ class WorkflowStateMachine:
                 "blocked_reason":f"{stage.value} changed; explicit regeneration is required."}))
             else: stages.append(value)
         return self._state(state.project_id,tuple(stages),state.warnings)
+    def perform(self,state,action,stage,*,reason="",version=None,artifact_path=None,artifact_sha256=None):
+        action=WorkflowAction(action); stage=WorkflowStage(stage); current=state.stage(stage)
+        if action==WorkflowAction.MARK_GENERATED:
+            next_version=current.current_version+1; relative=artifact_path or f"{stage.value}/version-{next_version:03d}.json"
+            if Path(relative).is_absolute() or ".." in Path(relative).parts: raise ValueError("Artifact path must be project-relative.")
+            artifact=ArtifactVersion(version=next_version,artifact_path=relative,
+                semantic_sha256=artifact_sha256 or semantic_sha256({"stage":stage.value,"version":next_version,"path":relative}))
+            changed=current.model_copy(update={"status":WorkflowStageStatus.GENERATED,"current_version":next_version,
+                "selected_version":next_version,"versions":current.versions+(artifact,),"blocked_reason":None,"last_error":None})
+            result=self._replace(state,changed); result=self._stale_after(result,stage)
+        elif action==WorkflowAction.APPROVE:
+            if current.status!=WorkflowStageStatus.GENERATED or current.selected_version is None: raise ValueError("Only a generated version can be approved.")
+            changed=current.model_copy(update={"status":WorkflowStageStatus.APPROVED,"approved_version":current.selected_version})
+            result=self.recalculate(self._replace(state,changed))
+        elif action==WorkflowAction.REJECT:
+            if current.status not in {WorkflowStageStatus.GENERATED,WorkflowStageStatus.APPROVED}: raise ValueError("Only generated or approved stages can be rejected.")
+            changed=current.model_copy(update={"status":WorkflowStageStatus.REJECTED}); result=self._stale_after(self._replace(state,changed),stage)
+        elif action==WorkflowAction.UNLOCK:
+            if current.status!=WorkflowStageStatus.APPROVED: raise ValueError("Only an approved stage can be unlocked.")
+            changed=current.model_copy(update={"status":WorkflowStageStatus.GENERATED}); result=self._stale_after(self._replace(state,changed),stage)
+        elif action==WorkflowAction.SELECT_VERSION:
+            if version is None or version not in {x.version for x in current.versions}: raise ValueError("Selected version does not exist.")
+            changed=current.model_copy(update={"selected_version":version,"status":WorkflowStageStatus.GENERATED})
+            result=self._stale_after(self._replace(state,changed),stage)
+        elif action==WorkflowAction.MARK_FAILED:
+            changed=current.model_copy(update={"status":WorkflowStageStatus.FAILED,"last_error":reason or "Stage failed."}); result=self._replace(state,changed)
+        else:
+            changed=current.model_copy(update={"status":WorkflowStageStatus.STALE,"blocked_reason":reason or "Explicitly marked stale."}); result=self._stale_after(self._replace(state,changed),stage)
+        final=result.stage(stage)
+        return WorkflowActionResult(action=action,stage=stage,from_status=current.status,to_status=final.status,
+            version=final.selected_version,state=result)
+    def _stale_after(self,state,stage):
+        stages=[]; downstream=False
+        for value in state.stages:
+            if value.stage==stage: stages.append(value); downstream=True
+            elif downstream and value.status not in {WorkflowStageStatus.BLOCKED,WorkflowStageStatus.NOT_STARTED}:
+                stages.append(value.model_copy(update={"status":WorkflowStageStatus.STALE,
+                    "blocked_reason":f"{stage.value} changed; explicit regeneration is required."}))
+            else: stages.append(value)
+        return self._state(state.project_id,tuple(stages),state.warnings)
     def recalculate(self,state):
         values={x.stage:x for x in state.stages}
         for dependency in WORKFLOW_DEPENDENCIES:
@@ -97,3 +156,20 @@ class WorkflowStateRepository:
         if self.path.is_file(): return read_workflow_state(self.path),True
         value=WorkflowStateMachine().initial(project_id); write_workflow_state(self.path,value); return value,False
     def save(self,state): write_workflow_state(self.path,state)
+
+class WorkflowActionService:
+    def __init__(self,project_directory):
+        self.project_directory=Path(project_directory); self.repository=WorkflowStateRepository(self.project_directory)
+        self.history_path=self.project_directory/"workflow"/"history.jsonl"
+    def execute(self,project_id,action,stage,*,reason="",version=None,artifact_path=None,artifact_sha256=None):
+        state,_reused=self.repository.resolve(project_id); result=WorkflowStateMachine().perform(state,action,stage,
+            reason=reason,version=version,artifact_path=artifact_path,artifact_sha256=artifact_sha256)
+        self.repository.save(result.state); self._audit(result,reason); return result
+    def _audit(self,result,reason):
+        self.history_path.parent.mkdir(parents=True,exist_ok=True)
+        record={"action":result.action.value,"stage":result.stage.value,"from_status":result.from_status.value,
+            "to_status":result.to_status.value,"version":result.version,"reason":reason,"timestamp":datetime.now(timezone.utc).isoformat()}
+        with self.history_path.open("a",encoding="utf-8",newline="\n") as stream:
+            stream.write(json.dumps(record,ensure_ascii=False,sort_keys=True,separators=(",",":"))+"\n"); stream.flush(); os.fsync(stream.fileno())
+
+WorkflowActionResult.model_rebuild()

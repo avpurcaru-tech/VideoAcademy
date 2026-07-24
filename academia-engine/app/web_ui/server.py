@@ -5,6 +5,7 @@ from urllib.parse import parse_qs,unquote,urlsplit
 
 from .project_service import ReadOnlyProjectService
 from .project_creation import AtomicProjectCreationService,EpisodeCreationInput
+from .workflow import WorkflowActionService,WorkflowStage,WorkflowAction
 from pydantic import ValidationError
 
 ROOT=Path(__file__).parent
@@ -24,6 +25,21 @@ class LocalWebApplication:
             except ValidationError as error: return WebResponse(422,self._new_project_form(values,error.errors()))
             except Exception as error: return WebResponse(409,self._new_project_form(values,({"msg":str(error)},)))
             return WebResponse(303,"",headers={"Location":f"/projects/{manifest.project_id}?created=1"})
+        action_prefix="/projects/"
+        if method=="POST" and route.startswith(action_prefix) and "/stages/" in route:
+            parts=route.strip("/").split("/")
+            if len(parts)!=5 or parts[0]!="projects" or parts[2]!="stages": return WebResponse(404,"Not found")
+            project_id,stage,action=parts[1],parts[3],parts[4]
+            action_map={"approve":WorkflowAction.APPROVE,"reject":WorkflowAction.REJECT,"unlock":WorkflowAction.UNLOCK,
+                "select-version":WorkflowAction.SELECT_VERSION}
+            if action not in action_map or not (self.projects.root/project_id/"project.json").is_file(): return WebResponse(404,"Invalid workflow action")
+            values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
+            try:
+                selected=int(values["version"]) if action=="select-version" else None
+                WorkflowActionService(self.projects.root/project_id).execute(project_id,action_map[action],WorkflowStage(stage),
+                    reason=values.get("reason","").strip(),version=selected)
+            except (ValueError,KeyError) as error: return WebResponse(422,f"Workflow action rejected: {html.escape(str(error))}")
+            return WebResponse(303,"",headers={"Location":f"/projects/{project_id}"})
         if route=="/health": return self._json(200,{"status":"ok"})
         if route=="/": return WebResponse(200,self._index())
         if route.startswith("/static/"):
@@ -71,9 +87,17 @@ class LocalWebApplication:
         cards="".join(f'<article class="stage-card" data-stage="{x.stage.value}"><h2>{labels[x.stage.value]}</h2>'
             f'<dl><dt>Status</dt><dd>{x.status.value}</dd><dt>Versiune curentă</dt><dd>{x.current_version}</dd>'
             f'<dt>Versiune aprobată</dt><dd>{x.approved_version or "—"}</dd><dt>Motiv blocare</dt><dd>{html.escape(x.blocked_reason or "—")}</dd>'
-            f'<dt>Ultima eroare</dt><dd>{html.escape(x.last_error or "—")}</dd></dl></article>' for x in state.stages if x.stage.value!="episode")
+            f'<dt>Ultima eroare</dt><dd>{html.escape(x.last_error or "—")}</dd></dl>{self._stage_actions(state.project_id,x)}</article>' for x in state.stages if x.stage.value!="episode")
         message='<p class="success" role="status">Proiect creat cu succes</p>' if created else ""
         return self._page(state.project_id,f'<main><a href="/">← Proiecte</a>{message}<h1>Proiect {html.escape(state.project_id)}</h1><section class="stage-grid">{cards}</section></main>')
+    @staticmethod
+    def _stage_actions(project_id,stage):
+        base=f"/projects/{project_id}/stages/{stage.stage.value}"; controls=[]
+        if stage.status.value=="generated": controls.extend((f'<form method="post" action="{base}/approve"><button>Aprobă</button></form>',f'<form method="post" action="{base}/reject"><button>Respinge</button></form>'))
+        if stage.status.value=="approved": controls.append(f'<form method="post" action="{base}/unlock"><button>Deblochează</button></form>')
+        options="".join(f'<option value="{x.version}"{" selected" if x.version==stage.selected_version else ""}>Versiunea {x.version}</option>' for x in stage.versions)
+        if options: controls.append(f'<details><summary>Vezi versiuni</summary><form method="post" action="{base}/select-version"><select name="version">{options}</select><button>Selectează versiune</button></form></details>')
+        return '<div class="stage-actions">'+"".join(controls)+"</div>"
     @staticmethod
     def _page(title,content): return f'<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{html.escape(title)}</title><link rel="stylesheet" href="/static/styles.css"></head><body>{content}<script src="/static/app.js"></script></body></html>'
     @staticmethod
