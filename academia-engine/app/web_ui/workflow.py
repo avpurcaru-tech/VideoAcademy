@@ -108,7 +108,7 @@ class WorkflowStateMachine:
         elif action==WorkflowAction.SELECT_VERSION:
             if version is None or version not in {x.version for x in current.versions}: raise ValueError("Selected version does not exist.")
             changed=current.model_copy(update={"selected_version":version,"status":WorkflowStageStatus.GENERATED})
-            result=self._stale_after(self._replace(state,changed),stage)
+            result=self._stale_after(self._replace(state,changed),stage,include_blocked=True)
         elif action==WorkflowAction.MARK_FAILED:
             changed=current.model_copy(update={"status":WorkflowStageStatus.FAILED,"last_error":reason or "Stage failed."}); result=self._replace(state,changed)
         else:
@@ -116,14 +116,15 @@ class WorkflowStateMachine:
         final=result.stage(stage)
         return WorkflowActionResult(action=action,stage=stage,from_status=current.status,to_status=final.status,
             version=final.selected_version,state=result)
-    def _stale_after(self,state,stage):
-        stages=[]; downstream=False
+    def _stale_after(self,state,stage,include_blocked=False):
+        stages=[]; downstream=False; immediate=True
         for value in state.stages:
             if value.stage==stage: stages.append(value); downstream=True
-            elif downstream and value.status not in {WorkflowStageStatus.BLOCKED,WorkflowStageStatus.NOT_STARTED}:
+            elif downstream and ((include_blocked and immediate) or value.status not in {WorkflowStageStatus.BLOCKED,WorkflowStageStatus.NOT_STARTED}):
                 stages.append(value.model_copy(update={"status":WorkflowStageStatus.STALE,
                     "blocked_reason":f"{stage.value} changed; explicit regeneration is required."}))
             else: stages.append(value)
+            if downstream and value.stage!=stage: immediate=False
         return self._state(state.project_id,tuple(stages),state.warnings)
     def recalculate(self,state):
         values={x.stage:x for x in state.stages}
@@ -164,7 +165,11 @@ class WorkflowActionService:
     def execute(self,project_id,action,stage,*,reason="",version=None,artifact_path=None,artifact_sha256=None):
         state,_reused=self.repository.resolve(project_id); result=WorkflowStateMachine().perform(state,action,stage,
             reason=reason,version=version,artifact_path=artifact_path,artifact_sha256=artifact_sha256)
-        self.repository.save(result.state); self._audit(result,reason); return result
+        self.repository.save(result.state); self._audit(result,reason)
+        if result.action==WorkflowAction.APPROVE:
+            from .sprint19_validation import ApprovalCheckpointService
+            ApprovalCheckpointService(self.project_directory).persist(result.state,result.stage)
+        return result
     def _audit(self,result,reason):
         self.history_path.parent.mkdir(parents=True,exist_ok=True)
         record={"action":result.action.value,"stage":result.stage.value,"from_status":result.from_status.value,
