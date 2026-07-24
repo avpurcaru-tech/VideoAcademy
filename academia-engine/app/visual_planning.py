@@ -62,6 +62,9 @@ class VisualConstraint(BaseModel):
 class VisualNegativeConstraint(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     constraint_type:str; key:str; value:Any; reason:str
+class CharacterWardrobeOverride(BaseModel):
+    model_config=ConfigDict(extra="forbid",frozen=True)
+    character_id:str; top:str|None=None; bottom:str|None=None; shoes:str|None=None; accessories:tuple[str,...]|None=None
 class VisualContinuityRequirement(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     required_previous_scene_id:str|None=None; required_next_scene_id:str|None=None
@@ -75,6 +78,8 @@ class VisualScene(BaseModel):
     visual_scene_id:str; source_scene_id:str; ordinal:int=Field(ge=0)
     start_s:float=Field(ge=0); end_s:float=Field(gt=0); duration_s:float=Field(gt=0)
     aspect_ratio:AspectRatio; subjects:tuple[VisualSubject,...]=(); actions:tuple[VisualAction,...]=()
+    character_ids:tuple[str,...]=()
+    character_wardrobe_overrides:tuple[CharacterWardrobeOverride,...]=()
     environment:VisualEnvironment; camera:VisualCamera; composition:VisualComposition; lighting:VisualLighting
     style:VisualStyle; palette:VisualPalette; educational_constraints:tuple[VisualConstraint,...]=()
     positive_constraints:tuple[VisualConstraint,...]=(); negative_constraints:tuple[VisualNegativeConstraint,...]=()
@@ -92,6 +97,7 @@ class VisualPlanDependencyMetadata(BaseModel):
     source_scene_plan_sha256:str=Field(pattern=r"^[a-f0-9]{64}$"); generator_version:str
     configuration_sha256:str=Field(pattern=r"^[a-f0-9]{64}$"); global_style_sha256:str=Field(pattern=r"^[a-f0-9]{64}$")
     aspect_ratio:AspectRatio
+    character_dependency_sha256:str=Field(default="0"*64,pattern=r"^[a-f0-9]{64}$")
 class VisualPlan(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     schema_version:str=VISUAL_PLAN_SCHEMA_VERSION; project_id:str; audio_variant_id:str
@@ -113,21 +119,24 @@ def default_visual_style(configuration=None):
 class ProviderNeutralVisualPlanner:
     def __init__(self,*,generator_version=VISUAL_PLANNER_VERSION,configuration=None):
         self.generator_version=generator_version; self.configuration=configuration or VisualPlanningConfiguration()
-    def dependencies(self,*,scene_plan,global_style,aspect_ratio):
+    def dependencies(self,*,scene_plan,global_style,aspect_ratio,character_registry=None):
         ratio=AspectRatio(aspect_ratio)
+        character_ids=self._character_ids(scene_plan,character_registry)
         return VisualPlanDependencyMetadata(source_scene_plan_sha256=scene_plan.semantic_sha256,
             generator_version=self.generator_version,configuration_sha256=semantic_sha256(self.configuration),
-            global_style_sha256=semantic_sha256(global_style),aspect_ratio=ratio)
-    def plan(self,*,scene_plan,global_style,aspect_ratio):
+            global_style_sha256=semantic_sha256(global_style),aspect_ratio=ratio,
+            character_dependency_sha256=(character_registry.dependency_sha256(character_ids) if character_registry else "0"*64))
+    def plan(self,*,scene_plan,global_style,aspect_ratio,character_registry=None):
         scene_plan=ScenePlan.model_validate(scene_plan); global_style=VisualStyle.model_validate(global_style); ratio=AspectRatio(aspect_ratio)
-        dependencies=self.dependencies(scene_plan=scene_plan,global_style=global_style,aspect_ratio=ratio)
+        dependencies=self.dependencies(scene_plan=scene_plan,global_style=global_style,aspect_ratio=ratio,character_registry=character_registry)
         scenes=[]
         for index,source in enumerate(scene_plan.scenes):
             subjects=tuple(VisualSubject(subject_type=value.subject_type,source_subject_id=value.subject_id,
                 display_name=value.display_name) for value in source.subjects)
+            character_ids=tuple(value for subject in source.subjects for value in self._resolve_character(subject,character_registry)[:1] if value)
             actions=tuple(VisualAction(action_type=value.description,source_action_id=value.action_id) for value in source.actions)
             instrumental=source.scene_type in {SceneType.INSTRUMENTAL_INTRO,SceneType.INSTRUMENTAL_BREAK,SceneType.INSTRUMENTAL_OUTRO}
-            if instrumental: subjects=(); actions=()
+            if instrumental: subjects=(); actions=(); character_ids=()
             constraints=(() if instrumental else tuple(VisualConstraint(constraint_type=value.constraint_type,
                 key=value.constraint_type,value=value.value,required=True) for value in source.educational_constraints))
             negatives=[]
@@ -148,6 +157,7 @@ class ProviderNeutralVisualPlanner:
             scenes.append(VisualScene(visual_scene_id=f"visual-{source.scene_id}",source_scene_id=source.scene_id,
                 ordinal=source.ordinal,start_s=source.start_s,end_s=source.end_s,duration_s=source.duration_s,
                 aspect_ratio=ratio,subjects=subjects,actions=actions,
+                character_ids=character_ids,
                 environment=(VisualEnvironment() if instrumental else VisualEnvironment(location=source.environment.location,
                     weather=source.environment.weather,time_of_day=source.environment.time_of_day)),
                 camera=VisualCamera(),composition=VisualComposition(focus_subject=focus),lighting=VisualLighting(),
@@ -165,6 +175,18 @@ class ProviderNeutralVisualPlanner:
             "scenes":[value.model_dump(mode="json") for value in scenes],"status":status.value,
             "warnings":[value.model_dump(mode="json") for value in warnings],"dependency_metadata":dependencies.model_dump(mode="json")}
         return VisualPlan(**core,semantic_sha256=semantic_sha256(core))
+    @staticmethod
+    def _resolve_character(subject,registry):
+        if registry is None: return (None,None)
+        for value in (subject.subject_id,subject.display_name):
+            if value:
+                character_id,warning=registry.resolve_alias(value)
+                if character_id: return character_id,warning
+        return None,None
+    def _character_ids(self,scene_plan,registry):
+        if registry is None: return ()
+        return tuple(sorted({value for scene in scene_plan.scenes for subject in scene.subjects
+            for value in self._resolve_character(subject,registry)[:1] if value}))
     @staticmethod
     def _status(status,warnings):
         value=status.value if isinstance(status,Enum) else str(status)
@@ -190,8 +212,8 @@ def read_visual_plan(path):
 class VisualPlanRepository:
     def __init__(self,directory): self.directory=Path(directory)
     def path(self,variant_id): return self.directory/f"visual-plan-{variant_id}.json"
-    def resolve_or_build(self,*,scene_plan,planner,global_style,aspect_ratio):
-        path=self.path(scene_plan.audio_variant_id); expected=planner.dependencies(scene_plan=scene_plan,global_style=global_style,aspect_ratio=aspect_ratio)
+    def resolve_or_build(self,*,scene_plan,planner,global_style,aspect_ratio,character_registry=None):
+        path=self.path(scene_plan.audio_variant_id); expected=planner.dependencies(scene_plan=scene_plan,global_style=global_style,aspect_ratio=aspect_ratio,character_registry=character_registry)
         existing=read_visual_plan(path) if path.is_file() else None
         if existing is not None and existing.dependency_metadata==expected: return existing,True
-        value=planner.plan(scene_plan=scene_plan,global_style=global_style,aspect_ratio=aspect_ratio); write_visual_plan(path,value); return value,False
+        value=planner.plan(scene_plan=scene_plan,global_style=global_style,aspect_ratio=aspect_ratio,character_registry=character_registry); write_visual_plan(path,value); return value,False

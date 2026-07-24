@@ -136,6 +136,13 @@ class ProjectGenerationService:
             scene_planner=SemanticScenePlanner()
             visual_plans=VisualPlanRepository(record.music_directory.parent/"visual")
             visual_planner=ProviderNeutralVisualPlanner(); visual_style=default_visual_style(visual_planner.configuration)
+            from app.character_registry import CharacterContinuityRepository,CharacterRegistryBuilder
+            character_builder=CharacterRegistryBuilder()
+            character_names=tuple(dict.fromkeys(name for section in storyboard.sections for name in getattr(section,"characters",())))
+            character_definitions=character_builder.from_names(record.project_id,character_names).characters
+            character_registry,_character_registry_reused=CharacterContinuityRepository(
+                record.music_directory.parent/"visual"/"character-registry.json").resolve_or_build(
+                    project_id=record.project_id,characters=character_definitions,builder=character_builder)
             from app.prompt_generation import (PromptBuilder,PromptProvider,PromptRepository,
                 default_prompt_capabilities)
             prompt_builder=PromptBuilder(); prompt_repository=PromptRepository(record.music_directory.parent/"visual"/"prompts")
@@ -145,10 +152,11 @@ class ProjectGenerationService:
                     alignment=LyricsAlignment.model_validate_json(alignment_path.read_text(encoding="utf-8"))
                     scene_plan,_reused=scene_plans.resolve_or_build(record.project_id,alignment,lyrics,scene_planner,storyboard,timeline)
                     visual_plan,_visual_reused=visual_plans.resolve_or_build(scene_plan=scene_plan,planner=visual_planner,
-                        global_style=visual_style,aspect_ratio=AspectRatio.LANDSCAPE_16_9)
+                        global_style=visual_style,aspect_ratio=AspectRatio.LANDSCAPE_16_9,character_registry=character_registry)
                     for prompt_provider in (PromptProvider.GENERIC_IMAGE,PromptProvider.GENERIC_VIDEO):
                         prompt_repository.resolve_or_build(visual_plan=visual_plan,builder=prompt_builder,
-                            provider=prompt_provider,capabilities=default_prompt_capabilities(prompt_provider))
+                            provider=prompt_provider,capabilities=default_prompt_capabilities(prompt_provider),
+                            character_registry=character_registry)
             record=self._status(record,ProjectStatus.TIMELINES_READY)
             from app.providers import KlingProviderRegistry
             from app.video_coverage import (VideoCoverageConfiguration,VideoCoveragePlan,VideoCoveragePlanner)

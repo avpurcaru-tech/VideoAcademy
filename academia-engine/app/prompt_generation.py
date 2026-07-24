@@ -43,6 +43,7 @@ class PromptDependencyMetadata(BaseModel):
     visual_plan_sha256:str=Field(pattern=r"^[a-f0-9]{64}$"); provider:PromptProvider; builder_version:str
     configuration_sha256:str=Field(pattern=r"^[a-f0-9]{64}$")
     capabilities_sha256:str=Field(pattern=r"^[a-f0-9]{64}$")
+    character_dependency_sha256:str=Field(default="0"*64,pattern=r"^[a-f0-9]{64}$")
 
 class PromptBundle(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
@@ -63,13 +64,24 @@ def default_prompt_capabilities(provider:PromptProvider|str)->PromptCapabilities
 class PromptBuilder:
     def __init__(self,*,builder_version=PROMPT_BUILDER_VERSION,configuration=None):
         self.builder_version=builder_version; self.configuration=configuration or PromptBuilderConfiguration()
-    def dependencies(self,*,visual_plan,provider,capabilities):
+    def dependencies(self,*,visual_plan,provider,capabilities,character_registry=None):
         return PromptDependencyMetadata(visual_plan_sha256=visual_plan.semantic_sha256,provider=PromptProvider(provider),
             builder_version=self.builder_version,configuration_sha256=semantic_sha256(self.configuration),
-            capabilities_sha256=semantic_sha256(capabilities))
-    def build_scene_prompt(self,*,scene,variant_id,provider,capabilities):
+            capabilities_sha256=semantic_sha256(capabilities),character_dependency_sha256=(
+                character_registry.dependency_sha256(visual_plan_character_ids(visual_plan)) if character_registry else "0"*64))
+    def build_scene_prompt(self,*,scene,variant_id,provider,capabilities,character_registry=None):
         scene=VisualScene.model_validate(scene); provider=PromptProvider(provider); capabilities=PromptCapabilities.model_validate(capabilities)
         positive=[]; counts=[]
+        if character_registry:
+            for character_id in scene.character_ids:
+                identity=character_registry.require(character_id)
+                if identity is None: continue
+                positive.append(f"character {identity.canonical_name}")
+                positive.extend(self._fields("character appearance",identity.appearance))
+                positive.extend(self._fields("character wardrobe",identity.wardrobe))
+                positive.extend(f"fixed character attribute: {value}" for value in identity.fixed_attributes)
+        for override in scene.character_wardrobe_overrides:
+            positive.extend(self._fields(f"scene wardrobe override for {override.character_id}",override))
         exact=self._exact_count(scene)
         for subject in scene.subjects:
             count=subject.count if subject.count is not None else (exact if len(scene.subjects)==1 else None)
@@ -106,10 +118,11 @@ class PromptBuilder:
             scene_id=scene.visual_scene_id,variant_id=variant_id,positive_prompt=self.configuration.phrase_separator.join(positive),
             negative_prompt=self.configuration.phrase_separator.join(negative),structured_parameters=structured,
             warnings=tuple(warnings),status=status)
-    def build_prompt_bundle(self,*,visual_plan,provider,capabilities):
+    def build_prompt_bundle(self,*,visual_plan,provider,capabilities,character_registry=None):
         plan=VisualPlan.model_validate(visual_plan); provider=PromptProvider(provider); capabilities=PromptCapabilities.model_validate(capabilities)
-        dependencies=self.dependencies(visual_plan=plan,provider=provider,capabilities=capabilities)
-        prompts=tuple(self.build_scene_prompt(scene=x,variant_id=plan.audio_variant_id,provider=provider,capabilities=capabilities) for x in plan.scenes)
+        dependencies=self.dependencies(visual_plan=plan,provider=provider,capabilities=capabilities,character_registry=character_registry)
+        prompts=tuple(self.build_scene_prompt(scene=x,variant_id=plan.audio_variant_id,provider=provider,
+            capabilities=capabilities,character_registry=character_registry) for x in plan.scenes)
         warnings=tuple(w for prompt in prompts for w in prompt.warnings); status=self._status(plan.status,warnings)
         core={"schema_version":PROMPT_BUNDLE_SCHEMA_VERSION,"project_id":plan.project_id,"variant_id":plan.audio_variant_id,
             "provider":provider.value,"prompts":[x.model_dump(mode="json") for x in prompts],
@@ -158,10 +171,13 @@ def read_prompt_bundle(path):
 class PromptRepository:
     def __init__(self,directory): self.directory=Path(directory)
     def path(self,variant_id,provider): return self.directory/variant_id/f"{PromptProvider(provider).value.replace('_','-')}.json"
-    def resolve_or_build(self,*,visual_plan,builder,provider,capabilities):
+    def resolve_or_build(self,*,visual_plan,builder,provider,capabilities,character_registry=None):
         path=self.path(visual_plan.audio_variant_id,provider)
-        expected=builder.dependencies(visual_plan=visual_plan,provider=provider,capabilities=capabilities)
+        expected=builder.dependencies(visual_plan=visual_plan,provider=provider,capabilities=capabilities,character_registry=character_registry)
         existing=read_prompt_bundle(path) if path.is_file() else None
         if existing is not None and existing.dependency_metadata==expected: return existing,True
-        value=builder.build_prompt_bundle(visual_plan=visual_plan,provider=provider,capabilities=capabilities)
+        value=builder.build_prompt_bundle(visual_plan=visual_plan,provider=provider,capabilities=capabilities,character_registry=character_registry)
         write_prompt_bundle(path,value); return value,False
+
+def visual_plan_character_ids(visual_plan):
+    return tuple(sorted({character_id for scene in visual_plan.scenes for character_id in scene.character_ids}))
