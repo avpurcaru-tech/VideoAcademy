@@ -17,7 +17,7 @@ class ProjectCreationUiTests(unittest.TestCase):
     def tearDown(self): self.temporary.cleanup()
     def post(self,data=None): return self.application.dispatch("/projects","POST",urlencode(data or self.valid).encode())
     def test_new_project_form_renders(self):
-        response=self.application.dispatch("/projects/new"); text=response.body.decode(); self.assertEqual(200,response.status); self.assertIn("Titlu episod",text); self.assertIn("Descriere personaj",text)
+        response=self.application.dispatch("/projects/new"); text=response.body.decode(); self.assertEqual(200,response.status); self.assertIn("Titlu episod",text); self.assertIn("Personaje",text); self.assertNotIn('name="main_character_description"',text)
     def test_create_project_with_valid_data(self):
         response=self.post(); self.assertEqual(303,response.status); self.assertEqual("/projects/008?created=1",response.headers["Location"])
         self.assertIn("Proiect creat cu succes",self.application.dispatch(response.headers["Location"]).body.decode())

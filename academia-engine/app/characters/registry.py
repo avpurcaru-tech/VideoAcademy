@@ -50,3 +50,11 @@ class CharacterRegistry:
         ids=tuple(character_ids)
         if len(ids)!=len(set(ids)): raise CharacterRegistryError("Required character IDs must be unique.")
         return tuple(self.get(value) for value in ids)
+    def list_profiles(self) -> tuple[CanonicalCharacterProfile,...]:
+        """Return registered profiles without creating or changing registry data."""
+        if not self._root.is_dir(): return ()
+        profiles=[]
+        for path in sorted(self._root.glob("*.json")):
+            try: profiles.append(self.get(path.stem))
+            except CharacterRegistryError: continue
+        return tuple(profiles)

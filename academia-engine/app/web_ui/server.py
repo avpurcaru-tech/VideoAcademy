@@ -1,4 +1,5 @@
 import html,json,mimetypes
+import hashlib
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs,unquote,urlsplit
@@ -17,6 +18,7 @@ from .job_recovery import (DuplicateCostWarningRequired,JobConfirmationRequired,
     JobRecoveryService)
 from .operational_preflight import ConnectivityConfirmationRequired,OperationalPreflightService
 from pydantic import ValidationError
+from app.characters import CharacterRegistry,CharacterRegistryError
 
 ROOT=Path(__file__).parent
 class WebResponse:
@@ -29,9 +31,16 @@ class LocalWebApplication:
             asset_provider=services.asset_provider; composition_renderer=services.composition_renderer
         self.projects=ReadOnlyProjectService(projects_root); self.lyrics_provider=lyrics_provider; self.music_provider=music_provider
         self.planning_builders=planning_builders or {}; self.asset_provider=asset_provider; self.composition_renderer=composition_renderer; self.services=services; self.settings=None
-        self.recovery_service=recovery_service or JobRecoveryService(self.projects.root)
+        self.recovery_service=recovery_service or JobRecoveryService(self.projects.root); self.character_registry=CharacterRegistry(self.projects.root.parent/"characters")
     def dispatch(self,path,method="GET",body=b"",headers=None):
         route=unquote(urlsplit(path).path)
+        character_parts=route.strip("/").split("/")
+        if method=="GET" and len(character_parts)==3 and character_parts[0]=="characters" and character_parts[2]=="reference":
+            try:
+                profile=self.character_registry.get(character_parts[1]); reference=profile.visual_reference
+                if reference is None or not reference.local_path.is_file() or hashlib.sha256(reference.local_path.read_bytes()).hexdigest()!=reference.sha256: raise ValueError()
+                return WebResponse(200,reference.local_path.read_bytes(),reference.content_type)
+            except (CharacterRegistryError,ValueError,OSError): return WebResponse(404,"Character reference not found","text/plain")
         if method=="GET" and route=="/preflight": return WebResponse(200,self._preflight_page())
         if method=="POST" and route=="/preflight/run":
             values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}; connectivity=values.get("provider_connectivity")=="yes"
@@ -54,10 +63,10 @@ class LocalWebApplication:
             return WebResponse(303,"",headers={"Location":"/jobs"})
         if method=="GET" and route=="/projects/new": return WebResponse(200,self._new_project_form())
         if method=="POST" and route=="/projects":
-            values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
+            parsed=parse_qs(body.decode("utf-8"),keep_blank_values=True); values={key:items[-1] for key,items in parsed.items()}; values["selected_character_ids"]=tuple(parsed.get("selected_character_ids",()))
             for optional in ("episode_theme","educational_goal","notes"):
                 if not values.get(optional): values[optional]=None
-            try: manifest=AtomicProjectCreationService(self.projects.root).create(values)
+            try: manifest=AtomicProjectCreationService(self.projects.root,self.character_registry).create(values)
             except ValidationError as error: return WebResponse(422,self._new_project_form(values,error.errors()))
             except Exception as error: return WebResponse(409,self._new_project_form(values,({"msg":str(error)},)))
             return WebResponse(303,"",headers={"Location":f"/projects/{manifest.project_id}?created=1"})
@@ -235,18 +244,42 @@ class LocalWebApplication:
         return self._page("Settings",content)
     def _new_project_form(self,values=None,errors=()):
         values=values or {}; error_html="" if not errors else '<div class="errors" role="alert">Datele formularului nu sunt valide.</div>'
+        help_text={"title":"Alege un titlu scurt și ușor de înțeles de către părinți.","description":"Explică în 2–4 propoziții ce vor învăța copiii.",
+            "episode_theme":"Tema principală a episodului.","educational_goal":"Descrie abilitatea sau informația pe care o exersează copilul.",
+            "notes":"Adaugă preferințe sau detalii opționale pentru echipa creativă."}
         def field(name,label,kind="text",required=True):
             required_html=" required" if required else ""; value=html.escape(str(values.get(name) or ""),quote=True)
-            if kind=="textarea": return f'<label>{label}<textarea name="{name}"{required_html}>{value}</textarea></label>'
-            return f'<label>{label}<input type="{kind}" name="{name}" value="{value}"{required_html}></label>'
-        selects=(f'<label>Limba<select name="language" required>{self._options(("ro","en","fr","de","es"),values.get("language","ro"))}</select></label>'
-            f'<label>Vârsta<select name="target_age" required>{self._options(("2-5","6-8","9-12"),values.get("target_age","2-5"))}</select></label>'
-            f'<label>Raport video<select name="aspect_ratio" required>{self._options(("16:9","9:16","1:1"),values.get("aspect_ratio","16:9"))}</select></label>')
-        content=(f'<main><a href="/">← Proiecte</a><h1>Episod nou</h1>{error_html}<form method="post" action="/projects">'
+            control=(f'<textarea id="{name}" name="{name}"{required_html}>{value}</textarea>' if kind=="textarea" else f'<input id="{name}" type="{kind}" name="{name}" value="{value}"{required_html}>')
+            return f'<label for="{name}">{label}{control}<small class="field-help">{help_text[name]}</small></label>'
+        selects=(f'<label for="language">Limba<select id="language" name="language" required>{self._options(("ro","en","fr","de","es"),values.get("language","ro"))}</select><small class="field-help">Limba în care vor fi create versurile și materialele episodului.</small></label>'
+            f'<label for="target_age">Vârsta<select id="target_age" name="target_age" required>{self._options(("2-5","6-8","9-12"),values.get("target_age","2-5"))}</select><small class="field-help">Alege grupa de vârstă pentru vocabularul și ritmul potrivit.</small></label>'
+            f'<label for="aspect_ratio">Raport video<select id="aspect_ratio" name="aspect_ratio" required>{self._options(("16:9","9:16","1:1"),values.get("aspect_ratio","16:9"))}</select><small class="field-help">Alege formatul potrivit platformei unde va fi folosit videoclipul.</small></label>')
+        examples={
+            "Titlu episod":("title",("Luca învață să numere până la 5","Animalele din fermă","Culorile curcubeului","Primele litere cu Luca","Formele geometrice distractive")),
+            "Descriere":("description",("Luca descoperă animale vesele și îi invită pe copii să numere împreună cu el de la 1 la 5.\n\nPrin cântec și joacă, copiii învață numerele folosind animale și obiecte ușor de recunoscut.",)),
+            "Tema":("episode_theme",("Numere","Culori","Animale","Fructe","Legume","Alfabet","Forme geometrice","Emoții","Mijloace de transport","Anotimpuri")),
+            "Obiectiv educațional":("educational_goal",("Învățarea numerelor până la 5","Recunoașterea culorilor","Dezvoltarea vocabularului","Exersarea memoriei","Coordonarea prin mișcare și cântec","Recunoașterea animalelor")),
+            "Raport video":("aspect_ratio",("16:9 → YouTube","9:16 → Shorts / TikTok","1:1 → Instagram Feed"))}
+        example_sections=[]
+        for heading,(target,items) in examples.items():
+            buttons="".join(f'<li><span>{html.escape(item)}</span><button type="button" class="use-example" data-example-target="{target}" data-example-value="{html.escape(item.split(" → ",1)[0] if target=="aspect_ratio" else item,quote=True)}">Folosește exemplul</button></li>' for item in items)
+            example_sections.append(f'<section class="example-group"><h3>{heading}</h3><ul>{buttons}</ul></section>')
+        example_sections.append('<section class="example-group"><h3>Personaje</h3><p>Selectează personajele deja create folosind imaginile lor de referință. Personajele selectate vor fi păstrate consecvent în toate scenele.</p></section>')
+        examples_panel='<aside class="examples-panel" aria-labelledby="examples-title"><h2 id="examples-title">💡 Exemple</h2>'+"".join(example_sections)+"</aside>"
+        profiles=self.character_registry.list_profiles(); cards=[]; selected=set(values.get("selected_character_ids") or ())
+        for profile in profiles:
+            reference=profile.visual_reference; usable=bool(reference and reference.local_path.is_file())
+            checked=" checked" if profile.character_id in selected else ""; disabled="" if usable else " disabled"; role=profile.character_type or "Personaj"
+            image=(f'<img src="/characters/{profile.character_id}/reference" alt="Imagine de referință pentru {html.escape(profile.name)}">' if usable else '<div class="character-placeholder" aria-label="Fără imagine">?</div>')
+            missing="" if usable else '<p class="character-warning">Fără imagine de referință — nu poate fi selectat.</p>'
+            primary_checked=" checked" if values.get("primary_character_id")==profile.character_id else ""
+            cards.append(f'<article class="character-card" data-character-name="{html.escape(profile.name.casefold())}" data-character-role="{html.escape(role.casefold())}" data-character-status="{"ready" if usable else "blocked"}">{image}<h3>{html.escape(profile.name)}</h3><p class="character-role">{html.escape(role)}</p><p>{html.escape(profile.canonical_description[:180])}</p>{missing}<label class="character-select"><input type="checkbox" name="selected_character_ids" value="{profile.character_id}"{checked}{disabled}> Selectează</label><label class="character-primary"><input type="radio" name="primary_character_id" value="{profile.character_id}"{primary_checked}{disabled}> Personaj principal</label></article>')
+        empty='<p class="character-empty">Nu există personaje create.<br>Creează mai întâi un personaj și o imagine de referință.</p>'
+        selector=(f'<fieldset class="character-selector"><legend>Personaje</legend><p class="field-help">Selectează unul sau mai multe personaje existente. Pentru selecții multiple marchează personajul principal.</p><div class="character-filters"><label>Caută după nume<input type="search" id="character-search"></label><label>Rol<select id="character-role-filter"><option value="">Toate</option>'+"".join(f'<option value="{html.escape(x)}">{html.escape(x.title())}</option>' for x in sorted({(p.character_type or "Personaj").casefold() for p in profiles}))+f'</select></label><label>Status<select id="character-status-filter"><option value="">Toate</option><option value="ready">Disponibil</option><option value="blocked">Fără referință</option></select></label></div><div class="character-grid">{"".join(cards) if cards else empty}</div></fieldset>')
+        content=(f'<main><a href="/">← Proiecte</a><h1>Episod nou</h1>{error_html}<div class="new-project-layout"><form class="new-project-form" method="post" action="/projects">'
             +field("title","Titlu episod")+field("description","Descriere","textarea")+field("episode_theme","Tema",required=False)
-            +field("educational_goal","Obiectiv educațional","textarea",False)+selects+field("main_character_name","Personaj principal")
-            +field("main_character_description","Descriere personaj","textarea")+field("notes","Note","textarea",False)
-            +'<button type="submit">Creează proiectul</button></form></main>')
+            +field("educational_goal","Obiectiv educațional","textarea",False)+selects+selector+field("notes","Note","textarea",False)
+            +'<button type="submit">Creează proiectul</button></form>'+examples_panel+'</div></main>')
         return self._page("Episod nou",content)
     @staticmethod
     def _options(options,selected): return "".join(f'<option value="{html.escape(x)}"{" selected" if x==selected else ""}>{html.escape(x)}</option>' for x in options)

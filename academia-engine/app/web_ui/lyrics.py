@@ -65,10 +65,10 @@ class LyricsStageService:
         return version
     def _request(self,feedback=None,user_instructions=None):
         manifest=WebProjectManifest.model_validate_json((self.project/"project.json").read_text(encoding="utf-8"))
-        episode=manifest.episode; character=manifest.main_character
+        episode=manifest.episode; character=manifest.resolve_primary_character(__import__("app.characters",fromlist=["CharacterRegistry"]).CharacterRegistry(self.project.parent.parent/"characters"))
         return LyricsGenerationRequest(episode_title=episode.title,description=episode.description,theme=episode.episode_theme,
             educational_goal=episode.educational_goal,language=episode.language,target_age=episode.target_age,
-            main_character_name=character.name,main_character_description=character.description,
+            main_character_name=character.name,main_character_description=getattr(character,"description",None) or character.canonical_description,
             user_instructions=(user_instructions.strip() or None) if user_instructions else None,
             feedback=(feedback.strip() or None) if feedback else None)
     @staticmethod

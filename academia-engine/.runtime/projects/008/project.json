@@ -1,0 +1,20 @@
+{
+  "characters": {
+    "primary_character_id": "luca",
+    "selected_character_ids": [
+      "luca"
+    ]
+  },
+  "episode": {
+    "aspect_ratio": "16:9",
+    "description": "Luca descoperă anotimpurile și îi invită pe copii să care sunt anotimpurile.\r\n\r\nPrin cântec și joacă, copiii învață anotimpurile prin elemente din natura ușor de recunoscut.",
+    "educational_goal": "Invatarea anotimpurilor",
+    "episode_theme": "anotimpurile",
+    "language": "ro",
+    "notes": null,
+    "target_age": "2-5",
+    "title": "Luca invata anotimpurile"
+  },
+  "main_character": null,
+  "project_id": "008"
+}

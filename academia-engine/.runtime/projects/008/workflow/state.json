@@ -1,0 +1,140 @@
+{
+  "dependencies": [
+    {
+      "downstream": "lyrics",
+      "requirement": "approved",
+      "upstream": "episode"
+    },
+    {
+      "downstream": "music",
+      "requirement": "approved",
+      "upstream": "lyrics"
+    },
+    {
+      "downstream": "alignment",
+      "requirement": "approved",
+      "upstream": "music"
+    },
+    {
+      "downstream": "scene_plan",
+      "requirement": "approved",
+      "upstream": "alignment"
+    },
+    {
+      "downstream": "visual_plan",
+      "requirement": "approved",
+      "upstream": "scene_plan"
+    },
+    {
+      "downstream": "prompts",
+      "requirement": "approved",
+      "upstream": "visual_plan"
+    },
+    {
+      "downstream": "assets",
+      "requirement": "approved",
+      "upstream": "prompts"
+    },
+    {
+      "downstream": "composition",
+      "requirement": "approved",
+      "upstream": "assets"
+    }
+  ],
+  "project_id": "008",
+  "schema_version": "1.0",
+  "semantic_sha256": "e2c294cf040cf68b15fb3b148e28d08e515ab7dd6ed4b189c0fcc2c2ac70b0f4",
+  "stages": [
+    {
+      "approved_version": null,
+      "blocked_reason": null,
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "episode",
+      "status": "approved",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": null,
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "lyrics",
+      "status": "ready",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": "Upstream dependency is not satisfied.",
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "music",
+      "status": "blocked",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": "Upstream dependency is not satisfied.",
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "alignment",
+      "status": "blocked",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": "Upstream dependency is not satisfied.",
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "scene_plan",
+      "status": "blocked",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": "Upstream dependency is not satisfied.",
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "visual_plan",
+      "status": "blocked",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": "Upstream dependency is not satisfied.",
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "prompts",
+      "status": "blocked",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": "Upstream dependency is not satisfied.",
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "assets",
+      "status": "blocked",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": "Upstream dependency is not satisfied.",
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "composition",
+      "status": "blocked",
+      "versions": []
+    }
+  ],
+  "warnings": []
+}
