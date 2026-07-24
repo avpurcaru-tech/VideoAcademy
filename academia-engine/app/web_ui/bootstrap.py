@@ -132,9 +132,18 @@ class DryRunPlanningBuilder:
 
 class OpenAILyricsUiAdapter:
     def __init__(self,settings): self.settings=settings
+    def prompt(self,request):
+        from app.providers.openai_lyrics_provider import format_lyrics_prompt
+        return format_lyrics_prompt(_brief(request))
+    @staticmethod
+    def validate_prompt(prompt_text):
+        from app.providers.openai_lyrics_provider import parse_lyrics_prompt
+        parse_lyrics_prompt(prompt_text)
     def generate(self,request):
         from app.providers.openai_lyrics_provider import OpenAILyricsGenerator
-        brief=_brief(request); plan=OpenAILyricsGenerator(api_key=self.settings.openai_api_key,model=self.settings.openai_lyrics_model).generate_lyrics(brief)
+        prompt=request.user_instructions or self.prompt(request)
+        if request.feedback: prompt=f"{prompt}\n\nRegeneration feedback:\n{request.feedback.strip()}"
+        brief=_brief(request); plan=OpenAILyricsGenerator(api_key=self.settings.openai_api_key,model=self.settings.openai_lyrics_model).generate_lyrics(brief,prompt_text=prompt)
         text="\n\n".join(f"[{x.kind.value.title()}]\n"+"\n".join(line.text for line in x.lines) for x in plan.sections)
         return LyricsGenerationResult(lyrics_text=text,sections=tuple(x.kind.value for x in plan.sections),provider_metadata={"provider":"openai","model":self.settings.openai_lyrics_model})
 class LazySunoMusicUiAdapter:
@@ -155,7 +164,11 @@ class ExistingAlignmentUiBuilder:
         from app.providers.sunoapi_org_music_provider import RequestsSunoApiOrgTransport,SunoApiOrgMusicProvider
         suno=SunoApiOrgMusicProvider(RequestsSunoApiOrgTransport(self.settings.suno_api_key or "",base_url=self.settings.suno_base_url,
             timeout_seconds=self.settings.request_timeout_seconds),model=self.settings.suno_model,callback_url=self.settings.suno_callback_url or "")
-        variant=next(x for x in music.variants if x.variant_id==music.approved_variant_id); audio=project/"music"/f"version-{music.version:03d}"/f"{variant.variant_id}.mp3"
+        variant_id=music.approved_variant_id or music.selected_variant_id
+        if not variant_id: raise ValueError("Versiunea muzicală aprobată nu are o variantă selectată.")
+        variant=next((x for x in music.variants if x.variant_id==variant_id),None)
+        if variant is None: raise ValueError("Varianta muzicală aprobată nu există în manifest.")
+        audio=project/"music"/f"version-{music.version:03d}"/f"{variant.variant_id}.mp3"
         retrieved=suno.get_timestamped_lyrics(music.task_id,variant.audio_id)
         alignment=LyricsAlignmentNormalizer().build(variant_id=variant.variant_id,audio_artifact_id=variant.audio_id,audio_sha256=variant.sha256,
             provider_task_id=music.task_id,provider_audio_id=variant.audio_id,audio_duration_seconds=variant.duration_seconds or 1,
@@ -248,8 +261,8 @@ def _music_request(request):
     from .lyrics import LyricsVersion
     # UI request already contains the approved durable lyrics text.
     version=SimpleNamespace(lyrics_text=request.lyrics_text,generation_request=SimpleNamespace(episode_title=request.episode_title,language=request.language))
-    plan=_lyrics_plan(version,request.project_id); music=MusicPlan(song_id=request.project_id,tempo_bpm=110,musical_style="educational pop",mood="cheerful",
-        instrumentation=("ukulele","xylophone"),vocal_style="clear child-friendly vocals",target_duration_seconds=60)
+    plan=_lyrics_plan(version,request.project_id); music=MusicPlan(song_id=request.project_id,tempo_bpm=request.tempo_bpm,musical_style=request.musical_style,mood=request.mood,
+        instrumentation=request.instrumentation,vocal_style=request.vocal_style,target_duration_seconds=60)
     return MusicGenerationRequest(song_id=request.project_id,title=request.episode_title,lyrics=plan,music_plan=music)
 def _approved_music(project):
     from .music import MusicStageService

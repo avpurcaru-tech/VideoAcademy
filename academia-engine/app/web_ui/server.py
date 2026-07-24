@@ -76,10 +76,11 @@ class LocalWebApplication:
             if not (project/"project.json").is_file(): return WebResponse(404,"Project not found")
             service=LyricsStageService(project,self.lyrics_provider)
             if method=="GET" and len(lyrics_parts)==3: return WebResponse(200,self._lyrics_page(project_id,service))
-            if method=="POST" and len(lyrics_parts)==4 and lyrics_parts[3] in {"edit","generate","regenerate"}:
+            if method=="POST" and len(lyrics_parts)==4 and lyrics_parts[3] in {"prompt","edit","generate","regenerate"}:
                 values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
                 try:
-                    if lyrics_parts[3]=="edit": service.edit(values.get("lyrics_text",""))
+                    if lyrics_parts[3]=="prompt": service.save_prompt_parts(values.get("system_prompt",""),values.get("user_prompt",""))
+                    elif lyrics_parts[3]=="edit": service.edit(values.get("lyrics_text",""))
                     else: service.generate(feedback=values.get("feedback") if lyrics_parts[3]=="regenerate" else None,
                         user_instructions=values.get("user_instructions"))
                 except LyricsGenerationFailure: return WebResponse(502,self._lyrics_page(project_id,service,error="Generarea versurilor a eșuat."))
@@ -100,7 +101,9 @@ class LocalWebApplication:
             if method=="POST" and len(music_parts)==4:
                 action=music_parts[3]; values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
                 try:
-                    if action in {"generate","regenerate"}: service.generate(confirmed=values.get("confirm_cost")=="yes",feedback=values.get("feedback") if action=="regenerate" else None)
+                    if action in {"generate","regenerate"}: service.generate(confirmed=values.get("confirm_cost")=="yes",feedback=values.get("feedback") if action=="regenerate" else None,
+                        musical_style=values.get("musical_style","educational pop"),mood=values.get("mood","cheerful"),instrumentation=values.get("instrumentation","ukulele, xylophone"),
+                        vocal_style=values.get("vocal_style","clear child-friendly vocals"),tempo_bpm=values.get("tempo_bpm",110))
                     elif action=="select": service.select(int(values["version"]),values["variant_id"])
                     elif action=="approve": service.approve(int(values["version"]),values.get("variant_id"))
                     elif action=="reject": service.reject(int(values["version"]))
@@ -179,6 +182,13 @@ class LocalWebApplication:
             if action not in action_map or not (self.projects.root/project_id/"project.json").is_file(): return WebResponse(404,"Invalid workflow action")
             values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
             try:
+                if stage=="music" and action in {"approve","reject"}:
+                    music_state,_=WorkflowStateRepository(self.projects.root/project_id).resolve(project_id)
+                    version=music_state.stage("music").selected_version
+                    if version is None: raise ValueError("No music version is selected.")
+                    music_service=MusicStageService(self.projects.root/project_id)
+                    music_service.approve(version) if action=="approve" else music_service.reject(version)
+                    return WebResponse(303,"",headers={"Location":f"/projects/{project_id}/music"})
                 selected=int(values["version"]) if action=="select-version" else None
                 WorkflowActionService(self.projects.root/project_id).execute(project_id,action_map[action],WorkflowStage(stage),
                     reason=values.get("reason","").strip(),version=selected)
@@ -301,7 +311,7 @@ class LocalWebApplication:
         message='<p class="success" role="status">Proiect creat cu succes</p>' if created else ""
         return self._page(state.project_id,f'<main><a href="/">← Proiecte</a>{message}<h1>Proiect {html.escape(state.project_id)}</h1><section class="stage-grid">{cards}</section></main>')
     def _lyrics_page(self,project_id,service,error=None):
-        selected=service.selected(); versions=service.versions(); text=html.escape(selected.lyrics_text if selected else "")
+        selected=service.selected(); versions=service.versions(); text=html.escape(selected.lyrics_text if selected else ""); system_prompt,user_prompt=(html.escape(value) for value in service.prompt_parts())
         status=selected.status.value if selected else "not_started"; number=selected.version if selected else "—"
         history="".join(f'<li>Versiunea {x.version} — {x.status.value}</li>' for x in reversed(versions)) or "<li>Nicio versiune</li>"
         workflow_stage=WorkflowStateRepository(service.project).resolve(project_id)[0].stage("lyrics"); base=f"/projects/{project_id}/stages/lyrics"
@@ -312,8 +322,9 @@ class LocalWebApplication:
         if options: actions+=f'<form method="post" action="{base}/select-version"><select name="version">{options}</select><button>Selectează versiune</button></form>'
         error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""
         content=(f'<main><a href="/projects/{project_id}">← Proiect</a><h1>Versuri</h1>{error_html}<p>Versiune curentă: {number}</p><p>Status: {status}</p>'
+            f'<form method="post" action="/projects/{project_id}/lyrics/prompt"><h2>Prompt complet</h2><label>Prompt SYSTEM<textarea class="lyrics-prompt lyrics-prompt--system" name="system_prompt" required>{system_prompt}</textarea></label><label>Prompt USER<textarea class="lyrics-prompt" name="user_prompt" required>{user_prompt}</textarea></label><p class="field-help">Cele două câmpuri sunt combinate automat și trimise modelului la următoarea generare sau regenerare.</p><button>Salvează promptul</button></form>'
             f'<form method="post" action="/projects/{project_id}/lyrics/edit"><label>Editor text<textarea name="lyrics_text" required>{text}</textarea></label><button>Salvează editarea</button></form>'
-            f'<form method="post" action="/projects/{project_id}/lyrics/generate"><label>Instrucțiuni opționale<textarea name="user_instructions"></textarea></label><button>Generează</button></form>'
+            f'<form method="post" action="/projects/{project_id}/lyrics/generate"><button>Generează</button></form>'
             f'<form method="post" action="/projects/{project_id}/lyrics/regenerate"><label>Feedback<textarea name="feedback"></textarea></label><button>Regenerare</button></form>'
             f'<div class="stage-actions">{actions}</div><section><h2>Istoric versiuni</h2><ul>{history}</ul></section></main>')
         return self._page("Versuri",content)
@@ -333,10 +344,17 @@ class LocalWebApplication:
             if version.selected_variant_id and stage.status.value=="generated": approval=(f'<form method="post" action="/projects/{project_id}/music/approve"><input type="hidden" name="version" value="{version.version}"><button>Aprobă</button></form>'
                 f'<form method="post" action="/projects/{project_id}/music/reject"><input type="hidden" name="version" value="{version.version}"><button>Respinge</button></form>')
             blocks.append(f'<section><h2>Versiunea {version.version} — {version.status.value}</h2>{"".join(variants)}<div class="stage-actions">{approval}</div></section>')
+        latest=versions[-1].request if versions else None
+        style=html.escape(latest.musical_style if latest else "educational pop"); mood=html.escape(latest.mood if latest else "cheerful")
+        instruments=html.escape(", ".join(latest.instrumentation) if latest else "ukulele, xylophone"); vocals=html.escape(latest.vocal_style if latest else "clear child-friendly vocals"); tempo=latest.tempo_bpm if latest else 110
+        style_fields=(f'<label>Stil muzical<input name="musical_style" list="music-style-options" value="{style}" required></label>'
+            f'<label>Atmosferă / mood<input name="mood" value="{mood}" required></label><label>Instrumente (separate prin virgulă)<input name="instrumentation" value="{instruments}" required></label>'
+            f'<label>Stil vocal<input name="vocal_style" value="{vocals}" required></label><label>Tempo BPM<input type="number" name="tempo_bpm" min="40" max="220" step="1" value="{tempo:g}" required></label>')
+        style_options='<datalist id="music-style-options"><option value="educational pop"><option value="children acoustic pop"><option value="dance pop"><option value="cinematic orchestral"><option value="playful reggae"><option value="kids rock"><option value="gentle lullaby"><option value="electro pop"></datalist>'
         confirmation='<p>Această acțiune poate consuma credite Suno.</p><label><input type="checkbox" name="confirm_cost" value="yes" required> Confirmă generarea</label>'
         content=(f'<main><a href="/projects/{project_id}">← Proiect</a><h1>Muzică</h1>{error_html}<p>Status: {stage.status.value}</p>'
-            f'<form method="post" action="/projects/{project_id}/music/generate">{confirmation}<button>Generează muzică</button></form>'
-            f'<form method="post" action="/projects/{project_id}/music/regenerate"><label>Feedback<input name="feedback"></label>{confirmation}<button>Regenerare</button></form>{"".join(blocks)}</main>')
+            f'{style_options}<form method="post" action="/projects/{project_id}/music/generate"><h2>Direcție muzicală</h2>{style_fields}{confirmation}<button>Generează muzică</button></form>'
+            f'<form method="post" action="/projects/{project_id}/music/regenerate"><h2>Regenerare cu alt stil</h2>{style_fields}<label>Feedback<input name="feedback"></label>{confirmation}<button>Regenerare</button></form>{"".join(blocks)}</main>')
         return self._page("Muzică",content)
     def _planning_page(self,project_id,route_stage,stage,service,error=None):
         state=WorkflowStateRepository(service.project).resolve(project_id)[0]; stage_state=state.stage(stage); selected=service.selected(stage)

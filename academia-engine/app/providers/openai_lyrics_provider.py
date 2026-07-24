@@ -94,9 +94,9 @@ class OpenAILyricsGenerator:
         try: self._client=OpenAI(api_key=credential,max_retries=0)
         except Exception as error: raise OpenAILyricsConfigurationError("OpenAI lyrics client could not be configured.") from error
 
-    def generate_lyrics(self, brief: EducationalSongBrief) -> LyricsPlan:
+    def generate_lyrics(self, brief: EducationalSongBrief, prompt_text: str | None=None) -> LyricsPlan:
         try:
-            response=self._client.responses.parse(model=self._model,input=_build_input(brief),text_format=_LyricsResponseDTO)
+            response=self._client.responses.parse(model=self._model,input=_input_from_prompt(brief,prompt_text),text_format=_LyricsResponseDTO)
         except ValidationError as error: raise OpenAILyricsStructuredResponseError("OpenAI structured lyrics are malformed.") from error
         except AuthenticationError as error: raise OpenAILyricsAuthenticationError("OpenAI authentication failed.") from error
         except RateLimitError as error: raise OpenAILyricsRateLimitError("OpenAI rate limit was reached.") from error
@@ -132,6 +132,30 @@ def _build_input(brief: EducationalSongBrief) -> list[dict[str,str]]:
             f"Approximate duration seconds: {brief.target_duration_seconds}\nTone: {brief.tone}\n"
             f"Repetition level: {brief.repetition_level}")},
     ]
+
+
+def format_lyrics_prompt(brief: EducationalSongBrief) -> str:
+    """Render the exact editable system/user messages used by the provider."""
+    messages=_build_input(brief)
+    return f"SYSTEM:\n{messages[0]['content']}\n\nUSER:\n{messages[1]['content']}"
+
+
+def parse_lyrics_prompt(prompt_text: str) -> list[dict[str,str]]:
+    marker="\n\nUSER:\n"; value=str(prompt_text).strip()
+    if not value.startswith("SYSTEM:\n") or marker not in value:
+        raise ValueError("Promptul trebuie să conțină secțiunile SYSTEM: și USER:.")
+    system,user=value.removeprefix("SYSTEM:\n").split(marker,1)
+    if not system.strip() or not user.strip(): raise ValueError("Secțiunile SYSTEM și USER nu pot fi goale.")
+    return [{"role":"system","content":system.strip()},{"role":"user","content":user.strip()}]
+
+
+def _input_from_prompt(brief: EducationalSongBrief,prompt_text: str | None):
+    if not prompt_text: return _build_input(brief)
+    value=prompt_text.strip()
+    if value.startswith("SYSTEM:\n"): return parse_lyrics_prompt(value)
+    messages=_build_input(brief)
+    messages[1]={**messages[1],"content":f"{messages[1]['content']}\n\nAdditional instructions:\n{value}"}
+    return messages
 
 
 def _contains_refusal(response) -> bool:

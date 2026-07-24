@@ -40,7 +40,38 @@ class LyricsStageService:
         versions={x.version:x for x in self.versions()}; state,_=WorkflowStateRepository(self.project).resolve(self.project.name)
         selected=state.stage("lyrics").selected_version
         return versions.get(selected) if selected else (versions[max(versions)] if versions else None)
+    def prompt(self):
+        path=self.project/"lyrics"/"prompt.txt"
+        if path.is_file(): return path.read_text(encoding="utf-8")
+        renderer=getattr(self.provider,"prompt",None)
+        if callable(renderer): return renderer(self._request())
+        return self._request().model_dump_json(indent=2)
+    def prompt_parts(self):
+        value=self.prompt().strip(); marker="\n\nUSER:\n"
+        if value.startswith("SYSTEM:\n") and marker in value:
+            system,user=value.removeprefix("SYSTEM:\n").split(marker,1)
+            return system.strip(),user.strip()
+        return "",value
+    def save_prompt_parts(self,system_prompt,user_prompt):
+        system=str(system_prompt).strip(); user=str(user_prompt).strip()
+        if not system: raise ValueError("Promptul SYSTEM este obligatoriu.")
+        if not user: raise ValueError("Promptul USER este obligatoriu.")
+        return self.save_prompt(f"SYSTEM:\n{system}\n\nUSER:\n{user}")
+    def save_prompt(self,prompt_text):
+        value=str(prompt_text).strip()
+        if not value: raise ValueError("Promptul este obligatoriu.")
+        validator=getattr(self.provider,"validate_prompt",None)
+        if callable(validator): validator(value)
+        path=self.project/"lyrics"/"prompt.txt"; path.parent.mkdir(parents=True,exist_ok=True); part=path.with_suffix(".txt.part")
+        try:
+            part.write_text(value+"\n",encoding="utf-8")
+            with part.open("r+b") as stream: os.fsync(stream.fileno())
+            os.replace(part,path)
+        finally: part.unlink(missing_ok=True)
+        return value
     def generate(self,*,feedback=None,user_instructions=None):
+        prompt_path=self.project/"lyrics"/"prompt.txt"
+        if user_instructions is None and prompt_path.is_file(): user_instructions=prompt_path.read_text(encoding="utf-8")
         request=self._request(feedback=feedback,user_instructions=user_instructions)
         if self.provider is None: return self._failure(request,"Lyrics generation provider is not configured.")
         try: result=LyricsGenerationResult.model_validate(self.provider.generate(request))

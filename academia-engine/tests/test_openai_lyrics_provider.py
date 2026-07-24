@@ -11,7 +11,7 @@ from app.cli.song_generate_lyrics import main as cli_main
 from app.providers.openai_lyrics_provider import (DEFAULT_OPENAI_LYRICS_MODEL, OpenAILyricsAPIError,
     OpenAILyricsAuthenticationError, OpenAILyricsConfigurationError, OpenAILyricsConnectionError, OpenAILyricsGenerator,
     OpenAILyricsRateLimitError, OpenAILyricsRefusalError, OpenAILyricsStructuredResponseError,
-    OpenAILyricsTimeoutError, _LyricsResponseDTO, _build_input)
+    OpenAILyricsTimeoutError, _LyricsResponseDTO, _build_input, format_lyrics_prompt, parse_lyrics_prompt)
 from app.song import DeterministicLyricsGenerator, LyricsGeneratorRegistry, LyricsPlan
 from tests.test_song_planning import FIXTURES, brief
 
@@ -86,6 +86,12 @@ class OpenAILyricsProviderTests(unittest.TestCase):
                          "target age","language","duration","tone"):
             self.assertIn(expected,prompt)
         self.assertIn("never imitate",prompt); self.assertNotIn("living artist",prompt)
+
+    def test_editable_prompt_round_trips_and_is_sent_exactly(self):
+        prompt=format_lyrics_prompt(brief()).replace("simple vocabulary","very simple vocabulary")
+        self.assertEqual(["system","user"],[item["role"] for item in parse_lyrics_prompt(prompt)])
+        client=client_with(dto()); OpenAILyricsGenerator(client=client).generate_lyrics(brief(),prompt_text=prompt)
+        self.assertEqual(parse_lyrics_prompt(prompt),client.responses.parse.call_args.kwargs["input"])
 
     def test_registry_deterministic_needs_no_key_and_openai_is_lazy(self):
         with patch.dict("os.environ",{},clear=True): self.assertIsInstance(LyricsGeneratorRegistry().resolve("deterministic"),DeterministicLyricsGenerator)

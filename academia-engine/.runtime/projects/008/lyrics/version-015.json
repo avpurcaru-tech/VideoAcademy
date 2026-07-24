@@ -1,0 +1,34 @@
+{
+  "error": null,
+  "generation_request": {
+    "description": "Luca descoperă anotimpurile și îi invită pe copii să care sunt anotimpurile.\r\n\r\nPrin cântec și joacă, copiii învață anotimpurile prin elemente din natura ușor de recunoscut.",
+    "educational_goal": "Invatarea anotimpurilor",
+    "episode_title": "Luca invata anotimpurile",
+    "feedback": null,
+    "language": "ro",
+    "main_character_description": "A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting.",
+    "main_character_name": "Luca",
+    "target_age": "2-5",
+    "theme": "anotimpurile",
+    "user_instructions": "manual_edit"
+  },
+  "generation_request_sha256": "845a84d89b50c5cd952e4d2617d45554165532bba3be62c704090a464d8781db",
+  "lyrics_text": "[Intro]\r\nHai să învățăm!\r\nAnotimpurile sunt patru\r\nSă le cântăm împreună\r\n\r\n[Verse]\r\nPrimăvara e verde\r\nFloare mică se deschide\r\nPăsările se întorc\r\nPlouă blând, plouă lin\r\nMuguri și iarba verde\r\nZâmbim și alergăm afară\r\n\r\n[Chorus]\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nSunt patru anotimpuri!\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nHai să le spunem iar!\r\n\r\n[Verse]\r\nVara e caldă\r\nSoarele strălucește sus\r\nNe jucăm în parc\r\nMâncăm fructe dulci\r\nSari, aleargă, joacă\r\nZi lungă și veselă\r\n\r\n[Chorus]\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nSunt patru anotimpuri!\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nHai să le spunem iar!\r\n\r\n[Verse]\r\nToamna e colorată\r\nFrunzele cad ușor\r\nStrângem mere și frunze\r\nVântul suflă lin\r\nNe punem jachete ușoare\r\nSărim în covor de frunze\r\n\r\n[Verse]\r\nIarna e albă\r\nNinge lin, ninge mult\r\nFacem om de zăpadă\r\nNe punem haine groase\r\nMănuși și căciulițe\r\nBucurie și clopoței\r\n\r\n[Chorus]\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nSunt patru anotimpuri!\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nHai să le spunem iar!\r\n\r\n[Chorus]\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nSunt patru anotimpuri!\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nHai să le spunem iar!\r\n\r\n[Outro]\r\nAcum știm anotimpurile\r\nIarna, Primăvara, Vara, Toamna\r\nSă le cântăm din nou! (repetați refrenul)",
+  "provider_metadata": {
+    "source": "manual_edit"
+  },
+  "sections": [
+    "[Intro]",
+    "[Verse]",
+    "[Chorus]",
+    "[Verse]",
+    "[Chorus]",
+    "[Verse]",
+    "[Verse]",
+    "[Chorus]",
+    "[Chorus]",
+    "[Outro]"
+  ],
+  "status": "generated",
+  "version": 15
+}

@@ -19,6 +19,10 @@ class WebUiShellTests(unittest.TestCase):
         response=self.application.dispatch("/api/projects/008/workflow"); payload=json.loads(response.body); self.assertEqual(200,response.status); self.assertEqual("008",payload["project_id"]); self.assertEqual(9,len(payload["stages"]))
     def test_unknown_project_returns_404(self): self.assertEqual(404,self.application.dispatch("/projects/missing").status)
     def test_static_css_is_served(self): self.assertIn(b"stage-grid",self.application.dispatch("/static/styles.css").body)
+    def test_generation_loader_assets_are_served(self):
+        script=self.application.dispatch("/static/app.js").body; styles=self.application.dispatch("/static/styles.css").body
+        self.assertIn(b"generation-loader",script); self.assertIn(b"/lyrics",script); self.assertIn(b"/music",script); self.assertIn(b"/composition",script)
+        self.assertIn(b".generation-loader",styles); self.assertIn(b"position:fixed",styles)
     def test_ui_does_not_make_http_external_calls(self): call=Mock(); self.application.dispatch("/"); self.application.dispatch("/health"); call.assert_not_called()
     def test_ui_does_not_make_ai_calls(self): call=Mock(); self.application.dispatch("/projects/008"); call.assert_not_called()
     def test_ui_does_not_make_ffmpeg_calls(self): call=Mock(); self.application.dispatch("/api/projects/008/workflow"); call.assert_not_called()

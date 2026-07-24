@@ -26,7 +26,16 @@ class LyricsUiTests(unittest.TestCase):
     def post(self,path,data=None,application=None): return (application or self.application).dispatch(path,"POST",urlencode(data or {}).encode())
     def generate(self): return self.post("/projects/008/lyrics/generate",{"user_instructions":"refren vesel"})
     def test_lyrics_page_renders(self):
-        text=self.application.dispatch("/projects/008/lyrics").body.decode(); self.assertIn("Editor text",text); self.assertIn("Generează",text); self.assertIn("Istoric versiuni",text)
+        text=self.application.dispatch("/projects/008/lyrics").body.decode(); self.assertIn("Prompt complet",text); self.assertLess(text.index("Prompt complet"),text.index("Editor text")); self.assertIn("Generează",text); self.assertIn("Istoric versiuni",text)
+    def test_saved_prompt_is_rendered_and_used_for_generation(self):
+        prompt='SYSTEM:\nScrie versuri originale.\n\nUSER:\nScrie despre culori.'
+        self.assertEqual(303,self.post("/projects/008/lyrics/prompt",{"system_prompt":"Scrie versuri originale.","user_prompt":"Scrie despre culori."}).status)
+        self.assertEqual(prompt+"\n",(self.project/"lyrics"/"prompt.txt").read_text(encoding="utf-8"))
+        self.assertIn("Scrie despre culori.",self.application.dispatch("/projects/008/lyrics").body.decode())
+        self.assertEqual(303,self.post("/projects/008/lyrics/generate").status); self.assertEqual(prompt,self.provider.requests[-1].user_instructions)
+    def test_prompt_fields_are_separate_and_markers_are_not_editable(self):
+        text=self.application.dispatch("/projects/008/lyrics").body.decode()
+        self.assertIn('name="system_prompt"',text); self.assertIn('name="user_prompt"',text); self.assertNotIn('name="prompt_text"',text)
     def test_generate_lyrics_creates_version(self): self.assertEqual(303,self.generate().status); self.assertTrue((self.project/"lyrics"/"version-001.json").is_file())
     def test_regenerate_lyrics_creates_new_version(self):
         self.generate(); self.post("/projects/008/lyrics/regenerate",{"feedback":"mai repetitiv"}); version=LyricsVersion.model_validate_json((self.project/"lyrics"/"version-002.json").read_text(encoding="utf-8")); self.assertEqual("mai repetitiv",version.generation_request.feedback)

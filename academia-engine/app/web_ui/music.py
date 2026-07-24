@@ -1,5 +1,5 @@
 """Explicit, versioned music generation UI service (Sprint 18.5)."""
-import hashlib,json,os
+import hashlib,json,os,time
 from enum import Enum
 from pathlib import Path
 from typing import Any,Callable,Protocol
@@ -7,6 +7,7 @@ from typing import Any,Callable,Protocol
 from pydantic import BaseModel,ConfigDict,Field
 
 from app.scene_planning import semantic_sha256
+from app.models import GenerationTaskStatus
 from .lyrics import LyricsVersion
 from .project_creation import WebProjectManifest
 from .workflow import WorkflowActionService,WorkflowStageStatus,WorkflowStateRepository
@@ -19,6 +20,11 @@ class MusicGenerationRequest(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     project_id:str; episode_title:str; language:str; target_age:str; lyrics_version:int=Field(ge=1)
     lyrics_text:str=Field(min_length=1); lyrics_sha256:str=Field(pattern=r"^[a-f0-9]{64}$"); regeneration_feedback:str|None=None
+    musical_style:str=Field(default="educational pop",min_length=1,max_length=500)
+    mood:str=Field(default="cheerful",min_length=1,max_length=200)
+    instrumentation:tuple[str,...]=Field(default=("ukulele","xylophone"),min_length=1)
+    vocal_style:str=Field(default="clear child-friendly vocals",min_length=1,max_length=300)
+    tempo_bpm:float=Field(default=110,gt=0,le=300)
 class MusicVariantResult(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     audio_id:str=Field(min_length=1,max_length=200); audio_bytes:bytes; duration_seconds:float|None=Field(default=None,gt=0)
@@ -31,13 +37,23 @@ class MusicGenerationProvider(Protocol):
 
 class SunoApiOrgMusicAdapter:
     """Adapter over the existing submit/query/download provider contract."""
-    def __init__(self,provider,request_mapper:Callable[[MusicGenerationRequest],Any]): self.provider=provider; self.request_mapper=request_mapper
+    def __init__(self,provider,request_mapper:Callable[[MusicGenerationRequest],Any],*,poll_interval_seconds=5,generation_timeout_seconds=900,clock=time):
+        self.provider=provider; self.request_mapper=request_mapper; self.poll_interval_seconds=float(poll_interval_seconds); self.generation_timeout_seconds=float(generation_timeout_seconds); self.clock=clock
+        if self.poll_interval_seconds<=0 or self.generation_timeout_seconds<=0: raise ValueError("Suno polling intervals must be positive.")
     def generate(self,request):
-        submitted=self.provider.submit_generation(self.request_mapper(request)); task=self.provider.get_task_by_id(submitted.provider_task_id)
-        if not task.artifacts: raise MusicUiError("Suno job has not produced audio variants yet.")
+        submitted=self.provider.submit_generation(self.request_mapper(request)); deadline=self.clock.monotonic()+self.generation_timeout_seconds
+        while True:
+            task=self.provider.get_task_by_id(submitted.provider_task_id)
+            if task.normalized_status==GenerationTaskStatus.FAILED: raise MusicUiError("Generarea muzicii a eșuat la providerul Suno.")
+            if task.normalized_status==GenerationTaskStatus.SUCCEEDED:
+                if not task.artifacts: raise MusicUiError("Suno a finalizat jobul fără variante audio.")
+                break
+            remaining=deadline-self.clock.monotonic()
+            if remaining<=0: raise MusicUiError("Generarea muzicii Suno a depășit timpul maxim de 15 minute.")
+            self.clock.sleep(min(self.poll_interval_seconds,remaining))
         variants=tuple(MusicVariantResult(audio_id=x.artifact_id,audio_bytes=self.provider.download_audio_bytes(x),
             duration_seconds=x.duration_seconds,content_type=x.content_type) for x in task.artifacts)
-        return MusicGenerationResult(task_id=task.provider_task_id,variants=variants,provider_metadata={"provider":"sunoapi_org"})
+        return MusicGenerationResult(task_id=submitted.provider_task_id,variants=variants,provider_metadata={"provider":"sunoapi_org"})
 
 class MusicVariantManifest(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True,populate_by_name=True)
@@ -55,7 +71,7 @@ class MusicStageService:
     def versions(self):
         return tuple(MusicVersionManifest.model_validate_json(path.read_text(encoding="utf-8"))
             for path in sorted((self.project/"music").glob("version-*/job.json")))
-    def generate(self,*,confirmed=False,feedback=None):
+    def generate(self,*,confirmed=False,feedback=None,musical_style="educational pop",mood="cheerful",instrumentation="ukulele, xylophone",vocal_style="clear child-friendly vocals",tempo_bpm=110):
         if not confirmed: raise MusicCostConfirmationRequired("Explicit Suno cost confirmation is required.")
         state,_=WorkflowStateRepository(self.project).resolve(self.project.name); lyrics_stage=state.stage("lyrics")
         if lyrics_stage.status!=WorkflowStageStatus.APPROVED or lyrics_stage.approved_version is None: raise MusicBlockedError("Approved lyrics are required.")
@@ -64,7 +80,10 @@ class MusicStageService:
         manifest=WebProjectManifest.model_validate_json((self.project/"project.json").read_text(encoding="utf-8"))
         request=MusicGenerationRequest(project_id=self.project.name,episode_title=manifest.episode.title,language=manifest.episode.language,
             target_age=manifest.episode.target_age,lyrics_version=lyrics.version,lyrics_text=lyrics.lyrics_text,
-            lyrics_sha256=semantic_sha256(lyrics),regeneration_feedback=(feedback.strip() or None) if feedback else None)
+            lyrics_sha256=semantic_sha256(lyrics),regeneration_feedback=(feedback.strip() or None) if feedback else None,
+            musical_style=str(musical_style).strip(),mood=str(mood).strip(),
+            instrumentation=tuple(value.strip() for value in str(instrumentation).split(",") if value.strip()),
+            vocal_style=str(vocal_style).strip(),tempo_bpm=float(tempo_bpm))
         result=MusicGenerationResult.model_validate(self.provider.generate(request)); number=state.stage("music").current_version+1
         directory=self.project/"music"/f"version-{number:03d}"; directory.mkdir(parents=True,exist_ok=False); variants=[]
         for index,value in enumerate(result.variants,1):

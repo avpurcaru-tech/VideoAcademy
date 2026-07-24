@@ -1,0 +1,9 @@
+{
+  "approved_version": 15,
+  "artifact_paths": [
+    "lyrics/version-015.json"
+  ],
+  "dependency_hashes": {},
+  "stage": "lyrics",
+  "validation_summary": "approved artifact and workflow dependency snapshot validated"
+}

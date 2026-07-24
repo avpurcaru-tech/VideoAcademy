@@ -1,0 +1,31 @@
+{
+  "error": null,
+  "generation_request": {
+    "description": "Luca descoperă anotimpurile și îi invită pe copii să care sunt anotimpurile.\r\n\r\nPrin cântec și joacă, copiii învață anotimpurile prin elemente din natura ușor de recunoscut.",
+    "educational_goal": "Invatarea anotimpurilor",
+    "episode_title": "Luca invata anotimpurile",
+    "feedback": null,
+    "language": "ro",
+    "main_character_description": "A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting.",
+    "main_character_name": "Luca",
+    "target_age": "2-5",
+    "theme": "anotimpurile",
+    "user_instructions": null
+  },
+  "generation_request_sha256": "f08b12dcc74303f94fd6c459788bb75dec5ebd7a2f646d94eac7a582508a6574",
+  "lyrics_text": "[Intro]\nHai să cântăm!\nAnotimpurile!\n\n[Verse]\nPrimăvara vin flori\nPrimăvara e veselă\nVara e cald, soare\nVara ne jucăm afară\n\n[Chorus]\nPrimăvara, vara, toamna, iarna\nPrimăvara, vara, toamna, iarna\nSpunem: primăvara, vara, toamna, iarna\nSpunem: primăvara, vara, toamna, iarna\n\n[Verse]\nToamna cad frunze\nToamna culorile-s multe\nIarna ninge alb\nIarna facem om de zăpadă\n\n[Chorus]\nPrimăvara, vara, toamna, iarna\nPrimăvara, vara, toamna, iarna\nLe învățăm: primăvara, vara, toamna, iarna\nLe învățăm: primăvara, vara, toamna, iarna\n\n[Outro]\nAcestea sunt anotimpurile\nPrimăvara, vara, toamna, iarna\nHai să le cântăm iar!",
+  "provider_metadata": {
+    "model": "gpt-5-mini",
+    "provider": "openai"
+  },
+  "sections": [
+    "intro",
+    "verse",
+    "chorus",
+    "verse",
+    "chorus",
+    "outro"
+  ],
+  "status": "generated",
+  "version": 13
+}

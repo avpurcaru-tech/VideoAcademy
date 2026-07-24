@@ -1,0 +1,11 @@
+{
+  "approved_version": 1,
+  "artifact_paths": [
+    "music/version-001/job.json"
+  ],
+  "dependency_hashes": {
+    "lyrics": "a67eb3b65ba21e4c292f9800d49e105436fe7a2b69e0516a23e94fe3868dd5db"
+  },
+  "stage": "music",
+  "validation_summary": "approved artifact and workflow dependency snapshot validated"
+}

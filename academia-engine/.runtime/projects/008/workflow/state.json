@@ -43,7 +43,7 @@
   ],
   "project_id": "008",
   "schema_version": "1.0",
-  "semantic_sha256": "e2c294cf040cf68b15fb3b148e28d08e515ab7dd6ed4b189c0fcc2c2ac70b0f4",
+  "semantic_sha256": "50a2b9fce8b2d8f474b4f2518e1b27857d17293603d784d90eb918396cfc2f34",
   "stages": [
     {
       "approved_version": null,
@@ -56,33 +56,115 @@
       "versions": []
     },
     {
-      "approved_version": null,
+      "approved_version": 15,
       "blocked_reason": null,
-      "current_version": 0,
+      "current_version": 15,
       "last_error": null,
-      "selected_version": null,
+      "selected_version": 15,
       "stage": "lyrics",
-      "status": "ready",
-      "versions": []
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "lyrics/version-001.json",
+          "semantic_sha256": "0d88d9b7eaa4526dae4682c178132d07b5cae20da28711f8f7bfbbc084b9faae",
+          "version": 1
+        },
+        {
+          "artifact_path": "lyrics/version-002.json",
+          "semantic_sha256": "5df650cd18d7d8768caa3225e12a0d8c58a41af8178cd5ae5441dd8d172e6545",
+          "version": 2
+        },
+        {
+          "artifact_path": "lyrics/version-003.json",
+          "semantic_sha256": "b3fc76438b7c2f3863dacd810c3eabf61a596ae17c701c22e09048a0c5539517",
+          "version": 3
+        },
+        {
+          "artifact_path": "lyrics/version-004.json",
+          "semantic_sha256": "7a4225f3e4abc4199b7979223ac5b675fd757b780bd7ff0dc9baa1a007e96c30",
+          "version": 4
+        },
+        {
+          "artifact_path": "lyrics/version-005.json",
+          "semantic_sha256": "17e8b6a2f8f72a9549426f959d6c17d4dfbacb69bbec7fcc58c888c9fe98a32d",
+          "version": 5
+        },
+        {
+          "artifact_path": "lyrics/version-006.json",
+          "semantic_sha256": "5eb335969481004cdae817eb9626c254f7cd7b7b8a45f6adb3a67b85605251e0",
+          "version": 6
+        },
+        {
+          "artifact_path": "lyrics/version-007.json",
+          "semantic_sha256": "70e2237606fd594fbdf6062d983a23d9a9b15c41b1ef128bf36d4250c433d89c",
+          "version": 7
+        },
+        {
+          "artifact_path": "lyrics/version-008.json",
+          "semantic_sha256": "28e78ee460ec49602fec114cec06e140ec5a5e945af8462afed9c7ea5517b323",
+          "version": 8
+        },
+        {
+          "artifact_path": "lyrics/version-009.json",
+          "semantic_sha256": "410b0bda483b8c9962437610248e7a4e7a2b9b61f37d7cc7cd2459aa77dda6e6",
+          "version": 9
+        },
+        {
+          "artifact_path": "lyrics/version-010.json",
+          "semantic_sha256": "3ac97c69b87cb83cfbae9d345db6013c9473ecc920712712e54b6d81957a6c67",
+          "version": 10
+        },
+        {
+          "artifact_path": "lyrics/version-011.json",
+          "semantic_sha256": "8abde99f6161c42ed472f8ec5ff7a6a14d71ae893c9c509368fbb9e778c88c2e",
+          "version": 11
+        },
+        {
+          "artifact_path": "lyrics/version-012.json",
+          "semantic_sha256": "c122917ffd3909ed515e8264507d890bfc3d63f9f90e1160bfa6fdf85249e15e",
+          "version": 12
+        },
+        {
+          "artifact_path": "lyrics/version-013.json",
+          "semantic_sha256": "61d8df2332c7e84c1ccfcf8dfb0531329264c02b5acec50bc76bf8fd59c9a24b",
+          "version": 13
+        },
+        {
+          "artifact_path": "lyrics/version-014.json",
+          "semantic_sha256": "7bba5e065065cf762e98bddc8ea0f52341a4dbc852f5597887a09ef60f7b720f",
+          "version": 14
+        },
+        {
+          "artifact_path": "lyrics/version-015.json",
+          "semantic_sha256": "a34d956562a76ac66fd31c9d32248098f65e9fa7686e395a07114a243da633bf",
+          "version": 15
+        }
+      ]
     },
     {
-      "approved_version": null,
-      "blocked_reason": "Upstream dependency is not satisfied.",
-      "current_version": 0,
+      "approved_version": 1,
+      "blocked_reason": null,
+      "current_version": 1,
       "last_error": null,
-      "selected_version": null,
+      "selected_version": 1,
       "stage": "music",
-      "status": "blocked",
-      "versions": []
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "music/version-001/job.json",
+          "semantic_sha256": "604991f2ee73251b3ffce9dfdb335eb3c41544cdb383e0525a32c5de5a5cbd33",
+          "version": 1
+        }
+      ]
     },
     {
       "approved_version": null,
-      "blocked_reason": "Upstream dependency is not satisfied.",
+      "blocked_reason": "music changed; explicit regeneration is required.",
       "current_version": 0,
       "last_error": null,
       "selected_version": null,
       "stage": "alignment",
-      "status": "blocked",
+      "status": "stale",
       "versions": []
     },
     {

@@ -1,4 +1,35 @@
 "use strict";
+const generationMessages = [
+  { pattern: /\/lyrics\/(?:generate|regenerate)\/?$/, message: "Se generează versurile…" },
+  { pattern: /\/music\/(?:generate|regenerate)\/?$/, message: "Se generează muzica…" },
+  { pattern: /\/scenes\/[^/]+\/assets\/(?:generate|regenerate)\/?$/, message: "Se generează videoclipul…" },
+  { pattern: /\/composition\/render\/?$/, message: "Se compune videoclipul final…" },
+];
+
+function showGenerationLoader(message, submitter) {
+  if (document.getElementById("generation-loader")) return;
+  const overlay = document.createElement("div");
+  overlay.id = "generation-loader";
+  overlay.className = "generation-loader";
+  overlay.setAttribute("role", "status");
+  overlay.setAttribute("aria-live", "assertive");
+  overlay.setAttribute("aria-busy", "true");
+  overlay.innerHTML = `<div class="generation-loader__panel"><span class="generation-loader__spinner" aria-hidden="true"></span><strong>${message}</strong><span>Te rugăm să nu închizi sau să reîncarci pagina.</span></div>`;
+  document.body.appendChild(overlay);
+  document.body.classList.add("is-generating");
+  if (submitter) {
+    submitter.disabled = true;
+    submitter.setAttribute("aria-disabled", "true");
+  }
+}
+
+document.addEventListener("submit", function (event) {
+  const action = event.target instanceof HTMLFormElement ? event.target.action : "";
+  const path = new URL(action, window.location.href).pathname;
+  const operation = generationMessages.find(({ pattern }) => pattern.test(path));
+  if (operation) showGenerationLoader(operation.message, event.submitter);
+});
+
 document.addEventListener("click", function (event) {
   const button = event.target.closest(".use-example");
   if (!button) return;

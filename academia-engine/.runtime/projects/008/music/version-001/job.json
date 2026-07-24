@@ -1,0 +1,48 @@
+{
+  "approved_variant_id": "variant-01",
+  "lyrics_sha256": "a34d956562a76ac66fd31c9d32248098f65e9fa7686e395a07114a243da633bf",
+  "lyrics_version": 15,
+  "request": {
+    "episode_title": "Luca invata anotimpurile",
+    "instrumentation": [
+      "ukulele",
+      "xylophone"
+    ],
+    "language": "ro",
+    "lyrics_sha256": "a34d956562a76ac66fd31c9d32248098f65e9fa7686e395a07114a243da633bf",
+    "lyrics_text": "[Intro]\r\nHai să învățăm!\r\nAnotimpurile sunt patru\r\nSă le cântăm împreună\r\n\r\n[Verse]\r\nPrimăvara e verde\r\nFloare mică se deschide\r\nPăsările se întorc\r\nPlouă blând, plouă lin\r\nMuguri și iarba verde\r\nZâmbim și alergăm afară\r\n\r\n[Chorus]\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nSunt patru anotimpuri!\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nHai să le spunem iar!\r\n\r\n[Verse]\r\nVara e caldă\r\nSoarele strălucește sus\r\nNe jucăm în parc\r\nMâncăm fructe dulci\r\nSari, aleargă, joacă\r\nZi lungă și veselă\r\n\r\n[Chorus]\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nSunt patru anotimpuri!\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nHai să le spunem iar!\r\n\r\n[Verse]\r\nToamna e colorată\r\nFrunzele cad ușor\r\nStrângem mere și frunze\r\nVântul suflă lin\r\nNe punem jachete ușoare\r\nSărim în covor de frunze\r\n\r\n[Verse]\r\nIarna e albă\r\nNinge lin, ninge mult\r\nFacem om de zăpadă\r\nNe punem haine groase\r\nMănuși și căciulițe\r\nBucurie și clopoței\r\n\r\n[Chorus]\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nSunt patru anotimpuri!\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nHai să le spunem iar!\r\n\r\n[Chorus]\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nSunt patru anotimpuri!\r\nIarna! Primăvara!\r\nVara! Toamna!\r\nHai să le spunem iar!\r\n\r\n[Outro]\r\nAcum știm anotimpurile\r\nIarna, Primăvara, Vara, Toamna\r\nSă le cântăm din nou! (repetați refrenul)",
+    "lyrics_version": 15,
+    "mood": "cheerful",
+    "musical_style": "educational pop",
+    "project_id": "008",
+    "regeneration_feedback": null,
+    "target_age": "2-5",
+    "tempo_bpm": 110.0,
+    "vocal_style": "clear child-friendly vocals"
+  },
+  "request_sha256": "3e17c4073fe1a5ee54a822b8edab54cffc1b264367f3de430a382129a716b17f",
+  "selected_variant_id": "variant-01",
+  "status": "approved",
+  "taskId": "448a6570c8d50e70a50dc59bafa3d38c",
+  "variants": [
+    {
+      "audioId": "b3326916-1e80-4ee5-b078-5e2c8fb06b46",
+      "byte_size": 3877821,
+      "content_type": "audio/mpeg",
+      "duration_seconds": 164.32,
+      "metadata": {},
+      "sha256": "c2f7f97ac6953a098e7dbf707d7315a848ef6a89556f08cf377bc30b17becf87",
+      "variant_id": "variant-01"
+    },
+    {
+      "audioId": "53981423-5e45-48e5-9cc5-e39cadffa6ff",
+      "byte_size": 4697901,
+      "content_type": "audio/mpeg",
+      "duration_seconds": 199.12,
+      "metadata": {},
+      "sha256": "e7d74cb0337660bcb081e619307e8522e1109a588dc8b580a14c48a643f607e0",
+      "variant_id": "variant-02"
+    }
+  ],
+  "version": 1
+}

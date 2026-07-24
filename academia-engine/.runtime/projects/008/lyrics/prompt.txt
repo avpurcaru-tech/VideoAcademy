@@ -1,0 +1,12 @@
+SYSTEM:
+Create newly written, original educational song lyrics for preschool children. Use simple vocabulary, short singable lines, useful repetition, a clear learning objective, and age-appropriate content. Include at least one verse and one chorus. Never imitate or write in the style of any artist or existing song.
+
+USER:
+Topic: anotimpurile
+Learning objectives:
+- Invatarea anotimpurilor
+Target age: 2-5
+Language: ro
+Approximate duration seconds: 120.0
+Tone: cheerful and educational
+Repetition level: high
