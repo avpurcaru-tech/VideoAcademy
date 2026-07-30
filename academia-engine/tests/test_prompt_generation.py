@@ -54,7 +54,16 @@ class PromptGenerationTests(unittest.TestCase):
     def test_negative_prompt_uses_negative_constraints(self):
         prompt=next(x for x in self.builder.build_prompt_bundle(visual_plan=self._count_plan(),provider=self.provider,capabilities=self.capabilities).prompts if x.negative_prompt)
         self.assertIn("no additional countable subjects",prompt.negative_prompt)
-    def test_structured_parameters_are_complete(self): self.assertEqual({"aspect_ratio","duration","camera","lighting","style","subjects","counts","educational_constraints"},set(self._rich().structured_parameters))
+    def test_structured_parameters_are_complete(self): self.assertEqual({"aspect_ratio","duration","camera","lighting","style","subjects","counts","educational_constraints","source_texts"},set(self._rich().structured_parameters))
+    def test_prompt_visually_grounds_the_scene_in_lyrics(self):
+        scene=self.visual_plans[0].scenes[1].model_copy(update={"source_texts":("Primăvara e verde","Floare mică se deschide")})
+        prompt=self.builder.build_scene_prompt(scene=scene,variant_id="variant-01",provider=self.provider,capabilities=self.capabilities)
+        self.assertIn("Primăvara e verde",prompt.positive_prompt); self.assertIn("concrete meaning",prompt.positive_prompt)
+        self.assertEqual(["Primăvara e verde","Floare mică se deschide"],prompt.structured_parameters["source_texts"])
+    def test_continuity_uses_visual_instruction_not_internal_scene_ids(self):
+        scene=self.visual_plans[0].scenes[1]; prompt=self.builder.build_scene_prompt(scene=scene,variant_id="variant-01",provider=self.provider,capabilities=self.capabilities)
+        self.assertIn("Visual continuity",prompt.positive_prompt)
+        self.assertNotIn(scene.continuity_requirements.required_previous_scene_id or "impossible",prompt.positive_prompt)
     def test_prompt_bundle_is_deterministic(self): self.assertEqual(self.bundles[0],self.builder.build_prompt_bundle(visual_plan=self.visual_plans[0],provider=self.provider,capabilities=self.capabilities))
     def test_prompt_json_is_stable(self):
         a=self.fx.root/"a.json"; b=self.fx.root/"b.json"; write_prompt_bundle(a,self.bundles[0]); write_prompt_bundle(b,self.bundles[0]); self.assertEqual(a.read_bytes(),b.read_bytes())

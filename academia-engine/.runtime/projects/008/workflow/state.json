@@ -43,7 +43,7 @@
   ],
   "project_id": "008",
   "schema_version": "1.0",
-  "semantic_sha256": "50a2b9fce8b2d8f474b4f2518e1b27857d17293603d784d90eb918396cfc2f34",
+  "semantic_sha256": "dada694c80d9b1bfbe8fc6780499d2d37dc1154e40bddaebe5075bdef3aa0132",
   "stages": [
     {
       "approved_version": null,
@@ -158,53 +158,142 @@
       ]
     },
     {
-      "approved_version": null,
-      "blocked_reason": "music changed; explicit regeneration is required.",
-      "current_version": 0,
+      "approved_version": 2,
+      "blocked_reason": null,
+      "current_version": 2,
       "last_error": null,
-      "selected_version": null,
+      "selected_version": 2,
       "stage": "alignment",
-      "status": "stale",
-      "versions": []
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "alignment/version-001.json",
+          "semantic_sha256": "2fc407935c8845b27054c2e68b59398c61b87f894629ef80b56b3e3148b9214c",
+          "version": 1
+        },
+        {
+          "artifact_path": "alignment/version-002.json",
+          "semantic_sha256": "f2da22ea3da4e597bcc3e0c30f2e786c6aee4b11ea6c925884c6e36a7adac0b3",
+          "version": 2
+        }
+      ]
     },
     {
-      "approved_version": null,
-      "blocked_reason": "Upstream dependency is not satisfied.",
-      "current_version": 0,
+      "approved_version": 4,
+      "blocked_reason": null,
+      "current_version": 4,
       "last_error": null,
-      "selected_version": null,
+      "selected_version": 4,
       "stage": "scene_plan",
-      "status": "blocked",
-      "versions": []
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "visual/scene-plans/version-001.json",
+          "semantic_sha256": "c56c72387603ae19ad4f2b3c76081b5780188952ecf52ad3800a394efe21fc67",
+          "version": 1
+        },
+        {
+          "artifact_path": "visual/scene-plans/version-002.json",
+          "semantic_sha256": "4cd1688f86348899c3c5b38c201f86e54d4460d5d144170f671fc5a870ace3bb",
+          "version": 2
+        },
+        {
+          "artifact_path": "visual/scene-plans/version-003.json",
+          "semantic_sha256": "8ce07de5bd6a14aadbef379d7df6b544f7f5d06a125817861f9ca8cf6059d234",
+          "version": 3
+        },
+        {
+          "artifact_path": "visual/scene-plans/version-004.json",
+          "semantic_sha256": "a340965f8ea06e02cac2286b0e488b3810d707f8b93039343604020369e3e396",
+          "version": 4
+        }
+      ]
     },
     {
-      "approved_version": null,
-      "blocked_reason": "Upstream dependency is not satisfied.",
-      "current_version": 0,
+      "approved_version": 3,
+      "blocked_reason": null,
+      "current_version": 3,
       "last_error": null,
-      "selected_version": null,
+      "selected_version": 3,
       "stage": "visual_plan",
-      "status": "blocked",
-      "versions": []
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "visual/plans/version-001.json",
+          "semantic_sha256": "2dc7260fa1eabc876c659d47a26585c534a6d376ceed09a762b7fddc0145616e",
+          "version": 1
+        },
+        {
+          "artifact_path": "visual/plans/version-002.json",
+          "semantic_sha256": "70b029030e9b9b14bb3dca0b6385675f5a5d54172e3bbabfe7b55314b2049b8d",
+          "version": 2
+        },
+        {
+          "artifact_path": "visual/plans/version-003.json",
+          "semantic_sha256": "17c457f5275c1e3d4344636dfd4427ec6b41dde11835a7bde347efa8cbd1f315",
+          "version": 3
+        }
+      ]
     },
     {
-      "approved_version": null,
-      "blocked_reason": "Upstream dependency is not satisfied.",
-      "current_version": 0,
+      "approved_version": 8,
+      "blocked_reason": null,
+      "current_version": 8,
       "last_error": null,
-      "selected_version": null,
+      "selected_version": 8,
       "stage": "prompts",
-      "status": "blocked",
-      "versions": []
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "visual/prompts/version-001.json",
+          "semantic_sha256": "6ecf17ee248e2aacb55a4e7f95e935723a13f4d882093bfac086bd21933c4dc3",
+          "version": 1
+        },
+        {
+          "artifact_path": "visual/prompts/version-002.json",
+          "semantic_sha256": "b63f35467de4c725c308d2f4a29dd845203ae6e136ce2f800e8404e4c45b7b80",
+          "version": 2
+        },
+        {
+          "artifact_path": "visual/prompts/version-003.json",
+          "semantic_sha256": "82485c8aa64559fc27397c878375911e358e156b1186860b9c0c297658d3a496",
+          "version": 3
+        },
+        {
+          "artifact_path": "visual/prompts/version-004.json",
+          "semantic_sha256": "ff8cece4c1c75563d64c4748d7b97eaf116b082f7ece7c77995f52f9146d95c0",
+          "version": 4
+        },
+        {
+          "artifact_path": "visual/prompts/version-005.json",
+          "semantic_sha256": "bc32f6e11706d04146a3846f045416f02d72f2e72db30e3c81087eb097c17d17",
+          "version": 5
+        },
+        {
+          "artifact_path": "visual/prompts/version-006.json",
+          "semantic_sha256": "d5a4897bddbc03c709062da81274ba0f26c04b5aaf6c40084b02c22139925f4a",
+          "version": 6
+        },
+        {
+          "artifact_path": "visual/prompts/version-007.json",
+          "semantic_sha256": "c0564386f79e95a146d94d15c6cc2f49251a8bc28ec0b0c9fd6c165f216a39b6",
+          "version": 7
+        },
+        {
+          "artifact_path": "visual/prompts/version-008.json",
+          "semantic_sha256": "9956c62804bb5536898d9ed6e8ff17f1710b32adbed06b0a257869d7c1b12ca3",
+          "version": 8
+        }
+      ]
     },
     {
       "approved_version": null,
-      "blocked_reason": "Upstream dependency is not satisfied.",
+      "blocked_reason": "prompts changed; explicit regeneration is required.",
       "current_version": 0,
       "last_error": null,
       "selected_version": null,
       "stage": "assets",
-      "status": "blocked",
+      "status": "stale",
       "versions": []
     },
     {

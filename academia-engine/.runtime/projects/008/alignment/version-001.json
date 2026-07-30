@@ -1,0 +1,2564 @@
+{
+  "data": {
+    "alignment_id": "alignment-variant-01",
+    "audio_artifact_id": "b3326916-1e80-4ee5-b078-5e2c8fb06b46",
+    "audio_duration_seconds": 164.32,
+    "audio_sha256": "c2f7f97ac6953a098e7dbf707d7315a848ef6a89556f08cf377bc30b17becf87",
+    "confidence": null,
+    "created_at": "2026-07-24T22:24:17.180765Z",
+    "granularity": "word",
+    "language": "ro",
+    "lines": [
+      {
+        "end_seconds": 2.28733,
+        "line_id": "variant-01-line-0001",
+        "normalized_text": "hai să învățăm",
+        "section_type": "intro",
+        "source_lyrics_line_id": "line-01-01",
+        "start_seconds": 0.638,
+        "text": "Hai să învățăm!",
+        "word_ids": [
+          "variant-01-word-0001",
+          "variant-01-word-0002",
+          "variant-01-word-0003"
+        ]
+      },
+      {
+        "end_seconds": 5.027,
+        "line_id": "variant-01-line-0002",
+        "normalized_text": "anotimpurile sunt patru",
+        "section_type": "intro",
+        "source_lyrics_line_id": "line-01-02",
+        "start_seconds": 2.34067,
+        "text": "Anotimpurile sunt patru",
+        "word_ids": [
+          "variant-01-word-0004",
+          "variant-01-word-0005",
+          "variant-01-word-0006"
+        ]
+      },
+      {
+        "end_seconds": 10.37867,
+        "line_id": "variant-01-line-0003",
+        "normalized_text": "să le cântăm împreună",
+        "section_type": "intro",
+        "source_lyrics_line_id": "line-01-03",
+        "start_seconds": 5.1065,
+        "text": "Să le cântăm împreună",
+        "word_ids": [
+          "variant-01-word-0007",
+          "variant-01-word-0008",
+          "variant-01-word-0009",
+          "variant-01-word-0010"
+        ]
+      },
+      {
+        "end_seconds": 12.527,
+        "line_id": "variant-01-line-0004",
+        "normalized_text": "primăvara e verde",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-02-01",
+        "start_seconds": 10.38533,
+        "text": "Primăvara e verde",
+        "word_ids": [
+          "variant-01-word-0011",
+          "variant-01-word-0012",
+          "variant-01-word-0013"
+        ]
+      },
+      {
+        "end_seconds": 15.239,
+        "line_id": "variant-01-line-0005",
+        "normalized_text": "floare mică se deschide",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-02-02",
+        "start_seconds": 12.55333,
+        "text": "Floare mică se deschide",
+        "word_ids": [
+          "variant-01-word-0014",
+          "variant-01-word-0015",
+          "variant-01-word-0016",
+          "variant-01-word-0017"
+        ]
+      },
+      {
+        "end_seconds": 17.473,
+        "line_id": "variant-01-line-0006",
+        "normalized_text": "păsările se întorc",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-02-03",
+        "start_seconds": 15.319,
+        "text": "Păsările se întorc",
+        "word_ids": [
+          "variant-01-word-0018",
+          "variant-01-word-0019",
+          "variant-01-word-0020"
+        ]
+      },
+      {
+        "end_seconds": 20.186,
+        "line_id": "variant-01-line-0007",
+        "normalized_text": "plouă blând plouă lin",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-02-04",
+        "start_seconds": 17.513,
+        "text": "Plouă blând, plouă lin",
+        "word_ids": [
+          "variant-01-word-0021",
+          "variant-01-word-0022",
+          "variant-01-word-0023",
+          "variant-01-word-0024"
+        ]
+      },
+      {
+        "end_seconds": 22.101,
+        "line_id": "variant-01-line-0008",
+        "normalized_text": "muguri și iarba verde",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-02-05",
+        "start_seconds": 20.306,
+        "text": "Muguri și iarba verde",
+        "word_ids": [
+          "variant-01-word-0025",
+          "variant-01-word-0026",
+          "variant-01-word-0027",
+          "variant-01-word-0028"
+        ]
+      },
+      {
+        "end_seconds": 26.09727,
+        "line_id": "variant-01-line-0009",
+        "normalized_text": "zâmbim și alergăm afară",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-02-06",
+        "start_seconds": 22.181,
+        "text": "Zâmbim și alergăm afară",
+        "word_ids": [
+          "variant-01-word-0029",
+          "variant-01-word-0030",
+          "variant-01-word-0031",
+          "variant-01-word-0032"
+        ]
+      },
+      {
+        "end_seconds": 28.6035,
+        "line_id": "variant-01-line-0010",
+        "normalized_text": "iarna primăvara",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-03-01",
+        "start_seconds": 26.10455,
+        "text": "Iarna! Primăvara!",
+        "word_ids": [
+          "variant-01-word-0033",
+          "variant-01-word-0034"
+        ]
+      },
+      {
+        "end_seconds": 30.6386,
+        "line_id": "variant-01-line-0011",
+        "normalized_text": "vara toamna",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-03-02",
+        "start_seconds": 28.723,
+        "text": "Vara! Toamna!",
+        "word_ids": [
+          "variant-01-word-0035",
+          "variant-01-word-0036"
+        ]
+      },
+      {
+        "end_seconds": 35.864,
+        "line_id": "variant-01-line-0012",
+        "normalized_text": "sunt patru anotimpuri",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-03-03",
+        "start_seconds": 30.7182,
+        "text": "Sunt patru anotimpuri!",
+        "word_ids": [
+          "variant-01-word-0037",
+          "variant-01-word-0038",
+          "variant-01-word-0039"
+        ]
+      },
+      {
+        "end_seconds": 38.3375,
+        "line_id": "variant-01-line-0013",
+        "normalized_text": "iarna primăvara",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-03-04",
+        "start_seconds": 35.904,
+        "text": "Iarna! Primăvara!",
+        "word_ids": [
+          "variant-01-word-0040",
+          "variant-01-word-0041"
+        ]
+      },
+      {
+        "end_seconds": 40.79075,
+        "line_id": "variant-01-line-0014",
+        "normalized_text": "vara toamna",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-03-05",
+        "start_seconds": 38.457,
+        "text": "Vara! Toamna!",
+        "word_ids": [
+          "variant-01-word-0042",
+          "variant-01-word-0043"
+        ]
+      },
+      {
+        "end_seconds": 45.80509,
+        "line_id": "variant-01-line-0015",
+        "normalized_text": "hai să le spunem iar",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-03-06",
+        "start_seconds": 40.8905,
+        "text": "Hai să le spunem iar!",
+        "word_ids": [
+          "variant-01-word-0044",
+          "variant-01-word-0045",
+          "variant-01-word-0046",
+          "variant-01-word-0047",
+          "variant-01-word-0048"
+        ]
+      },
+      {
+        "end_seconds": 48.032,
+        "line_id": "variant-01-line-0016",
+        "normalized_text": "vara e caldă",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-04-01",
+        "start_seconds": 45.84864,
+        "text": "Vara e caldă",
+        "word_ids": [
+          "variant-01-word-0049",
+          "variant-01-word-0050",
+          "variant-01-word-0051"
+        ]
+      },
+      {
+        "end_seconds": 50.505,
+        "line_id": "variant-01-line-0017",
+        "normalized_text": "soarele strălucește sus",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-04-02",
+        "start_seconds": 48.1115,
+        "text": "Soarele strălucește sus",
+        "word_ids": [
+          "variant-01-word-0052",
+          "variant-01-word-0053",
+          "variant-01-word-0054"
+        ]
+      },
+      {
+        "end_seconds": 52.58,
+        "line_id": "variant-01-line-0018",
+        "normalized_text": "ne jucăm în parc",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-04-03",
+        "start_seconds": 50.625,
+        "text": "Ne jucăm în parc",
+        "word_ids": [
+          "variant-01-word-0055",
+          "variant-01-word-0056",
+          "variant-01-word-0057",
+          "variant-01-word-0058"
+        ]
+      },
+      {
+        "end_seconds": 55.372,
+        "line_id": "variant-01-line-0019",
+        "normalized_text": "mâncăm fructe dulci",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-04-04",
+        "start_seconds": 52.66,
+        "text": "Mâncăm fructe dulci",
+        "word_ids": [
+          "variant-01-word-0059",
+          "variant-01-word-0060",
+          "variant-01-word-0061"
+        ]
+      },
+      {
+        "end_seconds": 57.527,
+        "line_id": "variant-01-line-0020",
+        "normalized_text": "sari aleargă joacă",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-04-05",
+        "start_seconds": 55.492,
+        "text": "Sari, aleargă, joacă",
+        "word_ids": [
+          "variant-01-word-0062",
+          "variant-01-word-0063",
+          "variant-01-word-0064"
+        ]
+      },
+      {
+        "end_seconds": 61.53055,
+        "line_id": "variant-01-line-0021",
+        "normalized_text": "zi lungă și veselă",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-04-06",
+        "start_seconds": 57.606,
+        "text": "Zi lungă și veselă",
+        "word_ids": [
+          "variant-01-word-0065",
+          "variant-01-word-0066",
+          "variant-01-word-0067",
+          "variant-01-word-0068"
+        ]
+      },
+      {
+        "end_seconds": 64.109,
+        "line_id": "variant-01-line-0022",
+        "normalized_text": "iarna primăvara",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-05-01",
+        "start_seconds": 61.54509,
+        "text": "Iarna! Primăvara!",
+        "word_ids": [
+          "variant-01-word-0069",
+          "variant-01-word-0070"
+        ]
+      },
+      {
+        "end_seconds": 66.1438,
+        "line_id": "variant-01-line-0023",
+        "normalized_text": "vara toamna",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-05-02",
+        "start_seconds": 64.229,
+        "text": "Vara! Toamna!",
+        "word_ids": [
+          "variant-01-word-0071",
+          "variant-01-word-0072"
+        ]
+      },
+      {
+        "end_seconds": 70.253,
+        "line_id": "variant-01-line-0024",
+        "normalized_text": "sunt patru anotimpuri",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-05-03",
+        "start_seconds": 66.2236,
+        "text": "Sunt patru anotimpuri!",
+        "word_ids": [
+          "variant-01-word-0073",
+          "variant-01-word-0074",
+          "variant-01-word-0075"
+        ]
+      },
+      {
+        "end_seconds": 71.1305,
+        "line_id": "variant-01-line-0025",
+        "normalized_text": "iarna primăvara",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-05-04",
+        "start_seconds": 70.293,
+        "text": "Iarna! Primăvara!",
+        "word_ids": [
+          "variant-01-word-0076",
+          "variant-01-word-0077"
+        ]
+      },
+      {
+        "end_seconds": 76.37675,
+        "line_id": "variant-01-line-0026",
+        "normalized_text": "vara toamna",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-05-05",
+        "start_seconds": 71.25,
+        "text": "Vara! Toamna!",
+        "word_ids": [
+          "variant-01-word-0078",
+          "variant-01-word-0079"
+        ]
+      },
+      {
+        "end_seconds": 81.15717,
+        "line_id": "variant-01-line-0027",
+        "normalized_text": "hai să le spunem iar",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-05-06",
+        "start_seconds": 76.4765,
+        "text": "Hai să le spunem iar!",
+        "word_ids": [
+          "variant-01-word-0080",
+          "variant-01-word-0081",
+          "variant-01-word-0082",
+          "variant-01-word-0083",
+          "variant-01-word-0084"
+        ]
+      },
+      {
+        "end_seconds": 83.537,
+        "line_id": "variant-01-line-0028",
+        "normalized_text": "toamna e colorată",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-06-01",
+        "start_seconds": 81.16375,
+        "text": "Toamna e colorată",
+        "word_ids": [
+          "variant-01-word-0085",
+          "variant-01-word-0086",
+          "variant-01-word-0087"
+        ]
+      },
+      {
+        "end_seconds": 86.011,
+        "line_id": "variant-01-line-0029",
+        "normalized_text": "frunzele cad ușor",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-06-02",
+        "start_seconds": 83.577,
+        "text": "Frunzele cad ușor",
+        "word_ids": [
+          "variant-01-word-0088",
+          "variant-01-word-0089",
+          "variant-01-word-0090"
+        ]
+      },
+      {
+        "end_seconds": 88.404,
+        "line_id": "variant-01-line-0030",
+        "normalized_text": "strângem mere și frunze",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-06-03",
+        "start_seconds": 86.03733,
+        "text": "Strângem mere și frunze",
+        "word_ids": [
+          "variant-01-word-0091",
+          "variant-01-word-0092",
+          "variant-01-word-0093",
+          "variant-01-word-0094"
+        ]
+      },
+      {
+        "end_seconds": 90.718,
+        "line_id": "variant-01-line-0031",
+        "normalized_text": "vântul suflă lin",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-06-04",
+        "start_seconds": 88.484,
+        "text": "Vântul suflă lin",
+        "word_ids": [
+          "variant-01-word-0095",
+          "variant-01-word-0096",
+          "variant-01-word-0097"
+        ]
+      },
+      {
+        "end_seconds": 92.314,
+        "line_id": "variant-01-line-0032",
+        "normalized_text": "ne punem jachete ușoare",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-06-05",
+        "start_seconds": 90.798,
+        "text": "Ne punem jachete ușoare",
+        "word_ids": [
+          "variant-01-word-0098",
+          "variant-01-word-0099",
+          "variant-01-word-0100",
+          "variant-01-word-0101"
+        ]
+      },
+      {
+        "end_seconds": 95.7529,
+        "line_id": "variant-01-line-0033",
+        "normalized_text": "sărim în covor de frunze",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-06-06",
+        "start_seconds": 92.473,
+        "text": "Sărim în covor de frunze",
+        "word_ids": [
+          "variant-01-word-0102",
+          "variant-01-word-0103",
+          "variant-01-word-0104",
+          "variant-01-word-0105",
+          "variant-01-word-0106"
+        ]
+      },
+      {
+        "end_seconds": 97.021,
+        "line_id": "variant-01-line-0034",
+        "normalized_text": "iarna e albă",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-07-01",
+        "start_seconds": 95.7608,
+        "text": "Iarna e albă",
+        "word_ids": [
+          "variant-01-word-0107",
+          "variant-01-word-0108",
+          "variant-01-word-0109"
+        ]
+      },
+      {
+        "end_seconds": 100.691,
+        "line_id": "variant-01-line-0035",
+        "normalized_text": "ninge lin ninge mult",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-07-02",
+        "start_seconds": 97.12075,
+        "text": "Ninge lin, ninge mult",
+        "word_ids": [
+          "variant-01-word-0110",
+          "variant-01-word-0111",
+          "variant-01-word-0112",
+          "variant-01-word-0113"
+        ]
+      },
+      {
+        "end_seconds": 102.367,
+        "line_id": "variant-01-line-0036",
+        "normalized_text": "facem om de zăpadă",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-07-03",
+        "start_seconds": 100.751,
+        "text": "Facem om de zăpadă",
+        "word_ids": [
+          "variant-01-word-0114",
+          "variant-01-word-0115",
+          "variant-01-word-0116",
+          "variant-01-word-0117"
+        ]
+      },
+      {
+        "end_seconds": 105.479,
+        "line_id": "variant-01-line-0037",
+        "normalized_text": "ne punem haine groase",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-07-04",
+        "start_seconds": 102.407,
+        "text": "Ne punem haine groase",
+        "word_ids": [
+          "variant-01-word-0118",
+          "variant-01-word-0119",
+          "variant-01-word-0120",
+          "variant-01-word-0121"
+        ]
+      },
+      {
+        "end_seconds": 107.473,
+        "line_id": "variant-01-line-0038",
+        "normalized_text": "mănuși și căciulițe",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-07-05",
+        "start_seconds": 105.5585,
+        "text": "Mănuși și căciulițe",
+        "word_ids": [
+          "variant-01-word-0122",
+          "variant-01-word-0123",
+          "variant-01-word-0124"
+        ]
+      },
+      {
+        "end_seconds": 112.98627,
+        "line_id": "variant-01-line-0039",
+        "normalized_text": "bucurie și clopoței",
+        "section_type": "verse",
+        "source_lyrics_line_id": "line-07-06",
+        "start_seconds": 107.593,
+        "text": "Bucurie și clopoței",
+        "word_ids": [
+          "variant-01-word-0125",
+          "variant-01-word-0126",
+          "variant-01-word-0127"
+        ]
+      },
+      {
+        "end_seconds": 115.5715,
+        "line_id": "variant-01-line-0040",
+        "normalized_text": "iarna primăvara",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-08-01",
+        "start_seconds": 112.99355,
+        "text": "Iarna! Primăvara!",
+        "word_ids": [
+          "variant-01-word-0128",
+          "variant-01-word-0129"
+        ]
+      },
+      {
+        "end_seconds": 117.6068,
+        "line_id": "variant-01-line-0041",
+        "normalized_text": "vara toamna",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-08-02",
+        "start_seconds": 115.691,
+        "text": "Vara! Toamna!",
+        "word_ids": [
+          "variant-01-word-0130",
+          "variant-01-word-0131"
+        ]
+      },
+      {
+        "end_seconds": 122.8325,
+        "line_id": "variant-01-line-0042",
+        "normalized_text": "sunt patru anotimpuri",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-08-03",
+        "start_seconds": 117.6866,
+        "text": "Sunt patru anotimpuri!",
+        "word_ids": [
+          "variant-01-word-0132",
+          "variant-01-word-0133",
+          "variant-01-word-0134"
+        ]
+      },
+      {
+        "end_seconds": 125.306,
+        "line_id": "variant-01-line-0043",
+        "normalized_text": "iarna primăvara",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-08-04",
+        "start_seconds": 122.872,
+        "text": "Iarna! Primăvara!",
+        "word_ids": [
+          "variant-01-word-0135",
+          "variant-01-word-0136"
+        ]
+      },
+      {
+        "end_seconds": 127.75975,
+        "line_id": "variant-01-line-0044",
+        "normalized_text": "vara toamna",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-08-05",
+        "start_seconds": 125.426,
+        "text": "Vara! Toamna!",
+        "word_ids": [
+          "variant-01-word-0137",
+          "variant-01-word-0138"
+        ]
+      },
+      {
+        "end_seconds": 130.22633,
+        "line_id": "variant-01-line-0045",
+        "normalized_text": "hai să le spunem iar",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-08-06",
+        "start_seconds": 127.8595,
+        "text": "Hai să le spunem iar!",
+        "word_ids": [
+          "variant-01-word-0139",
+          "variant-01-word-0140",
+          "variant-01-word-0141",
+          "variant-01-word-0142",
+          "variant-01-word-0143"
+        ]
+      },
+      {
+        "end_seconds": 135.0,
+        "line_id": "variant-01-line-0046",
+        "normalized_text": "iarna primăvara",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-09-01",
+        "start_seconds": 130.233,
+        "text": "Iarna! Primăvara!",
+        "word_ids": [
+          "variant-01-word-0144",
+          "variant-01-word-0145"
+        ]
+      },
+      {
+        "end_seconds": 137.2178,
+        "line_id": "variant-01-line-0047",
+        "normalized_text": "vara toamna",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-09-02",
+        "start_seconds": 135.08,
+        "text": "Vara! Toamna!",
+        "word_ids": [
+          "variant-01-word-0146",
+          "variant-01-word-0147"
+        ]
+      },
+      {
+        "end_seconds": 142.42,
+        "line_id": "variant-01-line-0048",
+        "normalized_text": "sunt patru anotimpuri",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-09-03",
+        "start_seconds": 137.2816,
+        "text": "Sunt patru anotimpuri!",
+        "word_ids": [
+          "variant-01-word-0148",
+          "variant-01-word-0149",
+          "variant-01-word-0150"
+        ]
+      },
+      {
+        "end_seconds": 144.9335,
+        "line_id": "variant-01-line-0049",
+        "normalized_text": "iarna primăvara",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-09-04",
+        "start_seconds": 142.5,
+        "text": "Iarna! Primăvara!",
+        "word_ids": [
+          "variant-01-word-0151",
+          "variant-01-word-0152"
+        ]
+      },
+      {
+        "end_seconds": 147.30675,
+        "line_id": "variant-01-line-0050",
+        "normalized_text": "vara toamna",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-09-05",
+        "start_seconds": 145.053,
+        "text": "Vara! Toamna!",
+        "word_ids": [
+          "variant-01-word-0153",
+          "variant-01-word-0154"
+        ]
+      },
+      {
+        "end_seconds": 152.4205,
+        "line_id": "variant-01-line-0051",
+        "normalized_text": "hai să le spunem iar",
+        "section_type": "chorus",
+        "source_lyrics_line_id": "line-09-06",
+        "start_seconds": 147.4065,
+        "text": "Hai să le spunem iar!",
+        "word_ids": [
+          "variant-01-word-0155",
+          "variant-01-word-0156",
+          "variant-01-word-0157",
+          "variant-01-word-0158",
+          "variant-01-word-0159"
+        ]
+      },
+      {
+        "end_seconds": 155.665,
+        "line_id": "variant-01-line-0052",
+        "normalized_text": "acum știm anotimpurile",
+        "section_type": "outro",
+        "source_lyrics_line_id": "line-10-01",
+        "start_seconds": 152.43375,
+        "text": "Acum știm anotimpurile",
+        "word_ids": [
+          "variant-01-word-0160",
+          "variant-01-word-0161",
+          "variant-01-word-0162"
+        ]
+      },
+      {
+        "end_seconds": 160.851,
+        "line_id": "variant-01-line-0053",
+        "normalized_text": "iarna primăvara vara toamna",
+        "section_type": "outro",
+        "source_lyrics_line_id": "line-10-02",
+        "start_seconds": 155.745,
+        "text": "Iarna, Primăvara, Vara, Toamna",
+        "word_ids": [
+          "variant-01-word-0163",
+          "variant-01-word-0164",
+          "variant-01-word-0165",
+          "variant-01-word-0166"
+        ]
+      },
+      {
+        "end_seconds": 164.521,
+        "line_id": "variant-01-line-0054",
+        "normalized_text": "să le cântăm din nou repetați refrenul",
+        "section_type": "outro",
+        "source_lyrics_line_id": "line-10-03",
+        "start_seconds": 160.931,
+        "text": "Să le cântăm din nou! (repetați refrenul)",
+        "word_ids": [
+          "variant-01-word-0167",
+          "variant-01-word-0168",
+          "variant-01-word-0169",
+          "variant-01-word-0170",
+          "variant-01-word-0171",
+          "variant-01-word-0172",
+          "variant-01-word-0173"
+        ]
+      }
+    ],
+    "mapping_confidence": 1.0,
+    "provider_audio_id": "b3326916-1e80-4ee5-b078-5e2c8fb06b46",
+    "provider_task_id": "448a6570c8d50e70a50dc59bafa3d38c",
+    "retrieval_status": "retrieved",
+    "sections": [
+      {
+        "end_seconds": 0.638,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-intro",
+        "section_type": "instrumental_intro",
+        "start_seconds": 0.0
+      },
+      {
+        "end_seconds": 10.37867,
+        "line_ids": [
+          "variant-01-line-0001",
+          "variant-01-line-0002",
+          "variant-01-line-0003"
+        ],
+        "section_id": "section-01",
+        "section_type": "intro",
+        "start_seconds": 0.638
+      },
+      {
+        "end_seconds": 10.38533,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-01",
+        "section_type": "instrumental_break",
+        "start_seconds": 10.37867
+      },
+      {
+        "end_seconds": 26.09727,
+        "line_ids": [
+          "variant-01-line-0004",
+          "variant-01-line-0005",
+          "variant-01-line-0006",
+          "variant-01-line-0007",
+          "variant-01-line-0008",
+          "variant-01-line-0009"
+        ],
+        "section_id": "section-02",
+        "section_type": "verse",
+        "start_seconds": 10.38533
+      },
+      {
+        "end_seconds": 26.10455,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-02",
+        "section_type": "instrumental_break",
+        "start_seconds": 26.09727
+      },
+      {
+        "end_seconds": 45.80509,
+        "line_ids": [
+          "variant-01-line-0010",
+          "variant-01-line-0011",
+          "variant-01-line-0012",
+          "variant-01-line-0013",
+          "variant-01-line-0014",
+          "variant-01-line-0015"
+        ],
+        "section_id": "section-03",
+        "section_type": "chorus",
+        "start_seconds": 26.10455
+      },
+      {
+        "end_seconds": 45.84864,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-03",
+        "section_type": "instrumental_break",
+        "start_seconds": 45.80509
+      },
+      {
+        "end_seconds": 61.53055,
+        "line_ids": [
+          "variant-01-line-0016",
+          "variant-01-line-0017",
+          "variant-01-line-0018",
+          "variant-01-line-0019",
+          "variant-01-line-0020",
+          "variant-01-line-0021"
+        ],
+        "section_id": "section-04",
+        "section_type": "verse",
+        "start_seconds": 45.84864
+      },
+      {
+        "end_seconds": 61.54509,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-04",
+        "section_type": "instrumental_break",
+        "start_seconds": 61.53055
+      },
+      {
+        "end_seconds": 81.15717,
+        "line_ids": [
+          "variant-01-line-0022",
+          "variant-01-line-0023",
+          "variant-01-line-0024",
+          "variant-01-line-0025",
+          "variant-01-line-0026",
+          "variant-01-line-0027"
+        ],
+        "section_id": "section-05",
+        "section_type": "chorus",
+        "start_seconds": 61.54509
+      },
+      {
+        "end_seconds": 81.16375,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-05",
+        "section_type": "instrumental_break",
+        "start_seconds": 81.15717
+      },
+      {
+        "end_seconds": 95.7529,
+        "line_ids": [
+          "variant-01-line-0028",
+          "variant-01-line-0029",
+          "variant-01-line-0030",
+          "variant-01-line-0031",
+          "variant-01-line-0032",
+          "variant-01-line-0033"
+        ],
+        "section_id": "section-06",
+        "section_type": "verse",
+        "start_seconds": 81.16375
+      },
+      {
+        "end_seconds": 95.7608,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-06",
+        "section_type": "instrumental_break",
+        "start_seconds": 95.7529
+      },
+      {
+        "end_seconds": 112.98627,
+        "line_ids": [
+          "variant-01-line-0034",
+          "variant-01-line-0035",
+          "variant-01-line-0036",
+          "variant-01-line-0037",
+          "variant-01-line-0038",
+          "variant-01-line-0039"
+        ],
+        "section_id": "section-07",
+        "section_type": "verse",
+        "start_seconds": 95.7608
+      },
+      {
+        "end_seconds": 112.99355,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-07",
+        "section_type": "instrumental_break",
+        "start_seconds": 112.98627
+      },
+      {
+        "end_seconds": 130.22633,
+        "line_ids": [
+          "variant-01-line-0040",
+          "variant-01-line-0041",
+          "variant-01-line-0042",
+          "variant-01-line-0043",
+          "variant-01-line-0044",
+          "variant-01-line-0045"
+        ],
+        "section_id": "section-08",
+        "section_type": "chorus",
+        "start_seconds": 112.99355
+      },
+      {
+        "end_seconds": 130.233,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-08",
+        "section_type": "instrumental_break",
+        "start_seconds": 130.22633
+      },
+      {
+        "end_seconds": 152.4205,
+        "line_ids": [
+          "variant-01-line-0046",
+          "variant-01-line-0047",
+          "variant-01-line-0048",
+          "variant-01-line-0049",
+          "variant-01-line-0050",
+          "variant-01-line-0051"
+        ],
+        "section_id": "section-09",
+        "section_type": "chorus",
+        "start_seconds": 130.233
+      },
+      {
+        "end_seconds": 152.43375,
+        "line_ids": [],
+        "section_id": "variant-01-instrumental-break-09",
+        "section_type": "instrumental_break",
+        "start_seconds": 152.4205
+      },
+      {
+        "end_seconds": 164.521,
+        "line_ids": [
+          "variant-01-line-0052",
+          "variant-01-line-0053",
+          "variant-01-line-0054"
+        ],
+        "section_id": "section-10",
+        "section_type": "outro",
+        "start_seconds": 152.43375
+      }
+    ],
+    "source": "suno_timestamped_lyrics",
+    "status": "valid",
+    "unmatched_lyrics_line_ids": [],
+    "unmatched_lyrics_tokens": [],
+    "unmatched_provider_tokens": [],
+    "variant_id": "variant-01",
+    "words": [
+      {
+        "confidence": null,
+        "end_seconds": 0.957,
+        "normalized_text": "hai",
+        "source_line_id": "line-01-01",
+        "start_seconds": 0.638,
+        "text": "[Intro]\nHai ",
+        "word_id": "variant-01-word-0001"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 1.117,
+        "normalized_text": "să",
+        "source_line_id": "line-01-01",
+        "start_seconds": 1.037,
+        "text": "să ",
+        "word_id": "variant-01-word-0002"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 2.28733,
+        "normalized_text": "învățăm",
+        "source_line_id": "line-01-01",
+        "start_seconds": 1.157,
+        "text": "învățăm!\n",
+        "word_id": "variant-01-word-0003"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 3.271,
+        "normalized_text": "anotimpurile",
+        "source_line_id": "line-01-02",
+        "start_seconds": 2.34067,
+        "text": "Anotimpurile ",
+        "word_id": "variant-01-word-0004"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 3.67,
+        "normalized_text": "sunt",
+        "source_line_id": "line-01-02",
+        "start_seconds": 3.37075,
+        "text": "sunt ",
+        "word_id": "variant-01-word-0005"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 5.027,
+        "normalized_text": "patru",
+        "source_line_id": "line-01-02",
+        "start_seconds": 3.77633,
+        "text": "patru\n",
+        "word_id": "variant-01-word-0006"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 5.186,
+        "normalized_text": "să",
+        "source_line_id": "line-01-03",
+        "start_seconds": 5.1065,
+        "text": "Să ",
+        "word_id": "variant-01-word-0007"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 5.346,
+        "normalized_text": "le",
+        "source_line_id": "line-01-03",
+        "start_seconds": 5.266,
+        "text": "le ",
+        "word_id": "variant-01-word-0008"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 6.064,
+        "normalized_text": "cântăm",
+        "source_line_id": "line-01-03",
+        "start_seconds": 5.426,
+        "text": "cântăm ",
+        "word_id": "variant-01-word-0009"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 10.37867,
+        "normalized_text": "împreună",
+        "source_line_id": "line-01-03",
+        "start_seconds": 6.144,
+        "text": "împreună\n\n",
+        "word_id": "variant-01-word-0010"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 11.09,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-02-01",
+        "start_seconds": 10.38533,
+        "text": "[Verse]\nPrimăvara ",
+        "word_id": "variant-01-word-0011"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 11.33,
+        "normalized_text": "e",
+        "source_line_id": "line-02-01",
+        "start_seconds": 11.25,
+        "text": "e ",
+        "word_id": "variant-01-word-0012"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 12.527,
+        "normalized_text": "verde",
+        "source_line_id": "line-02-01",
+        "start_seconds": 11.43633,
+        "text": "verde\n",
+        "word_id": "variant-01-word-0013"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 13.005,
+        "normalized_text": "floare",
+        "source_line_id": "line-02-02",
+        "start_seconds": 12.55333,
+        "text": "Floare ",
+        "word_id": "variant-01-word-0014"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 13.723,
+        "normalized_text": "mică",
+        "source_line_id": "line-02-02",
+        "start_seconds": 13.11133,
+        "text": "mică ",
+        "word_id": "variant-01-word-0015"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 13.963,
+        "normalized_text": "se",
+        "source_line_id": "line-02-02",
+        "start_seconds": 13.843,
+        "text": "se ",
+        "word_id": "variant-01-word-0016"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 15.239,
+        "normalized_text": "deschide",
+        "source_line_id": "line-02-02",
+        "start_seconds": 14.04267,
+        "text": "deschide\n",
+        "word_id": "variant-01-word-0017"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 16.197,
+        "normalized_text": "păsările",
+        "source_line_id": "line-02-03",
+        "start_seconds": 15.319,
+        "text": "Păsările ",
+        "word_id": "variant-01-word-0018"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 16.436,
+        "normalized_text": "se",
+        "source_line_id": "line-02-03",
+        "start_seconds": 16.3165,
+        "text": "se ",
+        "word_id": "variant-01-word-0019"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 17.473,
+        "normalized_text": "întorc",
+        "source_line_id": "line-02-03",
+        "start_seconds": 16.516,
+        "text": "întorc\n",
+        "word_id": "variant-01-word-0020"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 18.112,
+        "normalized_text": "plouă",
+        "source_line_id": "line-02-04",
+        "start_seconds": 17.513,
+        "text": "Plouă ",
+        "word_id": "variant-01-word-0021"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 18.69667,
+        "normalized_text": "blând",
+        "source_line_id": "line-02-04",
+        "start_seconds": 18.1515,
+        "text": "blând, ",
+        "word_id": "variant-01-word-0022"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 19.309,
+        "normalized_text": "plouă",
+        "source_line_id": "line-02-04",
+        "start_seconds": 18.72333,
+        "text": "plouă ",
+        "word_id": "variant-01-word-0023"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 20.186,
+        "normalized_text": "lin",
+        "source_line_id": "line-02-04",
+        "start_seconds": 19.41533,
+        "text": "lin\n",
+        "word_id": "variant-01-word-0024"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 20.824,
+        "normalized_text": "muguri",
+        "source_line_id": "line-02-05",
+        "start_seconds": 20.306,
+        "text": "Muguri ",
+        "word_id": "variant-01-word-0025"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 21.144,
+        "normalized_text": "și",
+        "source_line_id": "line-02-05",
+        "start_seconds": 20.944,
+        "text": "și ",
+        "word_id": "variant-01-word-0026"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 21.622,
+        "normalized_text": "iarba",
+        "source_line_id": "line-02-05",
+        "start_seconds": 21.223,
+        "text": "iarba ",
+        "word_id": "variant-01-word-0027"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 22.101,
+        "normalized_text": "verde",
+        "source_line_id": "line-02-05",
+        "start_seconds": 21.72833,
+        "text": "verde\n",
+        "word_id": "variant-01-word-0028"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 22.58,
+        "normalized_text": "zâmbim",
+        "source_line_id": "line-02-06",
+        "start_seconds": 22.181,
+        "text": "Zâmbim ",
+        "word_id": "variant-01-word-0029"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 22.739,
+        "normalized_text": "și",
+        "source_line_id": "line-02-06",
+        "start_seconds": 22.6595,
+        "text": "și ",
+        "word_id": "variant-01-word-0030"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 23.378,
+        "normalized_text": "alergăm",
+        "source_line_id": "line-02-06",
+        "start_seconds": 22.779,
+        "text": "alergăm ",
+        "word_id": "variant-01-word-0031"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 26.09727,
+        "normalized_text": "afară",
+        "source_line_id": "line-02-06",
+        "start_seconds": 23.4975,
+        "text": "afară\n\n",
+        "word_id": "variant-01-word-0032"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 27.267,
+        "normalized_text": "iarna",
+        "source_line_id": "line-03-01",
+        "start_seconds": 26.10455,
+        "text": "[Chorus]\nIarna! ",
+        "word_id": "variant-01-word-0033"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 28.6035,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-03-01",
+        "start_seconds": 27.327,
+        "text": "Primăvara!\n",
+        "word_id": "variant-01-word-0034"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 29.70767,
+        "normalized_text": "vara",
+        "source_line_id": "line-03-02",
+        "start_seconds": 28.723,
+        "text": "Vara! ",
+        "word_id": "variant-01-word-0035"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 30.6386,
+        "normalized_text": "toamna",
+        "source_line_id": "line-03-02",
+        "start_seconds": 29.73433,
+        "text": "Toamna!\n",
+        "word_id": "variant-01-word-0036"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 30.957,
+        "normalized_text": "sunt",
+        "source_line_id": "line-03-03",
+        "start_seconds": 30.7182,
+        "text": "Sunt ",
+        "word_id": "variant-01-word-0037"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 32.074,
+        "normalized_text": "patru",
+        "source_line_id": "line-03-03",
+        "start_seconds": 31.06367,
+        "text": "patru ",
+        "word_id": "variant-01-word-0038"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 35.864,
+        "normalized_text": "anotimpuri",
+        "source_line_id": "line-03-03",
+        "start_seconds": 32.194,
+        "text": "anotimpuri!\n",
+        "word_id": "variant-01-word-0039"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 37.081,
+        "normalized_text": "iarna",
+        "source_line_id": "line-03-04",
+        "start_seconds": 35.904,
+        "text": "Iarna! ",
+        "word_id": "variant-01-word-0040"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 38.3375,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-03-04",
+        "start_seconds": 37.141,
+        "text": "Primăvara!\n",
+        "word_id": "variant-01-word-0041"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 39.52133,
+        "normalized_text": "vara",
+        "source_line_id": "line-03-05",
+        "start_seconds": 38.457,
+        "text": "Vara! ",
+        "word_id": "variant-01-word-0042"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 40.79075,
+        "normalized_text": "toamna",
+        "source_line_id": "line-03-05",
+        "start_seconds": 39.54767,
+        "text": "Toamna!\n",
+        "word_id": "variant-01-word-0043"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 41.25,
+        "normalized_text": "hai",
+        "source_line_id": "line-03-06",
+        "start_seconds": 40.8905,
+        "text": "Hai ",
+        "word_id": "variant-01-word-0044"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 41.888,
+        "normalized_text": "să",
+        "source_line_id": "line-03-06",
+        "start_seconds": 41.3695,
+        "text": "să ",
+        "word_id": "variant-01-word-0045"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 42.527,
+        "normalized_text": "le",
+        "source_line_id": "line-03-06",
+        "start_seconds": 42.008,
+        "text": "le ",
+        "word_id": "variant-01-word-0046"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 43.085,
+        "normalized_text": "spunem",
+        "source_line_id": "line-03-06",
+        "start_seconds": 42.58675,
+        "text": "spunem ",
+        "word_id": "variant-01-word-0047"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 45.80509,
+        "normalized_text": "iar",
+        "source_line_id": "line-03-06",
+        "start_seconds": 43.165,
+        "text": "iar!\n\n",
+        "word_id": "variant-01-word-0048"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 46.436,
+        "normalized_text": "vara",
+        "source_line_id": "line-04-01",
+        "start_seconds": 45.84864,
+        "text": "[Verse]\nVara ",
+        "word_id": "variant-01-word-0049"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 46.755,
+        "normalized_text": "e",
+        "source_line_id": "line-04-01",
+        "start_seconds": 46.596,
+        "text": "e ",
+        "word_id": "variant-01-word-0050"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 48.032,
+        "normalized_text": "caldă",
+        "source_line_id": "line-04-01",
+        "start_seconds": 46.915,
+        "text": "caldă\n",
+        "word_id": "variant-01-word-0051"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 48.67,
+        "normalized_text": "soarele",
+        "source_line_id": "line-04-02",
+        "start_seconds": 48.1115,
+        "text": "Soarele ",
+        "word_id": "variant-01-word-0052"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 49.787,
+        "normalized_text": "strălucește",
+        "source_line_id": "line-04-02",
+        "start_seconds": 48.71,
+        "text": "strălucește ",
+        "word_id": "variant-01-word-0053"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 50.505,
+        "normalized_text": "sus",
+        "source_line_id": "line-04-02",
+        "start_seconds": 49.89333,
+        "text": "sus\n",
+        "word_id": "variant-01-word-0054"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 50.824,
+        "normalized_text": "ne",
+        "source_line_id": "line-04-03",
+        "start_seconds": 50.625,
+        "text": "Ne ",
+        "word_id": "variant-01-word-0055"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 51.383,
+        "normalized_text": "jucăm",
+        "source_line_id": "line-04-03",
+        "start_seconds": 50.904,
+        "text": "jucăm ",
+        "word_id": "variant-01-word-0056"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 51.622,
+        "normalized_text": "în",
+        "source_line_id": "line-04-03",
+        "start_seconds": 51.5025,
+        "text": "în ",
+        "word_id": "variant-01-word-0057"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 52.58,
+        "normalized_text": "parc",
+        "source_line_id": "line-04-03",
+        "start_seconds": 51.702,
+        "text": "parc\n",
+        "word_id": "variant-01-word-0058"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 53.378,
+        "normalized_text": "mâncăm",
+        "source_line_id": "line-04-04",
+        "start_seconds": 52.66,
+        "text": "Mâncăm ",
+        "word_id": "variant-01-word-0059"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 54.016,
+        "normalized_text": "fructe",
+        "source_line_id": "line-04-04",
+        "start_seconds": 53.457,
+        "text": "fructe ",
+        "word_id": "variant-01-word-0060"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 55.372,
+        "normalized_text": "dulci",
+        "source_line_id": "line-04-04",
+        "start_seconds": 54.09567,
+        "text": "dulci\n",
+        "word_id": "variant-01-word-0061"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 55.891,
+        "normalized_text": "sari",
+        "source_line_id": "line-04-05",
+        "start_seconds": 55.492,
+        "text": "Sari, ",
+        "word_id": "variant-01-word-0062"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 56.67567,
+        "normalized_text": "aleargă",
+        "source_line_id": "line-04-05",
+        "start_seconds": 56.011,
+        "text": "aleargă, ",
+        "word_id": "variant-01-word-0063"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 57.527,
+        "normalized_text": "joacă",
+        "source_line_id": "line-04-05",
+        "start_seconds": 56.70233,
+        "text": "joacă\n",
+        "word_id": "variant-01-word-0064"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 57.766,
+        "normalized_text": "zi",
+        "source_line_id": "line-04-06",
+        "start_seconds": 57.606,
+        "text": "Zi ",
+        "word_id": "variant-01-word-0065"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 58.484,
+        "normalized_text": "lungă",
+        "source_line_id": "line-04-06",
+        "start_seconds": 57.846,
+        "text": "lungă ",
+        "word_id": "variant-01-word-0066"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 58.723,
+        "normalized_text": "și",
+        "source_line_id": "line-04-06",
+        "start_seconds": 58.6035,
+        "text": "și ",
+        "word_id": "variant-01-word-0067"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 61.53055,
+        "normalized_text": "veselă",
+        "source_line_id": "line-04-06",
+        "start_seconds": 58.82967,
+        "text": "veselă\n\n",
+        "word_id": "variant-01-word-0068"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 62.83275,
+        "normalized_text": "iarna",
+        "source_line_id": "line-05-01",
+        "start_seconds": 61.54509,
+        "text": "[Chorus]\nIarna! ",
+        "word_id": "variant-01-word-0069"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 64.109,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-05-01",
+        "start_seconds": 62.8725,
+        "text": "Primăvara!\n",
+        "word_id": "variant-01-word-0070"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 65.21267,
+        "normalized_text": "vara",
+        "source_line_id": "line-05-02",
+        "start_seconds": 64.229,
+        "text": "Vara! ",
+        "word_id": "variant-01-word-0071"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 66.1438,
+        "normalized_text": "toamna",
+        "source_line_id": "line-05-02",
+        "start_seconds": 65.23933,
+        "text": "Toamna!\n",
+        "word_id": "variant-01-word-0072"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 66.463,
+        "normalized_text": "sunt",
+        "source_line_id": "line-05-03",
+        "start_seconds": 66.2236,
+        "text": "Sunt ",
+        "word_id": "variant-01-word-0073"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 67.58,
+        "normalized_text": "patru",
+        "source_line_id": "line-05-03",
+        "start_seconds": 66.56933,
+        "text": "patru ",
+        "word_id": "variant-01-word-0074"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 70.253,
+        "normalized_text": "anotimpuri",
+        "source_line_id": "line-05-03",
+        "start_seconds": 67.6995,
+        "text": "anotimpuri!\n",
+        "word_id": "variant-01-word-0075"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 70.492,
+        "normalized_text": "iarna",
+        "source_line_id": "line-05-04",
+        "start_seconds": 70.293,
+        "text": "Iarna! ",
+        "word_id": "variant-01-word-0076"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 71.1305,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-05-04",
+        "start_seconds": 70.532,
+        "text": "Primăvara!\n",
+        "word_id": "variant-01-word-0077"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 75.10667,
+        "normalized_text": "vara",
+        "source_line_id": "line-05-05",
+        "start_seconds": 71.25,
+        "text": "Vara! ",
+        "word_id": "variant-01-word-0078"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 76.37675,
+        "normalized_text": "toamna",
+        "source_line_id": "line-05-05",
+        "start_seconds": 75.13333,
+        "text": "Toamna!\n",
+        "word_id": "variant-01-word-0079"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 76.835,
+        "normalized_text": "hai",
+        "source_line_id": "line-05-06",
+        "start_seconds": 76.4765,
+        "text": "Hai ",
+        "word_id": "variant-01-word-0080"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 77.473,
+        "normalized_text": "să",
+        "source_line_id": "line-05-06",
+        "start_seconds": 76.9545,
+        "text": "să ",
+        "word_id": "variant-01-word-0081"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 78.112,
+        "normalized_text": "le",
+        "source_line_id": "line-05-06",
+        "start_seconds": 77.593,
+        "text": "le ",
+        "word_id": "variant-01-word-0082"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 78.67,
+        "normalized_text": "spunem",
+        "source_line_id": "line-05-06",
+        "start_seconds": 78.17175,
+        "text": "spunem ",
+        "word_id": "variant-01-word-0083"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 81.15717,
+        "normalized_text": "iar",
+        "source_line_id": "line-05-06",
+        "start_seconds": 78.75,
+        "text": "iar!\n\n",
+        "word_id": "variant-01-word-0084"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 81.622,
+        "normalized_text": "toamna",
+        "source_line_id": "line-06-01",
+        "start_seconds": 81.16375,
+        "text": "[Verse]\nToamna ",
+        "word_id": "variant-01-word-0085"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 81.782,
+        "normalized_text": "e",
+        "source_line_id": "line-06-01",
+        "start_seconds": 81.782,
+        "text": "e ",
+        "word_id": "variant-01-word-0086"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 83.537,
+        "normalized_text": "colorată",
+        "source_line_id": "line-06-01",
+        "start_seconds": 81.8778,
+        "text": "colorată\n",
+        "word_id": "variant-01-word-0087"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 84.814,
+        "normalized_text": "frunzele",
+        "source_line_id": "line-06-02",
+        "start_seconds": 83.577,
+        "text": "Frunzele ",
+        "word_id": "variant-01-word-0088"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 85.053,
+        "normalized_text": "cad",
+        "source_line_id": "line-06-02",
+        "start_seconds": 84.89367,
+        "text": "cad ",
+        "word_id": "variant-01-word-0089"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 86.011,
+        "normalized_text": "ușor",
+        "source_line_id": "line-06-02",
+        "start_seconds": 85.213,
+        "text": "ușor\n",
+        "word_id": "variant-01-word-0090"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 86.489,
+        "normalized_text": "strângem",
+        "source_line_id": "line-06-03",
+        "start_seconds": 86.03733,
+        "text": "Strângem ",
+        "word_id": "variant-01-word-0091"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 86.888,
+        "normalized_text": "mere",
+        "source_line_id": "line-06-03",
+        "start_seconds": 86.58875,
+        "text": "mere ",
+        "word_id": "variant-01-word-0092"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 87.287,
+        "normalized_text": "și",
+        "source_line_id": "line-06-03",
+        "start_seconds": 87.008,
+        "text": "și ",
+        "word_id": "variant-01-word-0093"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 88.404,
+        "normalized_text": "frunze",
+        "source_line_id": "line-06-03",
+        "start_seconds": 87.327,
+        "text": "frunze\n",
+        "word_id": "variant-01-word-0094"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 89.043,
+        "normalized_text": "vântul",
+        "source_line_id": "line-06-04",
+        "start_seconds": 88.484,
+        "text": "Vântul ",
+        "word_id": "variant-01-word-0095"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 89.681,
+        "normalized_text": "suflă",
+        "source_line_id": "line-06-04",
+        "start_seconds": 89.1625,
+        "text": "suflă ",
+        "word_id": "variant-01-word-0096"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 90.718,
+        "normalized_text": "lin",
+        "source_line_id": "line-06-04",
+        "start_seconds": 89.78733,
+        "text": "lin\n",
+        "word_id": "variant-01-word-0097"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 90.878,
+        "normalized_text": "ne",
+        "source_line_id": "line-06-05",
+        "start_seconds": 90.798,
+        "text": "Ne ",
+        "word_id": "variant-01-word-0098"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 91.356,
+        "normalized_text": "punem",
+        "source_line_id": "line-06-05",
+        "start_seconds": 90.95767,
+        "text": "punem ",
+        "word_id": "variant-01-word-0099"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 91.915,
+        "normalized_text": "jachete",
+        "source_line_id": "line-06-05",
+        "start_seconds": 91.436,
+        "text": "jachete ",
+        "word_id": "variant-01-word-0100"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 92.314,
+        "normalized_text": "ușoare",
+        "source_line_id": "line-06-05",
+        "start_seconds": 92.074,
+        "text": "ușoare\n",
+        "word_id": "variant-01-word-0101"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 93.59,
+        "normalized_text": "sărim",
+        "source_line_id": "line-06-06",
+        "start_seconds": 92.473,
+        "text": "Sărim ",
+        "word_id": "variant-01-word-0102"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 93.83,
+        "normalized_text": "în",
+        "source_line_id": "line-06-06",
+        "start_seconds": 93.71,
+        "text": "în ",
+        "word_id": "variant-01-word-0103"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 94.309,
+        "normalized_text": "covor",
+        "source_line_id": "line-06-06",
+        "start_seconds": 93.9095,
+        "text": "covor ",
+        "word_id": "variant-01-word-0104"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 94.548,
+        "normalized_text": "de",
+        "source_line_id": "line-06-06",
+        "start_seconds": 94.4285,
+        "text": "de ",
+        "word_id": "variant-01-word-0105"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 95.7529,
+        "normalized_text": "frunze",
+        "source_line_id": "line-06-06",
+        "start_seconds": 94.588,
+        "text": "frunze\n\n",
+        "word_id": "variant-01-word-0106"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 96.223,
+        "normalized_text": "iarna",
+        "source_line_id": "line-07-01",
+        "start_seconds": 95.7608,
+        "text": "[Verse]\nIarna ",
+        "word_id": "variant-01-word-0107"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 96.383,
+        "normalized_text": "e",
+        "source_line_id": "line-07-01",
+        "start_seconds": 96.383,
+        "text": "e ",
+        "word_id": "variant-01-word-0108"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 97.021,
+        "normalized_text": "albă",
+        "source_line_id": "line-07-01",
+        "start_seconds": 96.5025,
+        "text": "albă\n",
+        "word_id": "variant-01-word-0109"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 98.218,
+        "normalized_text": "ninge",
+        "source_line_id": "line-07-02",
+        "start_seconds": 97.12075,
+        "text": "Ninge ",
+        "word_id": "variant-01-word-0110"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 98.92,
+        "normalized_text": "lin",
+        "source_line_id": "line-07-02",
+        "start_seconds": 98.32433,
+        "text": "lin, ",
+        "word_id": "variant-01-word-0111"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 99.415,
+        "normalized_text": "ninge",
+        "source_line_id": "line-07-02",
+        "start_seconds": 98.984,
+        "text": "ninge ",
+        "word_id": "variant-01-word-0112"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 100.691,
+        "normalized_text": "mult",
+        "source_line_id": "line-07-02",
+        "start_seconds": 99.51475,
+        "text": "mult\n",
+        "word_id": "variant-01-word-0113"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 101.09,
+        "normalized_text": "facem",
+        "source_line_id": "line-07-03",
+        "start_seconds": 100.751,
+        "text": "Facem ",
+        "word_id": "variant-01-word-0114"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 101.33,
+        "normalized_text": "om",
+        "source_line_id": "line-07-03",
+        "start_seconds": 101.21,
+        "text": "om ",
+        "word_id": "variant-01-word-0115"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 101.489,
+        "normalized_text": "de",
+        "source_line_id": "line-07-03",
+        "start_seconds": 101.4095,
+        "text": "de ",
+        "word_id": "variant-01-word-0116"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 102.367,
+        "normalized_text": "zăpadă",
+        "source_line_id": "line-07-03",
+        "start_seconds": 101.569,
+        "text": "zăpadă\n",
+        "word_id": "variant-01-word-0117"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 102.447,
+        "normalized_text": "ne",
+        "source_line_id": "line-07-04",
+        "start_seconds": 102.407,
+        "text": "Ne ",
+        "word_id": "variant-01-word-0118"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 102.606,
+        "normalized_text": "punem",
+        "source_line_id": "line-07-04",
+        "start_seconds": 102.47367,
+        "text": "punem ",
+        "word_id": "variant-01-word-0119"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 104.441,
+        "normalized_text": "haine",
+        "source_line_id": "line-07-04",
+        "start_seconds": 102.71267,
+        "text": "haine ",
+        "word_id": "variant-01-word-0120"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 105.479,
+        "normalized_text": "groase",
+        "source_line_id": "line-07-04",
+        "start_seconds": 104.54767,
+        "text": "groase\n",
+        "word_id": "variant-01-word-0121"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 105.957,
+        "normalized_text": "mănuși",
+        "source_line_id": "line-07-05",
+        "start_seconds": 105.5585,
+        "text": "Mănuși ",
+        "word_id": "variant-01-word-0122"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 106.277,
+        "normalized_text": "și",
+        "source_line_id": "line-07-05",
+        "start_seconds": 106.077,
+        "text": "și ",
+        "word_id": "variant-01-word-0123"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 107.473,
+        "normalized_text": "căciulițe",
+        "source_line_id": "line-07-05",
+        "start_seconds": 106.3965,
+        "text": "căciulițe\n",
+        "word_id": "variant-01-word-0124"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 108.989,
+        "normalized_text": "bucurie",
+        "source_line_id": "line-07-06",
+        "start_seconds": 107.593,
+        "text": "Bucurie ",
+        "word_id": "variant-01-word-0125"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 109.309,
+        "normalized_text": "și",
+        "source_line_id": "line-07-06",
+        "start_seconds": 109.109,
+        "text": "și ",
+        "word_id": "variant-01-word-0126"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 112.98627,
+        "normalized_text": "clopoței",
+        "source_line_id": "line-07-06",
+        "start_seconds": 109.3485,
+        "text": "clopoței\n\n",
+        "word_id": "variant-01-word-0127"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 114.23575,
+        "normalized_text": "iarna",
+        "source_line_id": "line-08-01",
+        "start_seconds": 112.99355,
+        "text": "[Chorus]\nIarna! ",
+        "word_id": "variant-01-word-0128"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 115.5715,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-08-01",
+        "start_seconds": 114.2955,
+        "text": "Primăvara!\n",
+        "word_id": "variant-01-word-0129"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 116.67567,
+        "normalized_text": "vara",
+        "source_line_id": "line-08-02",
+        "start_seconds": 115.691,
+        "text": "Vara! ",
+        "word_id": "variant-01-word-0130"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 117.6068,
+        "normalized_text": "toamna",
+        "source_line_id": "line-08-02",
+        "start_seconds": 116.70233,
+        "text": "Toamna!\n",
+        "word_id": "variant-01-word-0131"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 117.926,
+        "normalized_text": "sunt",
+        "source_line_id": "line-08-03",
+        "start_seconds": 117.6866,
+        "text": "Sunt ",
+        "word_id": "variant-01-word-0132"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 119.043,
+        "normalized_text": "patru",
+        "source_line_id": "line-08-03",
+        "start_seconds": 118.03233,
+        "text": "patru ",
+        "word_id": "variant-01-word-0133"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 122.8325,
+        "normalized_text": "anotimpuri",
+        "source_line_id": "line-08-03",
+        "start_seconds": 119.1625,
+        "text": "anotimpuri!\n",
+        "word_id": "variant-01-word-0134"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 124.049,
+        "normalized_text": "iarna",
+        "source_line_id": "line-08-04",
+        "start_seconds": 122.872,
+        "text": "Iarna! ",
+        "word_id": "variant-01-word-0135"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 125.306,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-08-04",
+        "start_seconds": 124.109,
+        "text": "Primăvara!\n",
+        "word_id": "variant-01-word-0136"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 126.40967,
+        "normalized_text": "vara",
+        "source_line_id": "line-08-05",
+        "start_seconds": 125.426,
+        "text": "Vara! ",
+        "word_id": "variant-01-word-0137"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 127.75975,
+        "normalized_text": "toamna",
+        "source_line_id": "line-08-05",
+        "start_seconds": 126.43633,
+        "text": "Toamna!\n",
+        "word_id": "variant-01-word-0138"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 128.218,
+        "normalized_text": "hai",
+        "source_line_id": "line-08-06",
+        "start_seconds": 127.8595,
+        "text": "Hai ",
+        "word_id": "variant-01-word-0139"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 128.856,
+        "normalized_text": "să",
+        "source_line_id": "line-08-06",
+        "start_seconds": 128.3375,
+        "text": "să ",
+        "word_id": "variant-01-word-0140"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 129.415,
+        "normalized_text": "le",
+        "source_line_id": "line-08-06",
+        "start_seconds": 128.976,
+        "text": "le ",
+        "word_id": "variant-01-word-0141"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 130.053,
+        "normalized_text": "spunem",
+        "source_line_id": "line-08-06",
+        "start_seconds": 129.49475,
+        "text": "spunem ",
+        "word_id": "variant-01-word-0142"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 130.22633,
+        "normalized_text": "iar",
+        "source_line_id": "line-08-06",
+        "start_seconds": 130.133,
+        "text": "iar!\n\n",
+        "word_id": "variant-01-word-0143"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 130.731,
+        "normalized_text": "iarna",
+        "source_line_id": "line-09-01",
+        "start_seconds": 130.233,
+        "text": "[Chorus]\nIarna! ",
+        "word_id": "variant-01-word-0144"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 135.0,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-09-01",
+        "start_seconds": 130.771,
+        "text": "Primăvara!\n",
+        "word_id": "variant-01-word-0145"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 136.30333,
+        "normalized_text": "vara",
+        "source_line_id": "line-09-02",
+        "start_seconds": 135.08,
+        "text": "Vara! ",
+        "word_id": "variant-01-word-0146"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 137.2178,
+        "normalized_text": "toamna",
+        "source_line_id": "line-09-02",
+        "start_seconds": 136.32967,
+        "text": "Toamna!\n",
+        "word_id": "variant-01-word-0147"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 137.473,
+        "normalized_text": "sunt",
+        "source_line_id": "line-09-03",
+        "start_seconds": 137.2816,
+        "text": "Sunt ",
+        "word_id": "variant-01-word-0148"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 138.67,
+        "normalized_text": "patru",
+        "source_line_id": "line-09-03",
+        "start_seconds": 137.57967,
+        "text": "patru ",
+        "word_id": "variant-01-word-0149"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 142.42,
+        "normalized_text": "anotimpuri",
+        "source_line_id": "line-09-03",
+        "start_seconds": 138.79,
+        "text": "anotimpuri!\n",
+        "word_id": "variant-01-word-0150"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 143.657,
+        "normalized_text": "iarna",
+        "source_line_id": "line-09-04",
+        "start_seconds": 142.5,
+        "text": "Iarna! ",
+        "word_id": "variant-01-word-0151"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 144.9335,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-09-04",
+        "start_seconds": 143.697,
+        "text": "Primăvara!\n",
+        "word_id": "variant-01-word-0152"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 146.03733,
+        "normalized_text": "vara",
+        "source_line_id": "line-09-05",
+        "start_seconds": 145.053,
+        "text": "Vara! ",
+        "word_id": "variant-01-word-0153"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 147.30675,
+        "normalized_text": "toamna",
+        "source_line_id": "line-09-05",
+        "start_seconds": 146.06367,
+        "text": "Toamna!\n",
+        "word_id": "variant-01-word-0154"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 147.846,
+        "normalized_text": "hai",
+        "source_line_id": "line-09-06",
+        "start_seconds": 147.4065,
+        "text": "Hai ",
+        "word_id": "variant-01-word-0155"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 148.484,
+        "normalized_text": "să",
+        "source_line_id": "line-09-06",
+        "start_seconds": 147.9655,
+        "text": "să ",
+        "word_id": "variant-01-word-0156"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 149.043,
+        "normalized_text": "le",
+        "source_line_id": "line-09-06",
+        "start_seconds": 148.6035,
+        "text": "le ",
+        "word_id": "variant-01-word-0157"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 149.681,
+        "normalized_text": "spunem",
+        "source_line_id": "line-09-06",
+        "start_seconds": 149.12275,
+        "text": "spunem ",
+        "word_id": "variant-01-word-0158"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 152.4205,
+        "normalized_text": "iar",
+        "source_line_id": "line-09-06",
+        "start_seconds": 149.761,
+        "text": "iar!\n\n",
+        "word_id": "variant-01-word-0159"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 152.872,
+        "normalized_text": "acum",
+        "source_line_id": "line-10-01",
+        "start_seconds": 152.43375,
+        "text": "[Outro]\nAcum ",
+        "word_id": "variant-01-word-0160"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 153.59,
+        "normalized_text": "știm",
+        "source_line_id": "line-10-01",
+        "start_seconds": 152.952,
+        "text": "știm ",
+        "word_id": "variant-01-word-0161"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 155.665,
+        "normalized_text": "anotimpurile",
+        "source_line_id": "line-10-01",
+        "start_seconds": 153.67,
+        "text": "anotimpurile\n",
+        "word_id": "variant-01-word-0162"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 157.121,
+        "normalized_text": "iarna",
+        "source_line_id": "line-10-02",
+        "start_seconds": 155.745,
+        "text": "Iarna, ",
+        "word_id": "variant-01-word-0163"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 158.8165,
+        "normalized_text": "primăvara",
+        "source_line_id": "line-10-02",
+        "start_seconds": 157.141,
+        "text": "Primăvara, ",
+        "word_id": "variant-01-word-0164"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 159.52133,
+        "normalized_text": "vara",
+        "source_line_id": "line-10-02",
+        "start_seconds": 158.936,
+        "text": "Vara, ",
+        "word_id": "variant-01-word-0165"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 160.851,
+        "normalized_text": "toamna",
+        "source_line_id": "line-10-02",
+        "start_seconds": 159.54767,
+        "text": "Toamna\n",
+        "word_id": "variant-01-word-0166"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 161.011,
+        "normalized_text": "să",
+        "source_line_id": "line-10-03",
+        "start_seconds": 160.931,
+        "text": "Să ",
+        "word_id": "variant-01-word-0167"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 161.17,
+        "normalized_text": "le",
+        "source_line_id": "line-10-03",
+        "start_seconds": 161.0905,
+        "text": "le ",
+        "word_id": "variant-01-word-0168"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 161.809,
+        "normalized_text": "cântăm",
+        "source_line_id": "line-10-03",
+        "start_seconds": 161.25,
+        "text": "cântăm ",
+        "word_id": "variant-01-word-0169"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 162.128,
+        "normalized_text": "din",
+        "source_line_id": "line-10-03",
+        "start_seconds": 161.91533,
+        "text": "din ",
+        "word_id": "variant-01-word-0170"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 162.62929,
+        "normalized_text": "nou",
+        "source_line_id": "line-10-03",
+        "start_seconds": 162.23433,
+        "text": "nou! (",
+        "word_id": "variant-01-word-0171"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 163.564,
+        "normalized_text": "repetați",
+        "source_line_id": "line-10-03",
+        "start_seconds": 162.72043,
+        "text": "repetați ",
+        "word_id": "variant-01-word-0172"
+      },
+      {
+        "confidence": null,
+        "end_seconds": 164.521,
+        "normalized_text": "refrenul",
+        "source_line_id": "line-10-03",
+        "start_seconds": 163.657,
+        "text": "refrenul)\n\n",
+        "word_id": "variant-01-word-0173"
+      }
+    ]
+  },
+  "dependency_sha256": "fadb321b769c9c54b74add49d42cee3ec14c096732fea10c9155af1983f5671f",
+  "provider_metadata": {},
+  "review_required": false,
+  "semantic_sha256": "2fc407935c8845b27054c2e68b59398c61b87f894629ef80b56b3e3148b9214c",
+  "stage": "alignment",
+  "status": "generated",
+  "version": 1,
+  "warnings": []
+}

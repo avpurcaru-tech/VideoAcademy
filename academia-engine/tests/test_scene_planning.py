@@ -57,12 +57,27 @@ class SemanticScenePlanningTests(unittest.TestCase):
         for plan in self.plans:
             self.assertTrue(all(0<=x.start_s<x.end_s<=plan.audio_duration_s for x in plan.scenes))
             self.assertTrue(all(a.end_s<=b.start_s+.01 for a,b in zip(plan.scenes,plan.scenes[1:])))
+    def test_legacy_alignment_overrun_is_clamped_to_audio_duration(self):
+        alignment=self.fx.alignments[0]; duration=alignment.audio_duration_seconds
+        lines=list(alignment.lines); lines[-1]=lines[-1].model_copy(update={"end_seconds":duration+.2})
+        sections=tuple(section for section in alignment.sections if section.section_type!="instrumental_outro")
+        plan=self.planner.plan("008",alignment.model_copy(update={"lines":tuple(lines),"sections":sections}),self.fx.lyrics,self.fx.storyboard,self.fx.timelines[0])
+        self.assertEqual(duration,max(scene.end_s for scene in plan.scenes))
     def test_scene_duration_matches_start_and_end(self):
         for plan in self.plans:
             for scene in plan.scenes: self.assertAlmostEqual(scene.duration_s,scene.end_s-scene.start_s)
     def test_scene_plan_is_deterministic(self):
         again=self.planner.plan("008",self.fx.alignments[0],self.fx.lyrics,self.fx.storyboard,self.fx.timelines[0])
         self.assertEqual(self.plans[0],again)
+    def test_group_vocal_lines_creates_one_scene_per_lyrics_section(self):
+        planner=SemanticScenePlanner(ScenePlanningThresholds(group_vocal_lines=True))
+        plan=planner.plan("008",self.fx.alignments[0],self.fx.lyrics,self.fx.storyboard,self.fx.timelines[0])
+        vocal=[scene for scene in plan.scenes if scene.scene_type.value=="vocal"]
+        mapped_sections={line.source_lyrics_line_id for line in self.fx.alignments[0].lines}
+        expected={section.section_id for section in self.fx.lyrics.sections if any(line.line_id in mapped_sections for line in section.lines)}
+        self.assertEqual(len(expected),len(vocal)); self.assertEqual(expected,{scene.source_section_ids[0] for scene in vocal})
+        self.assertFalse(any(scene.scene_type.value=="instrumental_break" for scene in plan.scenes))
+        self.assertTrue(all(abs(first.end_s-second.start_s)<.001 for first,second in zip(plan.scenes,plan.scenes[1:])))
     def test_scene_plan_json_is_byte_stable(self):
         first=self.visual/"first.json"; second=self.visual/"second.json"
         write_scene_plan(first,self.plans[0]); write_scene_plan(second,self.plans[0])

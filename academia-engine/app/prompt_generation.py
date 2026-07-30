@@ -72,6 +72,10 @@ class PromptBuilder:
     def build_scene_prompt(self,*,scene,variant_id,provider,capabilities,character_registry=None):
         scene=VisualScene.model_validate(scene); provider=PromptProvider(provider); capabilities=PromptCapabilities.model_validate(capabilities)
         positive=[]; counts=[]
+        if scene.source_texts:
+            lyrics_text=" / ".join(value.strip() for value in scene.source_texts if value.strip())
+            positive.append(f"Scene content from this lyric stanza: {lyrics_text}")
+            positive.append("Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions")
         if character_registry:
             for character_id in scene.character_ids:
                 identity=character_registry.require(character_id)
@@ -98,9 +102,9 @@ class PromptBuilder:
         positive.extend(self._fields("camera",scene.camera))
         positive.extend(f"educational constraint {value.key}: {value.value}" for value in scene.educational_constraints)
         continuity=scene.continuity_requirements
-        if continuity.required_previous_scene_id: positive.append(f"continuity previous scene: {continuity.required_previous_scene_id}")
-        if continuity.required_next_scene_id: positive.append(f"continuity next scene: {continuity.required_next_scene_id}")
-        if continuity.shared_subject_ids: positive.append("continuity subjects: "+", ".join(continuity.shared_subject_ids))
+        if continuity.required_previous_scene_id or continuity.required_next_scene_id:
+            positive.append("Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes")
+        if continuity.shared_subject_ids: positive.append("Keep recurring subjects visually identical across adjacent scenes")
         negative=[f"{value.key}: {value.reason}" for value in scene.negative_constraints]
         if any(value.get("exact") for value in counts) and any(value.key=="must_not_show_extra_countable_subjects" for value in scene.educational_constraints):
             negative.append("no additional countable subjects")
@@ -112,7 +116,8 @@ class PromptBuilder:
         structured={"aspect_ratio":scene.aspect_ratio.value,"duration":scene.duration_s,
             "camera":scene.camera.model_dump(mode="json"),"lighting":scene.lighting.model_dump(mode="json"),
             "style":scene.style.model_dump(mode="json"),"subjects":[x.model_dump(mode="json") for x in scene.subjects],
-            "counts":counts,"educational_constraints":[x.model_dump(mode="json") for x in scene.educational_constraints]}
+            "counts":counts,"educational_constraints":[x.model_dump(mode="json") for x in scene.educational_constraints],
+            "source_texts":list(scene.source_texts)}
         status=self._status(scene.status,warnings)
         return GeneratedPrompt(prompt_id=f"{provider.value}-{scene.visual_scene_id}",provider=provider,
             scene_id=scene.visual_scene_id,variant_id=variant_id,positive_prompt=self.configuration.phrase_separator.join(positive),

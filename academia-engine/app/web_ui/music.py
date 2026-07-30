@@ -12,6 +12,12 @@ from .lyrics import LyricsVersion
 from .project_creation import WebProjectManifest
 from .workflow import WorkflowActionService,WorkflowStageStatus,WorkflowStateRepository
 
+DEFAULT_MUSICAL_STYLE="Romanian children’s song, preschool educational, slow nursery rhyme, bright cartoon chorus, simple major key, plate reverb, light compression, wide stereo mix"
+DEFAULT_MUSIC_MOOD="playful"
+DEFAULT_MUSIC_INSTRUMENTATION=("clapping percussion","toy piano","glockenspiel melody","ukulele strumming","hand drum taps","bass xylophone","finger snaps")
+DEFAULT_MUSIC_VOCAL_STYLE="playful female vocals, call and response"
+DEFAULT_MUSIC_TEMPO_BPM=92
+
 class MusicUiError(RuntimeError): pass
 class MusicBlockedError(MusicUiError): pass
 class MusicCostConfirmationRequired(MusicUiError): pass
@@ -20,11 +26,11 @@ class MusicGenerationRequest(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     project_id:str; episode_title:str; language:str; target_age:str; lyrics_version:int=Field(ge=1)
     lyrics_text:str=Field(min_length=1); lyrics_sha256:str=Field(pattern=r"^[a-f0-9]{64}$"); regeneration_feedback:str|None=None
-    musical_style:str=Field(default="educational pop",min_length=1,max_length=500)
-    mood:str=Field(default="cheerful",min_length=1,max_length=200)
-    instrumentation:tuple[str,...]=Field(default=("ukulele","xylophone"),min_length=1)
-    vocal_style:str=Field(default="clear child-friendly vocals",min_length=1,max_length=300)
-    tempo_bpm:float=Field(default=110,gt=0,le=300)
+    musical_style:str=Field(default=DEFAULT_MUSICAL_STYLE,min_length=1,max_length=500)
+    mood:str=Field(default=DEFAULT_MUSIC_MOOD,min_length=1,max_length=200)
+    instrumentation:tuple[str,...]=Field(default=DEFAULT_MUSIC_INSTRUMENTATION,min_length=1)
+    vocal_style:str=Field(default=DEFAULT_MUSIC_VOCAL_STYLE,min_length=1,max_length=300)
+    tempo_bpm:float=Field(default=DEFAULT_MUSIC_TEMPO_BPM,gt=0,le=300)
 class MusicVariantResult(BaseModel):
     model_config=ConfigDict(extra="forbid",frozen=True)
     audio_id:str=Field(min_length=1,max_length=200); audio_bytes:bytes; duration_seconds:float|None=Field(default=None,gt=0)
@@ -71,7 +77,8 @@ class MusicStageService:
     def versions(self):
         return tuple(MusicVersionManifest.model_validate_json(path.read_text(encoding="utf-8"))
             for path in sorted((self.project/"music").glob("version-*/job.json")))
-    def generate(self,*,confirmed=False,feedback=None,musical_style="educational pop",mood="cheerful",instrumentation="ukulele, xylophone",vocal_style="clear child-friendly vocals",tempo_bpm=110):
+    def generate(self,*,confirmed=False,feedback=None,musical_style=DEFAULT_MUSICAL_STYLE,mood=DEFAULT_MUSIC_MOOD,
+            instrumentation=", ".join(DEFAULT_MUSIC_INSTRUMENTATION),vocal_style=DEFAULT_MUSIC_VOCAL_STYLE,tempo_bpm=DEFAULT_MUSIC_TEMPO_BPM):
         if not confirmed: raise MusicCostConfirmationRequired("Explicit Suno cost confirmation is required.")
         state,_=WorkflowStateRepository(self.project).resolve(self.project.name); lyrics_stage=state.stage("lyrics")
         if lyrics_stage.status!=WorkflowStageStatus.APPROVED or lyrics_stage.approved_version is None: raise MusicBlockedError("Approved lyrics are required.")

@@ -1,0 +1,36 @@
+{
+  "feedback": null,
+  "negative_prompt": "",
+  "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity next scene: variant-01-vocal-variant-01-line-0001-5a9dc4020c",
+  "project_id": "008",
+  "prompt_bundle_version": 1,
+  "prompt_sha256": "59cd614161049ea9d4b18b7befffdbd02f7685c7655ae9585872c8a8e681200b",
+  "scene_id": "visual-variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+  "structured_parameters": {
+    "aspect_ratio": "16:9",
+    "camera": {
+      "angle": "unspecified",
+      "focus_target": "unspecified",
+      "movement_intent": "unspecified",
+      "shot_size": "unspecified"
+    },
+    "counts": [],
+    "duration": 0.638,
+    "educational_constraints": [],
+    "lighting": {
+      "brightness": "unspecified",
+      "direction": "unspecified",
+      "lighting_type": "unspecified",
+      "temperature": "unspecified"
+    },
+    "style": {
+      "complexity": "simple",
+      "medium": "3d_animation",
+      "readability": "high",
+      "render_style": "friendly_stylized",
+      "shape_language": "soft_rounded_shapes",
+      "target_age_group": "2_to_5"
+    },
+    "subjects": []
+  }
+}

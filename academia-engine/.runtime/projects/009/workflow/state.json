@@ -1,0 +1,201 @@
+{
+  "dependencies": [
+    {
+      "downstream": "lyrics",
+      "requirement": "approved",
+      "upstream": "episode"
+    },
+    {
+      "downstream": "music",
+      "requirement": "approved",
+      "upstream": "lyrics"
+    },
+    {
+      "downstream": "alignment",
+      "requirement": "approved",
+      "upstream": "music"
+    },
+    {
+      "downstream": "scene_plan",
+      "requirement": "approved",
+      "upstream": "alignment"
+    },
+    {
+      "downstream": "visual_plan",
+      "requirement": "approved",
+      "upstream": "scene_plan"
+    },
+    {
+      "downstream": "prompts",
+      "requirement": "approved",
+      "upstream": "visual_plan"
+    },
+    {
+      "downstream": "assets",
+      "requirement": "approved",
+      "upstream": "prompts"
+    },
+    {
+      "downstream": "composition",
+      "requirement": "approved",
+      "upstream": "assets"
+    }
+  ],
+  "project_id": "009",
+  "schema_version": "1.0",
+  "semantic_sha256": "2551923079bc7ae1a0a107fa2cb45169b2cfb9517ede1eb3bf6e55c164a4ab4c",
+  "stages": [
+    {
+      "approved_version": null,
+      "blocked_reason": null,
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "episode",
+      "status": "approved",
+      "versions": []
+    },
+    {
+      "approved_version": 3,
+      "blocked_reason": null,
+      "current_version": 3,
+      "last_error": null,
+      "selected_version": 3,
+      "stage": "lyrics",
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "lyrics/version-001.json",
+          "semantic_sha256": "09af87fcd94bb65122d3319498cc7847ba4270b050044984e353e3e0581a495c",
+          "version": 1
+        },
+        {
+          "artifact_path": "lyrics/version-002.json",
+          "semantic_sha256": "68b1cbde190f8d5f073a3d3b6af34a17e5a6bf50a7210e9a11042cc9ad9348dc",
+          "version": 2
+        },
+        {
+          "artifact_path": "lyrics/version-003.json",
+          "semantic_sha256": "61ebee803d0350f8d730bbcacdb5887c79572700654c4dbede8ce9c9f3bcec2d",
+          "version": 3
+        }
+      ]
+    },
+    {
+      "approved_version": 3,
+      "blocked_reason": null,
+      "current_version": 3,
+      "last_error": null,
+      "selected_version": 3,
+      "stage": "music",
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "music/version-001/job.json",
+          "semantic_sha256": "5963dabdfd49246d872d5755476a48e022fd134b5c7a1b942a8e8591d5b2292a",
+          "version": 1
+        },
+        {
+          "artifact_path": "music/version-002/job.json",
+          "semantic_sha256": "af73607f90b4742976e279c39d56809f4142d2abde2331cc62d2f5692172ed40",
+          "version": 2
+        },
+        {
+          "artifact_path": "music/version-003/job.json",
+          "semantic_sha256": "b2102fd9feb4f605cea22c4d9c5cc95ebdb998653623a1a68dffb6783abfbd98",
+          "version": 3
+        }
+      ]
+    },
+    {
+      "approved_version": 1,
+      "blocked_reason": null,
+      "current_version": 1,
+      "last_error": null,
+      "selected_version": 1,
+      "stage": "alignment",
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "alignment/version-001.json",
+          "semantic_sha256": "70ca8c44bd8e8a0669f21bc3145b15b53b46001720d331509558167572fd7454",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "approved_version": 1,
+      "blocked_reason": null,
+      "current_version": 1,
+      "last_error": null,
+      "selected_version": 1,
+      "stage": "scene_plan",
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "visual/scene-plans/version-001.json",
+          "semantic_sha256": "8a4c892a1e7d4ecd6f63d80b40328c1aaa971ef47423d93b223d38d5c2ebaac9",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "approved_version": 1,
+      "blocked_reason": null,
+      "current_version": 1,
+      "last_error": null,
+      "selected_version": 1,
+      "stage": "visual_plan",
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "visual/plans/version-001.json",
+          "semantic_sha256": "f5b7b831797faf1979b1ebc240eabcc92707262b60176b0acf71aa8418dd12ea",
+          "version": 1
+        }
+      ]
+    },
+    {
+      "approved_version": 2,
+      "blocked_reason": null,
+      "current_version": 2,
+      "last_error": null,
+      "selected_version": 2,
+      "stage": "prompts",
+      "status": "approved",
+      "versions": [
+        {
+          "artifact_path": "visual/prompts/version-001.json",
+          "semantic_sha256": "c7695292199c652e7863791907fab06f14152365b8f7e1b32ff433c06faf8de4",
+          "version": 1
+        },
+        {
+          "artifact_path": "visual/prompts/version-002.json",
+          "semantic_sha256": "833fcdfb552bee17843172e0f63862d2837bfaa7c840e382bbda7feb6def7e0c",
+          "version": 2
+        }
+      ]
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": null,
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "assets",
+      "status": "generated",
+      "versions": []
+    },
+    {
+      "approved_version": null,
+      "blocked_reason": "asset visual-variant-01-vocal-section-section-03-572211da2e changed",
+      "current_version": 0,
+      "last_error": null,
+      "selected_version": null,
+      "stage": "composition",
+      "status": "stale",
+      "versions": []
+    }
+  ],
+  "warnings": []
+}

@@ -1,0 +1,498 @@
+{
+  "dependency_sha256": "5a9de1190fd0c370de529827adcff0610342ee2f432d716d89bcd567cc0c4a1e",
+  "prompts": [
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.16,
+        "educational_constraints": [],
+        "english_visual_direction": null,
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Sunny kindergarten playground with a low wooden fence and colored play mats. A small group of diverse children stand in a semicircle, smiling; one child cups an ear, another points to their eyes, all show big smiles. Bright sun and a few fluffy clouds in the sky; birds faintly fly by. Children bob gently as if ready to sing and sway their hands in time.; Scene content from this lyric stanza: Bună, copii! / Să cântăm culorile! / Urechi, ochi și zâmbet, / Hai să le învățăm!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-01-e487c8131f",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 8.145,
+        "educational_constraints": [],
+        "english_visual_direction": "Sunny kindergarten playground with a low wooden fence and colored play mats. A small group of diverse children stand in a semicircle, smiling; one child cups an ear, another points to their eyes, all show big smiles. Bright sun and a few fluffy clouds in the sky; birds faintly fly by. Children bob gently as if ready to sing and sway their hands in time.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Bună, copii!",
+          "Să cântăm culorile!",
+          "Urechi, ochi și zâmbet,",
+          "Hai să le învățăm!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Close-up on a picnic blanket under a bright sun. A shiny red apple and a plump red strawberry sit beside a yellow banana; the sun above glows warm yellow. Two children point and pick up the apple and banana; colors briefly pulse red and yellow when touched.; Scene content from this lyric stanza: Roșu, roșu / Mărul este roșu / Roșu ca căpșuna / Roșu, roșu / Galben, galben / Soarele e galben / Galben ca banana / Galben, galben; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-02-a70094a7ee",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 16.650380000000002,
+        "educational_constraints": [],
+        "english_visual_direction": "Close-up on a picnic blanket under a bright sun. A shiny red apple and a plump red strawberry sit beside a yellow banana; the sun above glows warm yellow. Two children point and pick up the apple and banana; colors briefly pulse red and yellow when touched.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Roșu, roșu",
+          "Mărul este roșu",
+          "Roșu ca căpșuna",
+          "Roșu, roșu",
+          "Galben, galben",
+          "Soarele e galben",
+          "Galben ca banana",
+          "Galben, galben"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Wide shot of the playground with colorful flags and giant floating color bubbles (red, yellow, blue, green). Children stand in a row pointing to each bubble as it appears; bubbles pop gently in rhythm, then reappear, repeating the sequence. Sky is clear, children clap softly and mirror each other’s pointing actions.; Scene content from this lyric stanza: Culori, culori / Vino și spune cu mine / Roșu, galben, albastru, verde / Spunem iar și iar! / Culori, culori / Vrei să le arătăm din nou? / Roșu, galben, albastru, verde / Spunem iar și iar!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-03-572211da2e",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 15.47662,
+        "educational_constraints": [],
+        "english_visual_direction": "Wide shot of the playground with colorful flags and giant floating color bubbles (red, yellow, blue, green). Children stand in a row pointing to each bubble as it appears; bubbles pop gently in rhythm, then reappear, repeating the sequence. Sky is clear, children clap softly and mirror each other’s pointing actions.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Culori, culori",
+          "Vino și spune cu mine",
+          "Roșu, galben, albastru, verde",
+          "Spunem iar și iar!",
+          "Culori, culori",
+          "Vrei să le arătăm din nou?",
+          "Roșu, galben, albastru, verde",
+          "Spunem iar și iar!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Park beside a calm blue lake under a clear blue sky. A child points up at the bright blue sky and another dips a toe in the blue water; a patch of green grass and a large green leaf are in the foreground. Gentle breeze moves the grass and leaf while children touch the leaf and look toward the sea.; Scene content from this lyric stanza: Albastru, albastru / Cerul este albastru / Albastru ca marea / Albastru, albastru / Verde, verde / Iarba este verde / Verde ca frunza / Verde, verde; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-04-01320afe6d",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 15.842619999999997,
+        "educational_constraints": [],
+        "english_visual_direction": "Park beside a calm blue lake under a clear blue sky. A child points up at the bright blue sky and another dips a toe in the blue water; a patch of green grass and a large green leaf are in the foreground. Gentle breeze moves the grass and leaf while children touch the leaf and look toward the sea.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Albastru, albastru",
+          "Cerul este albastru",
+          "Albastru ca marea",
+          "Albastru, albastru",
+          "Verde, verde",
+          "Iarba este verde",
+          "Verde ca frunza",
+          "Verde, verde"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Backyard scene at late afternoon with a row of colored objects: an orange ball, a purple flower pot, a pink balloon, and a brown wooden toy. Children stand side by side and use their hands to point at each object in sequence; sunlight softens as the day progresses. Colors brighten briefly when each child points.; Scene content from this lyric stanza: Culori, culori / Hai să le cântăm din nou / Portocaliu, mov, roz și maro / Spunem iar și iar! / Culori, culori / Le arătăm cu mâna ta / Portocaliu, mov, roz și maro / Spunem iar și iar!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-05-965d760173",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 16.22753,
+        "educational_constraints": [],
+        "english_visual_direction": "Backyard scene at late afternoon with a row of colored objects: an orange ball, a purple flower pot, a pink balloon, and a brown wooden toy. Children stand side by side and use their hands to point at each object in sequence; sunlight softens as the day progresses. Colors brighten briefly when each child points.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Culori, culori",
+          "Hai să le cântăm din nou",
+          "Portocaliu, mov, roz și maro",
+          "Spunem iar și iar!",
+          "Culori, culori",
+          "Le arătăm cu mâna ta",
+          "Portocaliu, mov, roz și maro",
+          "Spunem iar și iar!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Garden at golden hour with an orange-glowing sunset on the horizon. A child pulls a bright orange carrot from the soil while the sun casts orange light; nearby a purple flower sways and emits tiny purple sparkles. Children admire the carrot and the glowing flower, holding them up against the sunset.; Scene content from this lyric stanza: Portocaliu, portocaliu / Morcovul e portocaliu / Portocaliu ca apusul / Portocaliu, portocaliu / Mov, mov / Floarea este mov / Mov ca magia / Mov, mov; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-06-c2e900a0eb",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 14.00018,
+        "educational_constraints": [],
+        "english_visual_direction": "Garden at golden hour with an orange-glowing sunset on the horizon. A child pulls a bright orange carrot from the soil while the sun casts orange light; nearby a purple flower sways and emits tiny purple sparkles. Children admire the carrot and the glowing flower, holding them up against the sunset.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Portocaliu, portocaliu",
+          "Morcovul e portocaliu",
+          "Portocaliu ca apusul",
+          "Portocaliu, portocaliu",
+          "Mov, mov",
+          "Floarea este mov",
+          "Mov ca magia",
+          "Mov, mov"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Simple indoor play area with large colored pads on the floor: red, yellow, blue, green. Children kneel and touch the red pad, then the yellow pad, then the blue and green pads in order; they clap hands together and jump with a small forward hop. The room is bright and cheerful, and the colored pads gently pulse as they are touched.; Scene content from this lyric stanza: Arată culoarea! / Degetul pe roșu / Degetul pe galben / Arată culoarea! / Acum pe albastru / Acum pe verde / Bate din palme, dă avânt! / Toate culorile sunt prieteni; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-07-a3572846f8",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 22.22905,
+        "educational_constraints": [],
+        "english_visual_direction": "Simple indoor play area with large colored pads on the floor: red, yellow, blue, green. Children kneel and touch the red pad, then the yellow pad, then the blue and green pads in order; they clap hands together and jump with a small forward hop. The room is bright and cheerful, and the colored pads gently pulse as they are touched.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Arată culoarea!",
+          "Degetul pe roșu",
+          "Degetul pe galben",
+          "Arată culoarea!",
+          "Acum pe albastru",
+          "Acum pe verde",
+          "Bate din palme, dă avânt!",
+          "Toate culorile sunt prieteni"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Montage of earlier scenes stitched together: red apple, yellow sun, blue sky, green grass, orange carrot, purple flower, pink balloon, brown toy. Children run across the frame collecting or pointing to each colored item, hugging balloons and holding objects up. Weather is sunny and warm; colors sparkle and all children smile and spin in place.; Scene content from this lyric stanza: Culori, culori / Spunem iar și iar / Roșu, galben, albastru, verde / Portocaliu, mov, roz și maro / Culori, culori / Le iubim pe toate / Spunem iar și iar! / Spunem iar și iar!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-08-b51d28d7bc",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 29.975539999999995,
+        "educational_constraints": [],
+        "english_visual_direction": "Montage of earlier scenes stitched together: red apple, yellow sun, blue sky, green grass, orange carrot, purple flower, pink balloon, brown toy. Children run across the frame collecting or pointing to each colored item, hugging balloons and holding objects up. Weather is sunny and warm; colors sparkle and all children smile and spin in place.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Culori, culori",
+          "Spunem iar și iar",
+          "Roșu, galben, albastru, verde",
+          "Portocaliu, mov, roz și maro",
+          "Culori, culori",
+          "Le iubim pe toate",
+          "Spunem iar și iar!",
+          "Spunem iar și iar!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Sunset playground with long golden light. The group of children stands in a line and waves goodbye toward a circle of softly glowing colored shapes as those shapes gently float upward and fade. Children wave with both hands and smile; the sky deepens to warm pink and orange as the scene closes.; Scene content from this lyric stanza: Bravo, copii! / Acum știi culorile / Roșu, galben, albastru, verde / La revedere, culori!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-09-580b14cde4",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 8.899079999999998,
+        "educational_constraints": [],
+        "english_visual_direction": "Sunset playground with long golden light. The group of children stands in a line and waves goodbye toward a circle of softly glowing colored shapes as those shapes gently float upward and fade. Children wave with both hands and smile; the sky deepens to warm pink and orange as the scene closes.",
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [
+          "Bravo, copii!",
+          "Acum știi culorile",
+          "Roșu, galben, albastru, verde",
+          "La revedere, culori!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-instrumental_outro-variant-01-instrumental-outro-0e99d4f9c5",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.593999999999994,
+        "educational_constraints": [],
+        "english_visual_direction": null,
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca",
+          "max"
+        ],
+        "source_texts": [],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    }
+  ],
+  "semantic_sha256": "833fcdfb552bee17843172e0f63862d2837bfaa7c840e382bbda7feb6def7e0c",
+  "version": 2
+}

@@ -174,17 +174,18 @@ class SemanticScenePlanner:
             constraints=()
             visual_goal=getattr(story,"visual_goal",None)
             if visual_goal: constraints=(SceneEducationalConstraint(constraint_type="visual_goal",value=visual_goal),)
-            timing=SceneTiming(start_s=aligned.start_seconds,end_s=aligned.end_seconds,
-                duration_s=aligned.end_seconds-aligned.start_seconds)
+            timing=self._bounded_timing(aligned.start_seconds,aligned.end_seconds,alignment.audio_duration_seconds)
             candidates.append((timing.start_s,"vocal",aligned,PlannedScene(scene_id=self._scene_id(alignment.variant_id,"vocal",aligned.line_id),
                 ordinal=0,scene_type="vocal",timing=timing,source_line_ids=(lyric_line.line_id,),
                 source_section_ids=(lyrics_section.section_id,),source_texts=(lyric_line.text,),
                 source_references=tuple(references),subjects=subjects,
                 actions=actions,environment=environment,mood=getattr(story,"emotion","unspecified") or "unspecified",
                 educational_constraints=constraints)))
+        if self.thresholds.group_vocal_lines: candidates=self._group_vocal_candidates(candidates,alignment)
         for section in alignment.sections:
             if section.section_type not in {"instrumental_intro","instrumental_break","instrumental_outro"}: continue
-            timing=SceneTiming(start_s=section.start_seconds,end_s=section.end_seconds,duration_s=section.end_seconds-section.start_seconds)
+            if self.thresholds.group_vocal_lines and section.section_type=="instrumental_break": continue
+            timing=self._bounded_timing(section.start_seconds,section.end_seconds,alignment.audio_duration_seconds)
             reference=SceneSourceReference(source_type="instrumental_section",source_id=section.section_id,
                 source_sha256=semantic_sha256(section))
             candidates.append((timing.start_s,section.section_type,section,PlannedScene(
@@ -192,6 +193,7 @@ class SemanticScenePlanner:
                 scene_type=section.section_type,timing=timing,source_section_ids=(section.section_id,),
                 source_references=(reference,),environment=SceneEnvironment(),mood="unspecified")))
         candidates.sort(key=lambda value:(value[0],value[1],value[3].scene_id))
+        if self.thresholds.group_vocal_lines: candidates=self._fill_grouped_gaps(candidates,alignment.audio_duration_seconds)
         scenes=tuple(value[3].model_copy(update={"ordinal":index}) for index,value in enumerate(candidates))
         warnings=tuple(ScenePlanWarning(code="unmapped_lyrics_line",source_id=line_id,
             path=f"lyrics.lines[{line_id}]") for line_id in alignment.unmatched_lyrics_line_ids)
@@ -204,6 +206,39 @@ class SemanticScenePlanner:
             "unplanned_line_ids":list(alignment.unmatched_lyrics_line_ids),"warnings":[value.model_dump(mode="json") for value in warnings],
             "dependency_metadata":dependencies.model_dump(mode="json")}
         return ScenePlan(**core,semantic_sha256=semantic_sha256(core))
+
+    def _group_vocal_candidates(self,candidates,alignment):
+        grouped={}
+        for candidate in candidates:
+            scene=candidate[3]; section_id=scene.source_section_ids[0]
+            grouped.setdefault(section_id,[]).append(candidate)
+        result=[]
+        for section_id,values in grouped.items():
+            values.sort(key=lambda value:value[3].start_s); scenes=[value[3] for value in values]; first=scenes[0]
+            timing=self._bounded_timing(first.start_s,max(scene.end_s for scene in scenes),alignment.audio_duration_seconds)
+            references=[]
+            for scene in scenes:
+                references.extend(reference for reference in scene.source_references if reference not in references)
+            merged=first.model_copy(update={"scene_id":self._scene_id(alignment.variant_id,"vocal-section",section_id),"timing":timing,
+                "source_line_ids":tuple(line_id for scene in scenes for line_id in scene.source_line_ids),
+                "source_texts":tuple(text for scene in scenes for text in scene.source_texts),"source_references":tuple(references)})
+            result.append((timing.start_s,"vocal",values[0][2],merged))
+        return result
+
+    def _fill_grouped_gaps(self,candidates,audio_duration):
+        result=[]
+        for index,candidate in enumerate(candidates):
+            scene=candidate[3]; boundary=candidates[index+1][3].start_s if index+1<len(candidates) else audio_duration
+            end=max(scene.end_s,boundary)
+            timing=self._bounded_timing(scene.start_s,end,audio_duration)
+            result.append((candidate[0],candidate[1],candidate[2],scene.model_copy(update={"timing":timing})))
+        return result
+
+    @staticmethod
+    def _bounded_timing(start,end,audio_duration):
+        bounded_end=min(end,audio_duration)
+        if start>=bounded_end: raise ScenePlanInvalidError("Scene starts beyond audio duration.")
+        return SceneTiming(start_s=start,end_s=bounded_end,duration_s=bounded_end-start)
 
     @staticmethod
     def _scene_id(variant,kind,source_id):

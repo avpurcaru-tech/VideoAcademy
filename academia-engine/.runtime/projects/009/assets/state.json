@@ -1,0 +1,24 @@
+{
+  "scenes": [
+    {
+      "approved_version": null,
+      "current_version": 1,
+      "scene_id": "visual-variant-01-vocal-section-section-02-a70094a7ee",
+      "selected_version": 1,
+      "status": "completed",
+      "versions": [
+        1
+      ]
+    },
+    {
+      "approved_version": null,
+      "current_version": 1,
+      "scene_id": "visual-variant-01-vocal-section-section-03-572211da2e",
+      "selected_version": 1,
+      "status": "completed",
+      "versions": [
+        1
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "error": null,
+  "generation_request": {
+    "description": "Luca invata culorile - rosu - galben - verde - albastru\r\nPrin cântec și joacă, copiii învață culorile folosind obiecte ușor de recunoscut. trandafirul e rosu - soarele e galben - iarba e verde - cerul e albastru",
+    "educational_goal": "Recunoașterea culorilor",
+    "episode_title": "Luca invata culorile",
+    "feedback": null,
+    "language": "ro",
+    "main_character_description": "A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting.",
+    "main_character_name": "Luca",
+    "target_age": "2-5",
+    "theme": "Culori",
+    "user_instructions": "SYSTEM:\nCreate newly written, original educational song lyrics for preschool children. Use simple vocabulary, short singable lines, useful repetition, a clear learning objective, and age-appropriate content. Include at least one verse and one chorus. Never imitate or write in the style of any artist or existing song.\n\nUSER:\nTopic: Culori\n\nLearning objectives:\n\n- Recunoașterea culorilor\n\nTarget age: 2-5\n\nLanguage: ro\n\nApproximate duration seconds: 120.0\n\nTone: cheerful and educational\n\nRepetition level: high"
+  },
+  "generation_request_sha256": "2c91215aca2b2d264f8411c4b92cde3a9f751469cabd24ce9ea5a9f121f3d852",
+  "lyrics_text": "[Intro]\nHei, copii!\nHaideți să vedem culorile\n\n[Verse]\nUită-te, roșu\nRoșu, roșu\nPrivește, albastru\nAlbastru, albastru\nSpunem din nou\nRoșu și albastru\n\n[Chorus]\nCulori, culori\nSunt atât de vii\nRoșu, galben, albastru\nVerde și portocaliu\nCulori, culori\nSpune-le cu mine\nRoșu, galben, albastru\nCulori, culori!\n\n[Verse]\nPrivește iar\nGalben, galben\nVerde, verde\nPortocaliu, portocaliu\nRoz, roz\nSunt culori frumoase\n\n[Chorus]\nCulori, culori\nHai să le numărăm\nRoșu, galben, albastru\nVerde, portocaliu, roz\nCulori, culori\nRepetăm iar\nRoșu, galben, albastru\nCulori, culori!\n\n[Bridge]\nMărul e roșu\nBanana e galbenă\nCerul e albastru\nIarba e verde\nPortocala e portocalie\nJucăria e roz\n\n[Chorus]\nCulori, culori\nSpune ce vezi\nRoșu, galben, albastru\nVerde, portocaliu, roz\nCulori, culori\nHai, arată!\nRoșu, galben, albastru\nCulori, culori!\n\n[Outro]\nAcum știi culorile\nRoșu, galben, albastru, verde\nLa revedere, culori!",
+  "provider_metadata": {
+    "model": "gpt-5-mini",
+    "provider": "openai"
+  },
+  "sections": [
+    "intro",
+    "verse",
+    "chorus",
+    "verse",
+    "chorus",
+    "bridge",
+    "chorus",
+    "outro"
+  ],
+  "status": "generated",
+  "version": 2
+}

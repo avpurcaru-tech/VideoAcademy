@@ -46,6 +46,7 @@ class MusicUiTests(unittest.TestCase):
     def test_music_page_exposes_editable_style_fields(self):
         text=self.application.dispatch("/projects/008/music").body.decode()
         for name in ("musical_style","mood","instrumentation","vocal_style","tempo_bpm"): self.assertIn(f'name="{name}"',text)
+        self.assertIn("Romanian children’s song",text); self.assertIn('value="92"',text)
     def test_music_generation_persists_custom_style(self):
         self.approve_lyrics(); response=self.post("/projects/008/music/generate",{"confirm_cost":"yes","musical_style":"playful reggae","mood":"sunny","instrumentation":"marimba, bass, drums","vocal_style":"warm duet","tempo_bpm":"124"})
         self.assertEqual(303,response.status); request=self.music_provider.requests[-1]

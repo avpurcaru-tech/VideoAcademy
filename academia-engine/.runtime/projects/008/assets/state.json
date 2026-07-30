@@ -1,0 +1,16 @@
+{
+  "scenes": [
+    {
+      "approved_version": null,
+      "current_version": 3,
+      "scene_id": "visual-variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+      "selected_version": 3,
+      "status": "failed",
+      "versions": [
+        1,
+        2,
+        3
+      ]
+    }
+  ]
+}

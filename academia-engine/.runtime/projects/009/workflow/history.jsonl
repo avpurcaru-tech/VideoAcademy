@@ -1,0 +1,29 @@
+{"action":"mark_generated","from_status":"ready","reason":"lyrics generation","stage":"lyrics","timestamp":"2026-07-26T21:25:29.944293+00:00","to_status":"generated","version":1}
+{"action":"mark_generated","from_status":"generated","reason":"lyrics generation","stage":"lyrics","timestamp":"2026-07-26T21:26:44.510923+00:00","to_status":"generated","version":2}
+{"action":"select_version","from_status":"generated","reason":"","stage":"lyrics","timestamp":"2026-07-26T21:27:08.898889+00:00","to_status":"generated","version":2}
+{"action":"approve","from_status":"generated","reason":"","stage":"lyrics","timestamp":"2026-07-26T21:27:37.885090+00:00","to_status":"approved","version":2}
+{"action":"mark_generated","from_status":"stale","reason":"music generation","stage":"music","timestamp":"2026-07-26T21:28:45.223909+00:00","to_status":"generated","version":1}
+{"action":"mark_generated","from_status":"generated","reason":"music generation","stage":"music","timestamp":"2026-07-26T21:36:02.167712+00:00","to_status":"generated","version":2}
+{"action":"mark_generated","from_status":"approved","reason":"lyrics generation","stage":"lyrics","timestamp":"2026-07-26T21:37:44.603021+00:00","to_status":"generated","version":3}
+{"action":"select_version","from_status":"generated","reason":"","stage":"lyrics","timestamp":"2026-07-26T21:38:31.130302+00:00","to_status":"generated","version":3}
+{"action":"approve","from_status":"generated","reason":"","stage":"lyrics","timestamp":"2026-07-26T21:38:45.048202+00:00","to_status":"approved","version":3}
+{"action":"mark_generated","from_status":"stale","reason":"music generation","stage":"music","timestamp":"2026-07-26T21:39:56.575739+00:00","to_status":"generated","version":3}
+{"action":"select_version","from_status":"generated","reason":"selected variant-01","stage":"music","timestamp":"2026-07-26T21:41:15.311853+00:00","to_status":"generated","version":3}
+{"action":"approve","from_status":"generated","reason":"approved variant-01","stage":"music","timestamp":"2026-07-26T21:41:29.282535+00:00","to_status":"approved","version":3}
+{"action":"select_version","from_status":"approved","reason":"","stage":"music","timestamp":"2026-07-26T21:41:36.684227+00:00","to_status":"generated","version":3}
+{"action":"approve","from_status":"generated","reason":"approved variant-01","stage":"music","timestamp":"2026-07-26T21:41:47.537937+00:00","to_status":"approved","version":3}
+{"action":"select_version","from_status":"approved","reason":"selected variant-01","stage":"music","timestamp":"2026-07-26T21:41:52.707233+00:00","to_status":"generated","version":3}
+{"action":"approve","from_status":"generated","reason":"approved variant-01","stage":"music","timestamp":"2026-07-26T21:42:02.705938+00:00","to_status":"approved","version":3}
+{"action":"select_version","from_status":"approved","reason":"selected variant-01","stage":"music","timestamp":"2026-07-26T21:42:08.994185+00:00","to_status":"generated","version":3}
+{"action":"approve","from_status":"generated","reason":"approved variant-01","stage":"music","timestamp":"2026-07-26T21:42:20.884776+00:00","to_status":"approved","version":3}
+{"action":"mark_generated","from_status":"stale","reason":"build","stage":"alignment","timestamp":"2026-07-26T21:42:27.187921+00:00","to_status":"generated","version":1}
+{"action":"approve","from_status":"generated","reason":"","stage":"alignment","timestamp":"2026-07-26T21:42:30.509634+00:00","to_status":"approved","version":1}
+{"action":"mark_generated","from_status":"ready","reason":"build","stage":"scene_plan","timestamp":"2026-07-26T21:42:35.066137+00:00","to_status":"generated","version":1}
+{"action":"approve","from_status":"generated","reason":"","stage":"scene_plan","timestamp":"2026-07-26T21:42:36.714068+00:00","to_status":"approved","version":1}
+{"action":"mark_generated","from_status":"ready","reason":"build","stage":"visual_plan","timestamp":"2026-07-26T21:42:40.158824+00:00","to_status":"generated","version":1}
+{"action":"approve","from_status":"generated","reason":"","stage":"visual_plan","timestamp":"2026-07-26T21:42:41.915391+00:00","to_status":"approved","version":1}
+{"action":"mark_generated","from_status":"ready","reason":"build","stage":"prompts","timestamp":"2026-07-26T21:43:05.773986+00:00","to_status":"generated","version":1}
+{"action":"mark_generated","from_status":"generated","reason":"build","stage":"prompts","timestamp":"2026-07-26T21:43:38.624549+00:00","to_status":"generated","version":2}
+{"action":"approve","from_status":"generated","reason":"","stage":"prompts","timestamp":"2026-07-26T21:53:59.655851+00:00","to_status":"approved","version":2}
+{"action":"mark_stale","from_status":"blocked","reason":"asset visual-variant-01-vocal-section-section-02-a70094a7ee changed","stage":"composition","timestamp":"2026-07-26T21:56:15.094334+00:00","to_status":"stale","version":null}
+{"action":"mark_stale","from_status":"stale","reason":"asset visual-variant-01-vocal-section-section-03-572211da2e changed","stage":"composition","timestamp":"2026-07-26T22:06:58.125257+00:00","to_status":"stale","version":null}

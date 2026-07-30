@@ -1,0 +1,11 @@
+{
+  "job_id": "910478425498980413",
+  "provider": "kling",
+  "provider_metadata": {
+    "artifact_id": "910478429722640427"
+  },
+  "response": {
+    "status": "succeeded"
+  },
+  "status": "completed"
+}

@@ -124,10 +124,19 @@ class LyricsAlignmentNormalizer:
             if not normalized: continue # section labels/punctuation are structural, not lexical words
             if value.start_seconds<0 or value.end_seconds<value.start_seconds:
                 raise LyricsAlignmentInvalid("Provider word timestamp is invalid.")
+            if value.end_seconds==value.start_seconds:
+                continue
             if value.end_seconds>audio_duration_seconds+self.policy.maximum_overrun_seconds:
                 raise LyricsAlignmentInvalid("Provider timestamp exceeds probed audio duration.")
+            # Suno can append a final word entirely inside its small timestamp
+            # overrun even though the probed audio has already ended.  There is
+            # no valid positive interval to clamp in that case, so discard the
+            # trailing provider word instead of rejecting the whole alignment.
+            if value.start_seconds>=audio_duration_seconds:
+                continue
+            end_seconds=min(value.end_seconds,audio_duration_seconds)
             words.append(AlignedLyricsWord(word_id=f"{variant_id}-word-{len(words)+1:04d}",text=value.text,
-                normalized_text=normalized,start_seconds=value.start_seconds,end_seconds=value.end_seconds,
+                normalized_text=normalized,start_seconds=value.start_seconds,end_seconds=end_seconds,
                 confidence=value.confidence))
         if not words: raise TimestampedLyricsParseFailed("Timestamped lyrics contain no lexical words.")
         return self._map(variant_id,audio_artifact_id,audio_sha256,provider_task_id,provider_audio_id,

@@ -1,0 +1,15 @@
+{
+  "approved_version": 3,
+  "artifact_paths": [
+    "visual/plans/version-003.json"
+  ],
+  "dependency_hashes": {
+    "alignment": "7a560e17ef7272e788b62ee3b52f55c1ad589e15c379efe7819bf0041abc063b",
+    "lyrics": "a67eb3b65ba21e4c292f9800d49e105436fe7a2b69e0516a23e94fe3868dd5db",
+    "music": "9c5315146824141d7f06ac72d774265625b08be89943933a00a08e0f00768bda",
+    "prompts": "bc1afbbbe27a528659c5b90bf7c1a67c26eba4cc1c82a548482056fe9303092c",
+    "scene_plan": "9eda0a1d6fc9440dff5db794e4f5536e7a9d0ca861b590af1e6b67bb3d7b9935"
+  },
+  "stage": "visual_plan",
+  "validation_summary": "approved artifact and workflow dependency snapshot validated"
+}

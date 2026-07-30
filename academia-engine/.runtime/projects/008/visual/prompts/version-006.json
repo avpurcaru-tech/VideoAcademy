@@ -1,0 +1,467 @@
+{
+  "dependency_sha256": "ecc9ea728a118ff157c6e05f0ecf2df636ff5b6657afca057d8ac375f792a4e0",
+  "prompts": [
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.638,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Hai să învățăm! / Anotimpurile sunt patru / Să le cântăm împreună; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-01-e487c8131f",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 9.74733,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Hai să învățăm!",
+          "Anotimpurile sunt patru",
+          "Să le cântăm împreună"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Primăvara e verde / Floare mică se deschide / Păsările se întorc / Plouă blând, plouă lin / Muguri și iarba verde / Zâmbim și alergăm afară; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-02-a70094a7ee",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 15.71922,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Primăvara e verde",
+          "Floare mică se deschide",
+          "Păsările se întorc",
+          "Plouă blând, plouă lin",
+          "Muguri și iarba verde",
+          "Zâmbim și alergăm afară"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Iarna! Primăvara! / Vara! Toamna! / Sunt patru anotimpuri! / Iarna! Primăvara! / Vara! Toamna! / Hai să le spunem iar!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-03-572211da2e",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 19.744090000000003,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!",
+          "Vara! Toamna!",
+          "Sunt patru anotimpuri!",
+          "Iarna! Primăvara!",
+          "Vara! Toamna!",
+          "Hai să le spunem iar!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Vara e caldă / Soarele strălucește sus / Ne jucăm în parc / Mâncăm fructe dulci / Sari, aleargă, joacă / Zi lungă și veselă; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-04-01320afe6d",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 15.696449999999999,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Vara e caldă",
+          "Soarele strălucește sus",
+          "Ne jucăm în parc",
+          "Mâncăm fructe dulci",
+          "Sari, aleargă, joacă",
+          "Zi lungă și veselă"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Iarna! Primăvara! / Vara! Toamna! / Sunt patru anotimpuri! / Iarna! Primăvara! / Vara! Toamna! / Hai să le spunem iar!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-05-965d760173",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 19.61865999999999,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!",
+          "Vara! Toamna!",
+          "Sunt patru anotimpuri!",
+          "Iarna! Primăvara!",
+          "Vara! Toamna!",
+          "Hai să le spunem iar!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Toamna e colorată / Frunzele cad ușor / Strângem mere și frunze / Vântul suflă lin / Ne punem jachete ușoare / Sărim în covor de frunze; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-06-c2e900a0eb",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 14.59705000000001,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Toamna e colorată",
+          "Frunzele cad ușor",
+          "Strângem mere și frunze",
+          "Vântul suflă lin",
+          "Ne punem jachete ușoare",
+          "Sărim în covor de frunze"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Iarna e albă / Ninge lin, ninge mult / Facem om de zăpadă / Ne punem haine groase / Mănuși și căciulițe / Bucurie și clopoței; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-07-a3572846f8",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 17.232749999999996,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Iarna e albă",
+          "Ninge lin, ninge mult",
+          "Facem om de zăpadă",
+          "Ne punem haine groase",
+          "Mănuși și căciulițe",
+          "Bucurie și clopoței"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Iarna! Primăvara! / Vara! Toamna! / Sunt patru anotimpuri! / Iarna! Primăvara! / Vara! Toamna! / Hai să le spunem iar!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-08-b51d28d7bc",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 17.239450000000005,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!",
+          "Vara! Toamna!",
+          "Sunt patru anotimpuri!",
+          "Iarna! Primăvara!",
+          "Vara! Toamna!",
+          "Hai să le spunem iar!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Iarna! Primăvara! / Vara! Toamna! / Sunt patru anotimpuri! / Iarna! Primăvara! / Vara! Toamna! / Hai să le spunem iar!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-09-580b14cde4",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 22.20075,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!",
+          "Vara! Toamna!",
+          "Sunt patru anotimpuri!",
+          "Iarna! Primăvara!",
+          "Vara! Toamna!",
+          "Hai să le spunem iar!"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.",
+      "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca reacts with curiosity and positive emotions.; Scene content from this lyric stanza: Acum știm anotimpurile / Iarna, Primăvara, Vara, Toamna / Să le cântăm din nou! (repetați refrenul); Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+      "scene_id": "visual-variant-01-vocal-section-section-10-8168fd3f93",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 11.88624999999999,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "selected_character_ids": [
+          "luca"
+        ],
+        "source_texts": [
+          "Acum știm anotimpurile",
+          "Iarna, Primăvara, Vara, Toamna",
+          "Să le cântăm din nou! (repetați refrenul)"
+        ],
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    }
+  ],
+  "semantic_sha256": "d5a4897bddbc03c709062da81274ba0f26c04b5aaf6c40084b02c22139925f4a",
+  "version": 6
+}

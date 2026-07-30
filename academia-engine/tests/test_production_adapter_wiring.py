@@ -4,6 +4,7 @@ from unittest.mock import Mock,patch
 
 from app.web_ui.assets import AssetGenerationRequest
 from app.web_ui.bootstrap import *
+from app.web_ui.bootstrap import _selected_character_prompt
 from app.web_ui.composition import ExistingFFmpegCompositionAdapter
 from app.web_ui.lyrics import LyricsGenerationRequest
 from app.web_ui.music import MusicGenerationRequest
@@ -47,8 +48,18 @@ class ProductionAdapterWiringTests(unittest.TestCase):
         services=build_application_services(settings=self.settings,runtime_mode="production"); self.assertIsInstance(services.planning_builders["visual_plan"],ExistingVisualPlanUiBuilder)
     def test_prompt_action_uses_existing_prompt_builder(self):
         services=build_application_services(settings=self.settings,runtime_mode="production"); self.assertIsInstance(services.planning_builders["prompts"],ExistingPromptUiBuilder)
+    def test_selected_character_context_is_added_to_every_prompt(self):
+        project=self.root/"008"; project.mkdir(); characters=self.root.parent/"characters"; characters.mkdir(exist_ok=True)
+        (project/"project.json").write_text('{"project_id":"008","episode":{"title":"x","description":"x","language":"ro","target_age":"2-5","aspect_ratio":"16:9"},"main_character":{"name":"Luca","description":"golden curls and blue shirt"}}',encoding="utf-8")
+        positive,negative,ids=_selected_character_prompt(project)
+        self.assertIn("Required on-screen character in every scene",positive); self.assertIn("Luca",positive); self.assertIn("golden curls",positive); self.assertEqual("",negative); self.assertEqual((),ids)
     def test_asset_action_uses_injected_asset_provider(self):
         services=self._mock_services(); self.assertIs(services.asset_provider,create_app(settings=self.settings,services=services).asset_provider)
+    def test_production_mode_wires_configured_kling_asset_adapter_lazily(self):
+        settings=ApplicationSettings(projects_root=self.root,assets=AssetProviderSettings(provider="kling",enabled=True,api_key=SecretValue("configured"),base_url="https://api.example.test"))
+        with patch("app.providers.kling_client.KlingHttpClient") as client:
+            services=build_application_services(settings=settings,runtime_mode="production")
+        self.assertIsInstance(services.asset_provider,KlingAssetUiAdapter); client.assert_not_called()
     def test_composition_action_uses_existing_ffmpeg_adapter(self):
         services=build_application_services(settings=self.settings,runtime_mode="production"); self.assertIsInstance(services.composition_renderer,ExistingFFmpegCompositionAdapter)
     def test_preflight_does_not_execute_ffmpeg(self):

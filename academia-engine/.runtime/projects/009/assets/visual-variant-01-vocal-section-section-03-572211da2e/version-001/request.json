@@ -1,0 +1,51 @@
+{
+  "feedback": null,
+  "negative_prompt": "Never change Luca's hair color.; Never change Luca's eye color.; Never change Luca's age.; Never change Luca's clothing.; Never portray Luca as an adult.; Max never speaks.; Never remove or change Max's red collar.; Never change Max's breed.; Never portray Max as an adult dog.; Never change Max's black and tan fur.",
+  "positive_prompt": "Required on-screen character in every scene: Luca [luca]. Canonical appearance: A cheerful 4–5-year-old boy with soft golden-blond curly hair, bright blue eyes, fair skin, rosy cheeks, a round childlike face, and a warm expressive smile. He always wears a light blue T-shirt, beige shorts, and white sneakers. High-quality stylized 3D preschool animation with soft rounded features and warm cinematic lighting. Behavior: Luca behaves like a friendly preschool child. Luca remains close to Max. Luca reacts with curiosity and positive emotions. Required on-screen character in every scene: Max [max]. Canonical appearance: A playful six-month-old German Shepherd puppy with black and tan fur, expressive brown eyes, a bright red collar, friendly facial expressions, and youthful puppy proportions. High-quality stylized 3D preschool animation with soft rounded features. Behavior: Max stays close to Luca. Max communicates through movement, expressions, and gestures. Max behaves like a young friendly puppy.; English visual direction: Wide shot of the playground with colorful flags and giant floating color bubbles (red, yellow, blue, green). Children stand in a row pointing to each bubble as it appears; bubbles pop gently in rhythm, then reappear, repeating the sequence. Sky is clear, children clap softly and mirror each other’s pointing actions.; Scene content from this lyric stanza: Culori, culori / Vino și spune cu mine / Roșu, galben, albastru, verde / Spunem iar și iar! / Culori, culori / Vrei să le arătăm din nou? / Roșu, galben, albastru, verde / Spunem iar și iar!; Visually depict the concrete meaning of the stanza through the setting, visible objects, events, and character actions; style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; Visual continuity: keep recurring characters' faces, hair, clothing, proportions, environment, palette, and animation style consistent with adjacent scenes",
+  "project_id": "009",
+  "prompt_bundle_version": 2,
+  "prompt_sha256": "da041d7f0c90a67e2487125446938d74179bc59a37a347460ed079537af1fe45",
+  "scene_id": "visual-variant-01-vocal-section-section-03-572211da2e",
+  "structured_parameters": {
+    "aspect_ratio": "16:9",
+    "camera": {
+      "angle": "unspecified",
+      "focus_target": "unspecified",
+      "movement_intent": "unspecified",
+      "shot_size": "unspecified"
+    },
+    "counts": [],
+    "duration": 15.47662,
+    "educational_constraints": [],
+    "english_visual_direction": "Wide shot of the playground with colorful flags and giant floating color bubbles (red, yellow, blue, green). Children stand in a row pointing to each bubble as it appears; bubbles pop gently in rhythm, then reappear, repeating the sequence. Sky is clear, children clap softly and mirror each other’s pointing actions.",
+    "lighting": {
+      "brightness": "unspecified",
+      "direction": "unspecified",
+      "lighting_type": "unspecified",
+      "temperature": "unspecified"
+    },
+    "selected_character_ids": [
+      "luca",
+      "max"
+    ],
+    "source_texts": [
+      "Culori, culori",
+      "Vino și spune cu mine",
+      "Roșu, galben, albastru, verde",
+      "Spunem iar și iar!",
+      "Culori, culori",
+      "Vrei să le arătăm din nou?",
+      "Roșu, galben, albastru, verde",
+      "Spunem iar și iar!"
+    ],
+    "style": {
+      "complexity": "simple",
+      "medium": "3d_animation",
+      "readability": "high",
+      "render_style": "friendly_stylized",
+      "shape_language": "soft_rounded_shapes",
+      "target_age_group": "2_to_5"
+    },
+    "subjects": []
+  }
+}

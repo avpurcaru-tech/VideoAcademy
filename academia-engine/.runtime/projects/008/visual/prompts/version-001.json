@@ -1,0 +1,2055 @@
+{
+  "dependency_sha256": "a0dc572a63f0329531dbe5f13aaa21b4704c20e5da9c503172168ed8627bb820",
+  "prompts": [
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity next scene: variant-01-vocal-variant-01-line-0001-5a9dc4020c",
+      "scene_id": "visual-variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.638,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db; continuity next scene: variant-01-vocal-variant-01-line-0002-5e6d8b63e6",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0001-5a9dc4020c",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.64933,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0001-5a9dc4020c; continuity next scene: variant-01-vocal-variant-01-line-0003-7e4c77ff9e",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0002-5e6d8b63e6",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.6863300000000003,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0002-5e6d8b63e6; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-01-7efc9a7ca3",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0003-7e4c77ff9e",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 5.27217,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0003-7e4c77ff9e; continuity next scene: variant-01-vocal-variant-01-line-0004-ce02b3bcbf",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-01-7efc9a7ca3",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.00666000000000011,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-01-7efc9a7ca3; continuity next scene: variant-01-vocal-variant-01-line-0005-98553d21db",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0004-ce02b3bcbf",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.1416699999999995,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0004-ce02b3bcbf; continuity next scene: variant-01-vocal-variant-01-line-0006-a871e6134b",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0005-98553d21db",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.68567,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0005-98553d21db; continuity next scene: variant-01-vocal-variant-01-line-0007-ace0349dcf",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0006-a871e6134b",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.153999999999998,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0006-a871e6134b; continuity next scene: variant-01-vocal-variant-01-line-0008-ab82a9eee2",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0007-ace0349dcf",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.6729999999999983,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0007-ace0349dcf; continuity next scene: variant-01-vocal-variant-01-line-0009-a34c24ae3f",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0008-ab82a9eee2",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.7949999999999982,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0008-ab82a9eee2; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-02-7e2874f829",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0009-a34c24ae3f",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 3.916270000000001,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0009-a34c24ae3f; continuity next scene: variant-01-vocal-variant-01-line-0010-568badf589",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-02-7e2874f829",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.007279999999997955,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-02-7e2874f829; continuity next scene: variant-01-vocal-variant-01-line-0011-0c4d9aa854",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0010-568badf589",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.4989500000000007,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0010-568badf589; continuity next scene: variant-01-vocal-variant-01-line-0012-73f158193d",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0011-0c4d9aa854",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.9156000000000013,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0011-0c4d9aa854; continuity next scene: variant-01-vocal-variant-01-line-0013-f3318b9bb8",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0012-73f158193d",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 5.145799999999998,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0012-73f158193d; continuity next scene: variant-01-vocal-variant-01-line-0014-9c1bb2052e",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0013-f3318b9bb8",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.433499999999995,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0013-f3318b9bb8; continuity next scene: variant-01-vocal-variant-01-line-0015-1cfb2cb23d",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0014-9c1bb2052e",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.333750000000002,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0014-9c1bb2052e; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-03-2c39a812ed",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0015-1cfb2cb23d",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 4.914589999999997,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0015-1cfb2cb23d; continuity next scene: variant-01-vocal-variant-01-line-0016-b58890637c",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-03-2c39a812ed",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.04355000000000331,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-03-2c39a812ed; continuity next scene: variant-01-vocal-variant-01-line-0017-6f17dc30c5",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0016-b58890637c",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.1833599999999933,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0016-b58890637c; continuity next scene: variant-01-vocal-variant-01-line-0018-b0242db3e4",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0017-6f17dc30c5",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.393500000000003,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0017-6f17dc30c5; continuity next scene: variant-01-vocal-variant-01-line-0019-c56d5e0d73",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0018-b0242db3e4",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.9549999999999983,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0018-b0242db3e4; continuity next scene: variant-01-vocal-variant-01-line-0020-7d7bc6eccf",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0019-c56d5e0d73",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.7120000000000033,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0019-c56d5e0d73; continuity next scene: variant-01-vocal-variant-01-line-0021-93e75b5a5a",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0020-7d7bc6eccf",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.0350000000000037,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0020-7d7bc6eccf; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-04-ba62694d07",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0021-93e75b5a5a",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 3.9245499999999964,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0021-93e75b5a5a; continuity next scene: variant-01-vocal-variant-01-line-0022-dcfbd971c0",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-04-ba62694d07",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.014540000000003772,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-04-ba62694d07; continuity next scene: variant-01-vocal-variant-01-line-0023-ff36012b06",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0022-dcfbd971c0",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.563909999999993,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0022-dcfbd971c0; continuity next scene: variant-01-vocal-variant-01-line-0024-52a33cb7d3",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0023-ff36012b06",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.9147999999999996,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0023-ff36012b06; continuity next scene: variant-01-vocal-variant-01-line-0025-5a85dd99b6",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0024-52a33cb7d3",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 4.029399999999995,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0024-52a33cb7d3; continuity next scene: variant-01-vocal-variant-01-line-0026-109f7b30e6",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0025-5a85dd99b6",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.8374999999999915,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0025-5a85dd99b6; continuity next scene: variant-01-vocal-variant-01-line-0027-ce330d4889",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0026-109f7b30e6",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 5.126750000000001,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0026-109f7b30e6; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-05-c71b7dd2b1",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0027-ce330d4889",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 4.680669999999992,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0027-ce330d4889; continuity next scene: variant-01-vocal-variant-01-line-0028-100245555d",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-05-c71b7dd2b1",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.006579999999999586,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-05-c71b7dd2b1; continuity next scene: variant-01-vocal-variant-01-line-0029-8947337928",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0028-100245555d",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.373250000000013,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0028-100245555d; continuity next scene: variant-01-vocal-variant-01-line-0030-9f79d55d86",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0029-8947337928",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.4339999999999975,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0029-8947337928; continuity next scene: variant-01-vocal-variant-01-line-0031-5330867388",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0030-9f79d55d86",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.366669999999999,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0030-9f79d55d86; continuity next scene: variant-01-vocal-variant-01-line-0032-885a012a66",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0031-5330867388",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.234000000000009,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0031-5330867388; continuity next scene: variant-01-vocal-variant-01-line-0033-a05b504420",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0032-885a012a66",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.5159999999999911,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0032-885a012a66; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-06-cb2f6e16e4",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0033-a05b504420",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 3.279899999999998,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0033-a05b504420; continuity next scene: variant-01-vocal-variant-01-line-0034-f2dfd4caa1",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-06-cb2f6e16e4",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.007900000000006457,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-06-cb2f6e16e4; continuity next scene: variant-01-vocal-variant-01-line-0035-d46888cba6",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0034-f2dfd4caa1",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.2601999999999975,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0034-f2dfd4caa1; continuity next scene: variant-01-vocal-variant-01-line-0036-397a05cf3a",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0035-d46888cba6",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 3.5702500000000015,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0035-d46888cba6; continuity next scene: variant-01-vocal-variant-01-line-0037-ac2252a60a",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0036-397a05cf3a",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.6159999999999997,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0036-397a05cf3a; continuity next scene: variant-01-vocal-variant-01-line-0038-bc5afe75cc",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0037-ac2252a60a",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 3.0720000000000027,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0037-ac2252a60a; continuity next scene: variant-01-vocal-variant-01-line-0039-e4c79f9e97",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0038-bc5afe75cc",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.9145000000000039,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0038-bc5afe75cc; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-07-4f6046fa1d",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0039-e4c79f9e97",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 5.393270000000001,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0039-e4c79f9e97; continuity next scene: variant-01-vocal-variant-01-line-0040-a5cc6bf2dc",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-07-4f6046fa1d",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.007279999999994402,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-07-4f6046fa1d; continuity next scene: variant-01-vocal-variant-01-line-0041-a02f891283",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0040-a5cc6bf2dc",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.5779500000000013,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0040-a5cc6bf2dc; continuity next scene: variant-01-vocal-variant-01-line-0042-b59ceb381d",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0041-a02f891283",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 1.9158000000000044,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0041-a02f891283; continuity next scene: variant-01-vocal-variant-01-line-0043-c1b1b25ec9",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0042-b59ceb381d",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 5.1458999999999975,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0042-b59ceb381d; continuity next scene: variant-01-vocal-variant-01-line-0044-2b56a8dc51",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0043-c1b1b25ec9",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.4339999999999975,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0043-c1b1b25ec9; continuity next scene: variant-01-vocal-variant-01-line-0045-63c3d2e2a9",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0044-2b56a8dc51",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.333749999999995,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0044-2b56a8dc51; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-08-af52b76a5b",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0045-63c3d2e2a9",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.366829999999993,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0045-63c3d2e2a9; continuity next scene: variant-01-vocal-variant-01-line-0046-3706cc917b",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-08-af52b76a5b",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.0066700000000139426,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-08-af52b76a5b; continuity next scene: variant-01-vocal-variant-01-line-0047-2c039b0b29",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0046-3706cc917b",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 4.766999999999996,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0046-3706cc917b; continuity next scene: variant-01-vocal-variant-01-line-0048-df0b5aef2b",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0047-2c039b0b29",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.1377999999999986,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0047-2c039b0b29; continuity next scene: variant-01-vocal-variant-01-line-0049-a2ce1d248d",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0048-df0b5aef2b",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 5.13839999999999,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0048-df0b5aef2b; continuity next scene: variant-01-vocal-variant-01-line-0050-9ed617869a",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0049-a2ce1d248d",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.4335000000000093,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0049-a2ce1d248d; continuity next scene: variant-01-vocal-variant-01-line-0051-0193087f66",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0050-9ed617869a",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 2.2537499999999966,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0050-9ed617869a; continuity next scene: variant-01-instrumental_break-variant-01-instrumental-break-09-4a84f73fd5",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0051-0193087f66",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 5.01400000000001,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0051-0193087f66; continuity next scene: variant-01-vocal-variant-01-line-0052-0a433c71ac",
+      "scene_id": "visual-variant-01-instrumental_break-variant-01-instrumental-break-09-4a84f73fd5",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 0.013249999999999318,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-instrumental_break-variant-01-instrumental-break-09-4a84f73fd5; continuity next scene: variant-01-vocal-variant-01-line-0053-ef6edb6beb",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0052-0a433c71ac",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 3.2312499999999886,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0052-0a433c71ac; continuity next scene: variant-01-vocal-variant-01-line-0054-8b8482cf52",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0053-ef6edb6beb",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 5.1059999999999945,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    },
+    {
+      "negative_prompt": "",
+      "positive_prompt": "style medium: 3d_animation; style render_style: friendly_stylized; style shape_language: soft_rounded_shapes; style complexity: simple; style readability: high; style target_age_group: 2_to_5; continuity previous scene: variant-01-vocal-variant-01-line-0053-ef6edb6beb",
+      "scene_id": "visual-variant-01-vocal-variant-01-line-0054-8b8482cf52",
+      "structured_parameters": {
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "counts": [],
+        "duration": 3.3889999999999816,
+        "educational_constraints": [],
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": []
+      }
+    }
+  ],
+  "semantic_sha256": "6ecf17ee248e2aacb55a4e7f95e935723a13f4d882093bfac086bd21933c4dc3",
+  "version": 1
+}

@@ -8,7 +8,9 @@ from .project_service import ReadOnlyProjectService
 from .project_creation import AtomicProjectCreationService,EpisodeCreationInput
 from .workflow import WorkflowActionService,WorkflowStage,WorkflowAction,WorkflowStateRepository
 from .lyrics import LyricsGenerationFailure,LyricsStageService
-from .music import MusicBlockedError,MusicCostConfirmationRequired,MusicStageService,MusicUiError
+from .music import (DEFAULT_MUSICAL_STYLE,DEFAULT_MUSIC_INSTRUMENTATION,DEFAULT_MUSIC_MOOD,
+    DEFAULT_MUSIC_TEMPO_BPM,DEFAULT_MUSIC_VOCAL_STYLE,MusicBlockedError,MusicCostConfirmationRequired,
+    MusicStageService,MusicUiError)
 from .planning_review import PlanningReviewError,PlanningReviewService,PlanningStageBlocked
 from .assets import (AssetBlockedError,AssetCostConfirmationRequired,AssetGenerationFailure,
     AssetReviewError,AssetReviewService)
@@ -102,8 +104,9 @@ class LocalWebApplication:
                 action=music_parts[3]; values={key:items[-1] for key,items in parse_qs(body.decode("utf-8"),keep_blank_values=True).items()}
                 try:
                     if action in {"generate","regenerate"}: service.generate(confirmed=values.get("confirm_cost")=="yes",feedback=values.get("feedback") if action=="regenerate" else None,
-                        musical_style=values.get("musical_style","educational pop"),mood=values.get("mood","cheerful"),instrumentation=values.get("instrumentation","ukulele, xylophone"),
-                        vocal_style=values.get("vocal_style","clear child-friendly vocals"),tempo_bpm=values.get("tempo_bpm",110))
+                        musical_style=values.get("musical_style",DEFAULT_MUSICAL_STYLE),mood=values.get("mood",DEFAULT_MUSIC_MOOD),
+                        instrumentation=values.get("instrumentation",", ".join(DEFAULT_MUSIC_INSTRUMENTATION)),
+                        vocal_style=values.get("vocal_style",DEFAULT_MUSIC_VOCAL_STYLE),tempo_bpm=values.get("tempo_bpm",DEFAULT_MUSIC_TEMPO_BPM))
                     elif action=="select": service.select(int(values["version"]),values["variant_id"])
                     elif action=="approve": service.approve(int(values["version"]),values.get("variant_id"))
                     elif action=="reject": service.reject(int(values["version"]))
@@ -345,8 +348,8 @@ class LocalWebApplication:
                 f'<form method="post" action="/projects/{project_id}/music/reject"><input type="hidden" name="version" value="{version.version}"><button>Respinge</button></form>')
             blocks.append(f'<section><h2>Versiunea {version.version} — {version.status.value}</h2>{"".join(variants)}<div class="stage-actions">{approval}</div></section>')
         latest=versions[-1].request if versions else None
-        style=html.escape(latest.musical_style if latest else "educational pop"); mood=html.escape(latest.mood if latest else "cheerful")
-        instruments=html.escape(", ".join(latest.instrumentation) if latest else "ukulele, xylophone"); vocals=html.escape(latest.vocal_style if latest else "clear child-friendly vocals"); tempo=latest.tempo_bpm if latest else 110
+        style=html.escape(latest.musical_style if latest else DEFAULT_MUSICAL_STYLE); mood=html.escape(latest.mood if latest else DEFAULT_MUSIC_MOOD)
+        instruments=html.escape(", ".join(latest.instrumentation) if latest else ", ".join(DEFAULT_MUSIC_INSTRUMENTATION)); vocals=html.escape(latest.vocal_style if latest else DEFAULT_MUSIC_VOCAL_STYLE); tempo=latest.tempo_bpm if latest else DEFAULT_MUSIC_TEMPO_BPM
         style_fields=(f'<label>Stil muzical<input name="musical_style" list="music-style-options" value="{style}" required></label>'
             f'<label>Atmosferă / mood<input name="mood" value="{mood}" required></label><label>Instrumente (separate prin virgulă)<input name="instrumentation" value="{instruments}" required></label>'
             f'<label>Stil vocal<input name="vocal_style" value="{vocals}" required></label><label>Tempo BPM<input type="number" name="tempo_bpm" min="40" max="220" step="1" value="{tempo:g}" required></label>')
@@ -361,10 +364,13 @@ class LocalWebApplication:
         labels={"alignment":"Alignment","scene_plan":"Scene Plan","visual_plan":"Visual Plan","prompts":"Prompturi"}; error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""
         details="<p>Nicio versiune construită.</p>"
         if stage=="prompts" and selected:
-            rows=[]
-            for prompt in service.effective_prompts():
+            rows=[]; visual=service.selected("visual_plan"); visual_texts={}
+            if visual: visual_texts={scene.get("visual_scene_id"):scene.get("source_texts",[]) for scene in visual.data.get("scenes",[])}
+            for index,prompt in enumerate(service.effective_prompts(),1):
                 scene_id=html.escape(prompt.scene_id); positive=html.escape(prompt.positive_prompt); negative=html.escape(prompt.negative_prompt)
-                rows.append(f'<article class="prompt-scene"><h2>{scene_id}</h2><form method="post" action="/projects/{project_id}/prompts/edit"><input type="hidden" name="scene_id" value="{scene_id}"><label>Prompt pozitiv<textarea name="positive_prompt">{positive}</textarea></label><label>Prompt negativ<textarea name="negative_prompt">{negative}</textarea></label><pre>{html.escape(json.dumps(prompt.structured_parameters,ensure_ascii=False,sort_keys=True,indent=2))}</pre><button>Salvează versiune nouă</button></form>'
+                source_texts=prompt.structured_parameters.get("source_texts") or visual_texts.get(prompt.scene_id,[])
+                source_html=("<br>".join(html.escape(value) for value in source_texts) if source_texts else "Secțiune instrumentală")
+                rows.append(f'<article class="prompt-scene"><h2>Bucata {index}</h2><blockquote class="prompt-source-text">{source_html}</blockquote><details><summary>ID tehnic</summary><code>{scene_id}</code></details><form method="post" action="/projects/{project_id}/prompts/edit"><input type="hidden" name="scene_id" value="{scene_id}"><label>Prompt pozitiv<textarea name="positive_prompt">{positive}</textarea></label><label>Prompt negativ<textarea name="negative_prompt">{negative}</textarea></label><pre>{html.escape(json.dumps(prompt.structured_parameters,ensure_ascii=False,sort_keys=True,indent=2))}</pre><button>Salvează versiune nouă</button></form>'
                     f'<form method="post" action="/projects/{project_id}/prompts/regenerate-scene"><input type="hidden" name="scene_id" value="{scene_id}"><label>Feedback<input name="feedback"></label><button>Regenerează scena</button></form></article>')
             details="".join(rows)
         elif selected:
@@ -378,20 +384,27 @@ class LocalWebApplication:
         return self._page(labels[stage],content)
     def _assets_page(self,project_id,service,error=None):
         state=service.state(); error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""; cards=[]
-        for prompt in service.prompts():
-            scene=state.scene(prompt.scene_id); versions=[]
+        planning=PlanningReviewService(service.project); visual=planning.selected("visual_plan"); visual_texts={}
+        if visual: visual_texts={scene.get("visual_scene_id"):scene.get("source_texts",[]) for scene in visual.data.get("scenes",[])}
+        for index,prompt in enumerate(service.prompts(),1):
+            scene=state.scene(prompt.scene_id); versions=[]; selected_preview=""
+            source_texts=prompt.structured_parameters.get("source_texts") or visual_texts.get(prompt.scene_id,[])
+            source_html=("<br>".join(html.escape(str(value)) for value in source_texts) if source_texts else "Secțiune instrumentală / fără versuri")
             for number in reversed(scene.versions):
                 try: metadata=service.metadata(prompt.scene_id,number)
                 except ValueError: continue
                 preview=f"/projects/{project_id}/scenes/{prompt.scene_id}/assets/version-{number:03d}/preview"
                 media=(f'<img class="asset-preview" src="{preview}" alt="Asset {html.escape(prompt.scene_id)}">' if metadata.media_type.value=="image"
                     else f'<video class="asset-preview" controls preload="none" src="{preview}"></video>')
-                versions.append(f'<div class="asset-version"><h3>Versiunea {number}</h3>{media}<p>Provider: {html.escape(metadata.provider)}</p><p>Durată: {metadata.duration_seconds or "—"}</p>'
+                version_html=(f'<div class="asset-version"><h3>Versiunea {number}</h3>{media}<p>Provider: {html.escape(metadata.provider)}</p><p>Durată: {metadata.duration_seconds or "—"}</p>'
                     f'<form method="post" action="/projects/{project_id}/scenes/{prompt.scene_id}/assets/select-version"><input type="hidden" name="version" value="{number}"><button>Selectează versiune</button></form></div>')
+                if number==scene.selected_version: selected_preview=f'<section class="selected-asset"><h3>Versiunea selectată</h3>{version_html}</section>'
+                else: versions.append(version_html)
             base=f"/projects/{project_id}/scenes/{prompt.scene_id}/assets"; confirmation='<label><input type="checkbox" name="confirm_cost" value="yes" required> Confirmă: această acțiune poate consuma credite.</label>'
             actions=f'<form method="post" action="{base}/generate">{confirmation}<button>Generează asset</button></form><form method="post" action="{base}/regenerate"><label>Feedback<input name="feedback"></label>{confirmation}<button>Regenerează</button></form>'
             if scene.selected_version is not None: actions+=f'<form method="post" action="{base}/approve"><button>Aprobă</button></form><form method="post" action="{base}/reject"><button>Respinge</button></form>'
-            cards.append(f'<article class="asset-scene"><h2>{html.escape(prompt.scene_id)}</h2><p>Prompt: {html.escape(prompt.positive_prompt)}</p><p>Status: {scene.status.value}</p><p>Versiune: {scene.selected_version or "—"}</p><div class="stage-actions">{actions}</div><details><summary>Vezi istoric</summary>{"".join(versions)}</details></article>')
+            history=(f'<details><summary>Vezi istoricul versiunilor</summary>{"".join(versions)}</details>' if versions else "")
+            cards.append(f'<article class="asset-scene"><h2>Bucata {index}</h2><h3>Textul strofei/scenei</h3><blockquote class="prompt-source-text">{source_html}</blockquote><details><summary>ID tehnic</summary><code>{html.escape(prompt.scene_id)}</code></details><p><strong>Prompt:</strong> {html.escape(prompt.positive_prompt)}</p><p>Status: {scene.status.value}</p><p>Versiune: {scene.selected_version or "—"}</p>{selected_preview}<div class="stage-actions">{actions}</div>{history}</article>')
         return self._page("Assets",f'<main><a href="/projects/{project_id}">← Proiect</a><h1>Assets</h1>{error_html}{"".join(cards) or "<p>Nu există prompturi.</p>"}</main>')
     def _composition_page(self,project_id,service,error=None):
         error_html=f'<p class="errors" role="alert">{html.escape(error)}</p>' if error else ""; preflight=service.last_preflight()
@@ -432,8 +445,14 @@ def serve(application,host="127.0.0.1",port=8080):
         def do_POST(self):
             length=int(self.headers.get("Content-Length","0")); self._respond(application.dispatch(self.path,"POST",self.rfile.read(length),dict(self.headers)))
         def _respond(self,response):
-            self.send_response(response.status); self.send_header("Content-Type",response.content_type)
-            for key,value in response.headers.items(): self.send_header(key,value)
-            self.send_header("Content-Length",str(len(response.body))); self.end_headers(); self.wfile.write(response.body)
+            try:
+                self.send_response(response.status); self.send_header("Content-Type",response.content_type)
+                for key,value in response.headers.items(): self.send_header(key,value)
+                self.send_header("Content-Length",str(len(response.body))); self.end_headers(); self.wfile.write(response.body)
+            except (BrokenPipeError,ConnectionAbortedError,ConnectionResetError):
+                # The browser may navigate, refresh, or cancel a long POST after
+                # dispatch has completed. The durable operation is already done;
+                # there is no response channel left and nothing to retry here.
+                return
         def log_message(self,format,*args): pass
     ThreadingHTTPServer((host,port),Handler).serve_forever()

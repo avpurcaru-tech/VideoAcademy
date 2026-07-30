@@ -1,0 +1,12 @@
+{
+  "approved_version": 1,
+  "artifact_paths": [
+    "alignment/version-001.json"
+  ],
+  "dependency_hashes": {
+    "lyrics": "1c16e2d26d4500d7b9c4ccacfcc6a0d812ab2687a57c590f7a0b9d75ceac9226",
+    "music": "d4ad782773ba9179a65675c91ff40328e8a8b4d82b0c89e138e8654b9c1d57c0"
+  },
+  "stage": "alignment",
+  "validation_summary": "approved artifact and workflow dependency snapshot validated"
+}

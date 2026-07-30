@@ -1,0 +1,52 @@
+{
+  "approved_variant_id": "variant-01",
+  "lyrics_sha256": "61ebee803d0350f8d730bbcacdb5887c79572700654c4dbede8ce9c9f3bcec2d",
+  "lyrics_version": 3,
+  "request": {
+    "episode_title": "Luca invata culorile",
+    "instrumentation": [
+      "clapping percussion",
+      "toy piano",
+      "glockenspiel",
+      "ukulele",
+      "hand drum",
+      "bass xylophone și finger snaps"
+    ],
+    "language": "ro",
+    "lyrics_sha256": "61ebee803d0350f8d730bbcacdb5887c79572700654c4dbede8ce9c9f3bcec2d",
+    "lyrics_text": "[Intro]\nBună, copii!\nSă cântăm culorile!\nUrechi, ochi și zâmbet,\nHai să le învățăm!\n\n[Verse]\nRoșu, roșu\nMărul este roșu\nRoșu ca căpșuna\nRoșu, roșu\nGalben, galben\nSoarele e galben\nGalben ca banana\nGalben, galben\n\n[Chorus]\nCulori, culori\nVino și spune cu mine\nRoșu, galben, albastru, verde\nSpunem iar și iar!\nCulori, culori\nVrei să le arătăm din nou?\nRoșu, galben, albastru, verde\nSpunem iar și iar!\n\n[Verse]\nAlbastru, albastru\nCerul este albastru\nAlbastru ca marea\nAlbastru, albastru\nVerde, verde\nIarba este verde\nVerde ca frunza\nVerde, verde\n\n[Chorus]\nCulori, culori\nHai să le cântăm din nou\nPortocaliu, mov, roz și maro\nSpunem iar și iar!\nCulori, culori\nLe arătăm cu mâna ta\nPortocaliu, mov, roz și maro\nSpunem iar și iar!\n\n[Verse]\nPortocaliu, portocaliu\nMorcovul e portocaliu\nPortocaliu ca apusul\nPortocaliu, portocaliu\nMov, mov\nFloarea este mov\nMov ca magia\nMov, mov\n\n[Bridge]\nArată culoarea!\nDegetul pe roșu\nDegetul pe galben\nArată culoarea!\nAcum pe albastru\nAcum pe verde\nBate din palme, dă avânt!\nToate culorile sunt prieteni\n\n[Chorus]\nCulori, culori\nSpunem iar și iar\nRoșu, galben, albastru, verde\nPortocaliu, mov, roz și maro\nCulori, culori\nLe iubim pe toate\nSpunem iar și iar!\nSpunem iar și iar!\n\n[Outro]\nBravo, copii!\nAcum știi culorile\nRoșu, galben, albastru, verde\nLa revedere, culori!",
+    "lyrics_version": 3,
+    "mood": "playful",
+    "musical_style": "Romanian children’s song, preschool educational, slow nursery rhyme, bright cartoon chorus, simple major key, plate reverb, light compression, wide stereo mix",
+    "project_id": "009",
+    "regeneration_feedback": null,
+    "target_age": "2-5",
+    "tempo_bpm": 110.0,
+    "vocal_style": "playful female vocals, call and response"
+  },
+  "request_sha256": "ecdc6a5d47d2eeeb11e311437f70c8eccd2a52846759e005eec2834039c50676",
+  "selected_variant_id": "variant-01",
+  "status": "approved",
+  "taskId": "830d2b4839850a6dffab35e61b4a98f7",
+  "variants": [
+    {
+      "audioId": "52c4b937-7376-4c20-a278-5537f12e7337",
+      "byte_size": 3376893,
+      "content_type": "audio/mpeg",
+      "duration_seconds": 149.2,
+      "metadata": {},
+      "sha256": "1f3d7d17b213161da31b1c928ee2ca77d4f3da67b825161b6c7dc5a76da6302f",
+      "variant_id": "variant-01"
+    },
+    {
+      "audioId": "f8a14f8a-8044-4e18-adf7-73d6227cc540",
+      "byte_size": 3780021,
+      "content_type": "audio/mpeg",
+      "duration_seconds": 158.32,
+      "metadata": {},
+      "sha256": "ea018d8b72e91e55f42deb2a2d04c8cdf7bdbb3c0171822ff21c35678e3ef04e",
+      "variant_id": "variant-02"
+    }
+  ],
+  "version": 3
+}

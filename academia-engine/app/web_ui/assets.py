@@ -69,9 +69,10 @@ class AssetReviewService:
         self._write_json(directory/"request.json",request.model_dump(mode="json"))
         try: result=AssetGenerationResult.model_validate(self.provider.generate(request))
         except Exception as error:
-            self._write_json(directory/"provider-response.json",{"status":"failed","error":str(error)[:500]})
+            message=self._provider_failure_message(error)
+            self._write_json(directory/"provider-response.json",{"status":"failed","error":message})
             self._update(scene_state.model_copy(update={"status":AssetJobStatus.FAILED,"current_version":number,
-                "selected_version":number,"versions":scene_state.versions+(number,)})); raise AssetGenerationFailure("Asset generation failed.") from error
+                "selected_version":number,"versions":scene_state.versions+(number,)})); raise AssetGenerationFailure(message) from error
         if result.job.status!=AssetJobStatus.COMPLETED or not result.content: raise AssetGenerationFailure("Provider job is not completed.")
         extension=".png" if result.media_type==AssetMediaType.IMAGE else ".mp4"; filename="asset"+extension
         self._write_bytes(directory/filename,result.content); self._write_json(directory/"provider-response.json",{
@@ -127,6 +128,13 @@ class AssetReviewService:
     @staticmethod
     def _scene_id(value):
         if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,199}",value): raise ValueError("Scene ID is invalid.")
+    @staticmethod
+    def _provider_failure_message(error):
+        status=getattr(error,"http_status",None)
+        if status==429: return "Kling a refuzat cererea: limită de rată sau credite insuficiente (HTTP 429). Verifică soldul și încearcă mai târziu."
+        if status in {401,403}: return "Autentificarea Kling a eșuat. Verifică cheia API."
+        if status==400: return "Kling a respins parametrii cererii video (HTTP 400)."
+        return "Generarea asset-ului a eșuat la provider."
     @staticmethod
     def _write_json(path,payload,replace=False):
         path.parent.mkdir(parents=True,exist_ok=True)

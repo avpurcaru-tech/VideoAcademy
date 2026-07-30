@@ -1,0 +1,21 @@
+{
+  "characters": {
+    "primary_character_id": "luca",
+    "selected_character_ids": [
+      "luca",
+      "max"
+    ]
+  },
+  "episode": {
+    "aspect_ratio": "16:9",
+    "description": "Luca invata culorile - rosu - galben - verde - albastru\r\nPrin cântec și joacă, copiii învață culorile folosind obiecte ușor de recunoscut. trandafirul e rosu - soarele e galben - iarba e verde - cerul e albastru",
+    "educational_goal": "Recunoașterea culorilor",
+    "episode_theme": "Culori",
+    "language": "ro",
+    "notes": null,
+    "target_age": "2-5",
+    "title": "Luca invata culorile"
+  },
+  "main_character": null,
+  "project_id": "009"
+}

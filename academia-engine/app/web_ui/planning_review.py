@@ -1,5 +1,5 @@
 """Explicit versioned planning/review stages for the local UI (Sprint 18.6)."""
-import json,os
+import json,os,threading
 from pathlib import Path
 from typing import Any,Protocol
 
@@ -40,6 +40,13 @@ STAGE_LAYOUT={WorkflowStage.ALIGNMENT:("alignment","alignment"),WorkflowStage.SC
     WorkflowStage.VISUAL_PLAN:("visual/plans","visual_plan"),WorkflowStage.PROMPTS:("visual/prompts","prompts")}
 UPSTREAM={WorkflowStage.ALIGNMENT:WorkflowStage.MUSIC,WorkflowStage.SCENE_PLAN:WorkflowStage.ALIGNMENT,
     WorkflowStage.VISUAL_PLAN:WorkflowStage.SCENE_PLAN,WorkflowStage.PROMPTS:WorkflowStage.VISUAL_PLAN}
+_BUILD_LOCKS_GUARD=threading.Lock()
+_BUILD_LOCKS={}
+
+def _build_lock(project,stage):
+    key=(str(Path(project).resolve()),WorkflowStage(stage).value)
+    with _BUILD_LOCKS_GUARD:
+        return _BUILD_LOCKS.setdefault(key,threading.Lock())
 
 class PlanningReviewService:
     def __init__(self,project_directory,builders=None): self.project=Path(project_directory); self.builders=builders or {}
@@ -48,7 +55,10 @@ class PlanningReviewService:
         model=PromptReviewBundle if stage==WorkflowStage.PROMPTS else PlanningArtifactVersion
         return tuple(model.model_validate_json(x.read_text(encoding="utf-8")) for x in sorted(directory.glob("version-*.json")))
     def build(self,stage,*,rebuild=False):
-        stage=WorkflowStage(stage); state,_=WorkflowStateRepository(self.project).resolve(self.project.name); upstream=state.stage(UPSTREAM[stage])
+        stage=WorkflowStage(stage)
+        with _build_lock(self.project,stage): return self._build_locked(stage,rebuild=rebuild)
+    def _build_locked(self,stage,*,rebuild=False):
+        state,_=WorkflowStateRepository(self.project).resolve(self.project.name); upstream=state.stage(UPSTREAM[stage])
         if upstream.status!=WorkflowStageStatus.APPROVED: raise PlanningStageBlocked(f"{UPSTREAM[stage].value} must be approved first.")
         builder=self.builders.get(stage.value)
         if builder is None: raise PlanningReviewError(f"No {stage.value} builder is configured.")

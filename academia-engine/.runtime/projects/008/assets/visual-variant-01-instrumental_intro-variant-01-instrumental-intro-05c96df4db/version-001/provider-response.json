@@ -1,0 +1,4 @@
+{
+  "error": "assets unavailable: no safe UI-to-Kling asset mapper is configured",
+  "status": "failed"
+}

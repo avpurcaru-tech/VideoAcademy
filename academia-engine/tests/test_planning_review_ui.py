@@ -1,4 +1,5 @@
-import json,tempfile,unittest
+import json,tempfile,time,unittest
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from unittest.mock import Mock
 from urllib.parse import urlencode
@@ -21,7 +22,7 @@ class PlanningReviewUiTests(unittest.TestCase):
         self.alignment=FakeBuilder(PlanningBuildResult(data={"coverage":.96,"unmapped_words":["x"],"unmapped_lines":[],"instrumental_sections":["intro"],"status":"review_required"},warnings=("word unmapped",),review_required=True))
         self.scene=FakeBuilder(PlanningBuildResult(data={"scenes":[{"scene_id":"scene-1","type":"vocal","start":0,"end":5,"source_lines":["line-1"],"warnings":[]}]}))
         self.visual=FakeBuilder(PlanningBuildResult(data={"scenes":[{"scene_id":"scene-1","subjects":["Luca"],"actions":["arată"],"environment":"parc","style":"3d","camera":"wide","constraints":[]}]}))
-        self.prompts=FakeBuilder(PlanningBuildResult(data={"prompts":[{"scene_id":"scene-1","positive_prompt":"Luca în parc","negative_prompt":"fără extra","structured_parameters":{"camera":"wide"}},{"scene_id":"scene-2","positive_prompt":"Mărul roșu","negative_prompt":"","structured_parameters":{}}]}))
+        self.prompts=FakeBuilder(PlanningBuildResult(data={"prompts":[{"scene_id":"scene-1","positive_prompt":"Luca în parc","negative_prompt":"fără extra","structured_parameters":{"camera":"wide","source_texts":["Roșu și galben", "Luca le arată"]}},{"scene_id":"scene-2","positive_prompt":"Mărul roșu","negative_prompt":"","structured_parameters":{}}]}))
         self.prompt_scene=FakeBuilder(PlanningBuildResult(data={"scene_id":"scene-1","positive_prompt":"Luca sare","negative_prompt":"","structured_parameters":{"camera":"medium"}}))
         self.builders={"alignment":self.alignment,"scene_plan":self.scene,"visual_plan":self.visual,"prompts":self.prompts,"prompt_scene":self.prompt_scene}
         self.application=create_application(self.root,planning_builders=self.builders); self.service=PlanningReviewService(self.project,self.builders)
@@ -40,6 +41,14 @@ class PlanningReviewUiTests(unittest.TestCase):
     def test_alignment_runs_only_on_explicit_action(self): self.make_music_approved(); self.application.dispatch("/projects/008/alignment"); self.assertEqual(0,len(self.alignment.calls)); self.assertEqual(303,self.post("/projects/008/alignment/build").status)
     def test_alignment_rebuild_does_not_generate_music(self):
         music=Mock(); self.make_music_approved(); self.post("/projects/008/alignment/build"); self.post("/projects/008/alignment/rebuild"); music.assert_not_called(); self.assertEqual(2,len(self.alignment.calls))
+    def test_concurrent_build_requests_get_distinct_versions(self):
+        self.make_music_approved(); original=self.alignment.build
+        def slow(context): time.sleep(.03); return original(context)
+        self.alignment.build=slow
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            values=tuple(pool.map(lambda _:PlanningReviewService(self.project,self.builders).build("alignment"),range(2)))
+        self.assertEqual([1,2],sorted(value.version for value in values))
+        self.assertEqual([1,2],[value.version for value in self.service.versions("alignment")])
     def test_scene_plan_requires_approved_alignment(self): self.make_music_approved(); self.service.build("alignment"); self.assertEqual(422,self.post("/projects/008/scene-plan/build").status)
     def test_visual_plan_requires_approved_scene_plan(self): self.build_chain_to("scene_plan"); self.assertEqual(422,self.post("/projects/008/visual-plan/build").status)
     def test_prompts_require_approved_visual_plan(self): self.build_chain_to("visual_plan"); self.assertEqual(422,self.post("/projects/008/prompts/build").status)
@@ -53,6 +62,9 @@ class PlanningReviewUiTests(unittest.TestCase):
     def test_prompt_change_marks_composition_stale(self): self.build_chain_to("prompts"); self.post("/projects/008/prompts/edit",{"scene_id":"scene-1","positive_prompt":"nou"}); self.assertEqual(WorkflowStageStatus.STALE,read_workflow_state(self.project/"workflow"/"state.json").stage("composition").status)
     def test_prompt_change_does_not_mark_music_stale(self): self.build_chain_to("prompts"); self.post("/projects/008/prompts/edit",{"scene_id":"scene-1","positive_prompt":"nou"}); self.assertEqual(WorkflowStageStatus.APPROVED,read_workflow_state(self.project/"workflow"/"state.json").stage("music").status)
     def test_review_required_alignment_is_displayed(self): self.make_music_approved(); self.service.build("alignment"); text=self.application.dispatch("/projects/008/alignment").body.decode(); self.assertIn("Review required",text); self.assertIn("word unmapped",text)
+    def test_prompt_page_leads_with_source_lyrics_instead_of_technical_id(self):
+        self.build_chain_to("prompts"); text=self.application.dispatch("/projects/008/prompts").body.decode()
+        self.assertIn("Bucata 1",text); self.assertIn("Roșu și galben",text); self.assertIn("Luca le arată",text); self.assertIn("ID tehnic",text)
     def test_planning_pages_make_zero_unexpected_external_calls(self): external=Mock(); self.application.dispatch("/projects/008/alignment"); self.application.dispatch("/projects/008/scene-plan"); self.application.dispatch("/projects/008/visual-plan"); self.application.dispatch("/projects/008/prompts"); external.assert_not_called()
 
 if __name__=="__main__": unittest.main()

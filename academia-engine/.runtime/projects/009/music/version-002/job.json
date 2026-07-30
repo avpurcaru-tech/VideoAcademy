@@ -1,0 +1,52 @@
+{
+  "approved_variant_id": null,
+  "lyrics_sha256": "68b1cbde190f8d5f073a3d3b6af34a17e5a6bf50a7210e9a11042cc9ad9348dc",
+  "lyrics_version": 2,
+  "request": {
+    "episode_title": "Luca invata culorile",
+    "instrumentation": [
+      "clapping percussion",
+      "toy piano",
+      "glockenspiel",
+      "ukulele",
+      "hand drum",
+      "bass xylophone și finger snaps"
+    ],
+    "language": "ro",
+    "lyrics_sha256": "68b1cbde190f8d5f073a3d3b6af34a17e5a6bf50a7210e9a11042cc9ad9348dc",
+    "lyrics_text": "[Intro]\nHei, copii!\nHaideți să vedem culorile\n\n[Verse]\nUită-te, roșu\nRoșu, roșu\nPrivește, albastru\nAlbastru, albastru\nSpunem din nou\nRoșu și albastru\n\n[Chorus]\nCulori, culori\nSunt atât de vii\nRoșu, galben, albastru\nVerde și portocaliu\nCulori, culori\nSpune-le cu mine\nRoșu, galben, albastru\nCulori, culori!\n\n[Verse]\nPrivește iar\nGalben, galben\nVerde, verde\nPortocaliu, portocaliu\nRoz, roz\nSunt culori frumoase\n\n[Chorus]\nCulori, culori\nHai să le numărăm\nRoșu, galben, albastru\nVerde, portocaliu, roz\nCulori, culori\nRepetăm iar\nRoșu, galben, albastru\nCulori, culori!\n\n[Bridge]\nMărul e roșu\nBanana e galbenă\nCerul e albastru\nIarba e verde\nPortocala e portocalie\nJucăria e roz\n\n[Chorus]\nCulori, culori\nSpune ce vezi\nRoșu, galben, albastru\nVerde, portocaliu, roz\nCulori, culori\nHai, arată!\nRoșu, galben, albastru\nCulori, culori!\n\n[Outro]\nAcum știi culorile\nRoșu, galben, albastru, verde\nLa revedere, culori!",
+    "lyrics_version": 2,
+    "mood": "playful",
+    "musical_style": "Romanian children’s song, preschool educational, slow nursery rhyme, bright cartoon chorus, simple major key, plate reverb, light compression, wide stereo mix",
+    "project_id": "009",
+    "regeneration_feedback": null,
+    "target_age": "2-5",
+    "tempo_bpm": 110.0,
+    "vocal_style": "playful female vocals, call and response"
+  },
+  "request_sha256": "fa614ab77adf0d5ef69a648e28433cf2c99cff8dc9effe7d1866ec22cd0c1f2a",
+  "selected_variant_id": null,
+  "status": "generated",
+  "taskId": "8c35b3b100c141d8b229e3c026711a0a",
+  "variants": [
+    {
+      "audioId": "a50e6bc8-e91a-4ec5-b088-3ff57795e384",
+      "byte_size": 2609373,
+      "content_type": "audio/mpeg",
+      "duration_seconds": 112.8,
+      "metadata": {},
+      "sha256": "601fbf3996d8a80b8bf155cf2d80defc58ada9d26609f637e5e38299aa6c8d6e",
+      "variant_id": "variant-01"
+    },
+    {
+      "audioId": "853a26f7-a123-410a-935b-e0ceca9a4abf",
+      "byte_size": 2671821,
+      "content_type": "audio/mpeg",
+      "duration_seconds": 111.88,
+      "metadata": {},
+      "sha256": "dc24250cc244110012cbfcb3bdcea8099213894a61c8617de59776fdd4c0abda",
+      "variant_id": "variant-02"
+    }
+  ],
+  "version": 2
+}

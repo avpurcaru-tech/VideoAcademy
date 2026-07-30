@@ -57,12 +57,14 @@ class KlingProvider:
         client: KlingHttpClient | None = None,
         mapper: KlingTextToVideoMapper | None = None,
         generation_settings: KlingGenerationSettings | None = None,
+        endpoint: str = "/text-to-video/kling-3.0",
     ) -> None:
         base_url = os.environ.get("KLING_BASE_URL", "https://api-singapore.klingai.com")
         self._client = client or KlingHttpClient(base_url=base_url)
         self._mapper = mapper or KlingTextToVideoMapper(
             generation_settings or KlingGenerationSettings.from_environment()
         )
+        self._endpoint=endpoint
 
     def validate_authentication(self) -> dict[str, Any]:
         raise KlingAuthenticationProbeUnavailableError(
@@ -85,7 +87,7 @@ class KlingProvider:
     def submit_generation(self, request: VideoGenerationRequest) -> GenerationTask:
         correlation_id = uuid4().hex
         provider_request = self._mapper.map(request, external_task_id=correlation_id)
-        payload = self._client.post_json("/text-to-video/kling-3.0", provider_request.to_payload())
+        payload = self._client.post_json(self._endpoint, provider_request.to_payload())
         response = KlingCreateTaskResponse.parse(payload)
         data = response.data
         if data is None:

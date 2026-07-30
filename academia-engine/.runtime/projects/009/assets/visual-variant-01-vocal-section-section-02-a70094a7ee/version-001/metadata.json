@@ -1,0 +1,14 @@
+{
+  "byte_size": 12432264,
+  "content_type": "video/mp4",
+  "duration_seconds": 15.041,
+  "filename": "asset.mp4",
+  "job_id": "910475776905052257",
+  "media_type": "video",
+  "prompt_sha256": "a702768aec1da8163a0bb34166edbf74b0c4df41c6646ca633ac50139acb5d83",
+  "provider": "kling",
+  "scene_id": "visual-variant-01-vocal-section-section-02-a70094a7ee",
+  "sha256": "ae4a6d7ba31de2840880b99dc6c8cd3695d579d4c06a10134541fe1331e58be6",
+  "status": "completed",
+  "version": 1
+}

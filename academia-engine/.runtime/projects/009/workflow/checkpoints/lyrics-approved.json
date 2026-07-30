@@ -1,0 +1,9 @@
+{
+  "approved_version": 3,
+  "artifact_paths": [
+    "lyrics/version-003.json"
+  ],
+  "dependency_hashes": {},
+  "stage": "lyrics",
+  "validation_summary": "approved artifact and workflow dependency snapshot validated"
+}

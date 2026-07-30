@@ -1,0 +1,48 @@
+{
+  "approved_variant_id": null,
+  "lyrics_sha256": "68b1cbde190f8d5f073a3d3b6af34a17e5a6bf50a7210e9a11042cc9ad9348dc",
+  "lyrics_version": 2,
+  "request": {
+    "episode_title": "Luca invata culorile",
+    "instrumentation": [
+      "ukulele",
+      "xylophone"
+    ],
+    "language": "ro",
+    "lyrics_sha256": "68b1cbde190f8d5f073a3d3b6af34a17e5a6bf50a7210e9a11042cc9ad9348dc",
+    "lyrics_text": "[Intro]\nHei, copii!\nHaideți să vedem culorile\n\n[Verse]\nUită-te, roșu\nRoșu, roșu\nPrivește, albastru\nAlbastru, albastru\nSpunem din nou\nRoșu și albastru\n\n[Chorus]\nCulori, culori\nSunt atât de vii\nRoșu, galben, albastru\nVerde și portocaliu\nCulori, culori\nSpune-le cu mine\nRoșu, galben, albastru\nCulori, culori!\n\n[Verse]\nPrivește iar\nGalben, galben\nVerde, verde\nPortocaliu, portocaliu\nRoz, roz\nSunt culori frumoase\n\n[Chorus]\nCulori, culori\nHai să le numărăm\nRoșu, galben, albastru\nVerde, portocaliu, roz\nCulori, culori\nRepetăm iar\nRoșu, galben, albastru\nCulori, culori!\n\n[Bridge]\nMărul e roșu\nBanana e galbenă\nCerul e albastru\nIarba e verde\nPortocala e portocalie\nJucăria e roz\n\n[Chorus]\nCulori, culori\nSpune ce vezi\nRoșu, galben, albastru\nVerde, portocaliu, roz\nCulori, culori\nHai, arată!\nRoșu, galben, albastru\nCulori, culori!\n\n[Outro]\nAcum știi culorile\nRoșu, galben, albastru, verde\nLa revedere, culori!",
+    "lyrics_version": 2,
+    "mood": "cheerful",
+    "musical_style": "educational pop",
+    "project_id": "009",
+    "regeneration_feedback": null,
+    "target_age": "2-5",
+    "tempo_bpm": 110.0,
+    "vocal_style": "clear child-friendly vocals"
+  },
+  "request_sha256": "4c5c411dfecab5d758f15836a41fa54d70da1336c39cec344d156e9a2d069b8c",
+  "selected_variant_id": null,
+  "status": "generated",
+  "taskId": "8612fcfd8cb2ea71e98905e47388d71f",
+  "variants": [
+    {
+      "audioId": "a0d72d6a-2581-46e4-90de-8b8348a86e9e",
+      "byte_size": 3413109,
+      "content_type": "audio/mpeg",
+      "duration_seconds": 147.32,
+      "metadata": {},
+      "sha256": "6b9703d37bc959f44c14b1301dd093efc8f1d9ab77730371b6a2a64897e6cb70",
+      "variant_id": "variant-01"
+    },
+    {
+      "audioId": "26d91058-cb44-4e51-93da-d726215d9484",
+      "byte_size": 2852277,
+      "content_type": "audio/mpeg",
+      "duration_seconds": 126.32,
+      "metadata": {},
+      "sha256": "7b0ff0aba9205ee2a0a3b2074099c00063827fddea8a01569828efa723aa00e1",
+      "variant_id": "variant-02"
+    }
+  ],
+  "version": 1
+}

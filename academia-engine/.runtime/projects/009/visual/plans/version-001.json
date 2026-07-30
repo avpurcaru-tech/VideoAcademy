@@ -1,0 +1,1694 @@
+{
+  "data": {
+    "aspect_ratio": "16:9",
+    "audio_variant_id": "variant-01",
+    "dependency_metadata": {
+      "aspect_ratio": "16:9",
+      "character_dependency_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "configuration_sha256": "6ad2147aac000fb69e1e7a3b1c2f2f0f2c3311b99f6416aa105900a369061d67",
+      "generator_version": "17.2.0",
+      "global_style_sha256": "d726aa0428d38ca61e4197a8466ac4de8a5bc0e0a68fd32d268e0c0dd900d4be",
+      "source_scene_plan_sha256": "fe026a0428742853205a51e7e948fa0f6ca1b494370b0209044498a46b88e058"
+    },
+    "generator_version": "17.2.0",
+    "global_style": {
+      "complexity": "simple",
+      "medium": "3d_animation",
+      "readability": "high",
+      "render_style": "friendly_stylized",
+      "shape_language": "soft_rounded_shapes",
+      "target_age_group": "2_to_5"
+    },
+    "project_id": "009",
+    "scenes": [
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-01-e487c8131f",
+          "required_previous_scene_id": null,
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 0.16,
+        "educational_constraints": [],
+        "end_s": 0.16,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 0,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-intro",
+            "source_ordinal": null,
+            "source_sha256": "06e5511a13f76e09fa9c297990a7edac80ec21d239fac31eef42f0a3aa98769a",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_scene_id": "variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+        "source_texts": [],
+        "start_s": 0.0,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-02-a70094a7ee",
+          "required_previous_scene_id": "variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 8.145,
+        "educational_constraints": [],
+        "end_s": 8.305,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 1,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-01-01",
+            "source_ordinal": 0,
+            "source_sha256": "240dbefe90a613294d6406246dcf77459854e508e74e8cbe6779f0d5786db180",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-01",
+            "source_ordinal": 0,
+            "source_sha256": "e111b4bf7782feb2dbad026dff681efc9f425e2d06cd3acb0056c40668633152",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0001",
+            "source_ordinal": null,
+            "source_sha256": "7f39ffa2ffb1afeff530762be4091a2336ccea8ed331054480e3d8f369a5e085",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-01-02",
+            "source_ordinal": 1,
+            "source_sha256": "e10dd3997f311043e209ceae53047a6555e1dba47d9c481c02492d3c0d52e234",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0002",
+            "source_ordinal": null,
+            "source_sha256": "e9248333d27a46e172b30af3375b2466f9a3b0812dd2a8182d3db8090af1b206",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-01-03",
+            "source_ordinal": 2,
+            "source_sha256": "25e04f60343cf7f7babcb52a7cc3f8ad2595b3a4a992a5b46183ecf1e2e272be",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0003",
+            "source_ordinal": null,
+            "source_sha256": "c9cbea4a98befcf36251febefbd87e765978910c689b5f7ff6ab25bd77e45c6c",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-01-04",
+            "source_ordinal": 3,
+            "source_sha256": "1eb890220cb5135d8e076182507543e439ab9d24547ca40ac25fdb228fc1f525",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0004",
+            "source_ordinal": null,
+            "source_sha256": "2975fdba7ad1c2ef471df0c2fd8de172f79b76a814e33ddc7c84156a41abd28f",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-01-e487c8131f",
+        "source_texts": [
+          "Bună, copii!",
+          "Să cântăm culorile!",
+          "Urechi, ochi și zâmbet,",
+          "Hai să le învățăm!"
+        ],
+        "start_s": 0.16,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-01-e487c8131f",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-03-572211da2e",
+          "required_previous_scene_id": "variant-01-vocal-section-section-01-e487c8131f",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 16.650380000000002,
+        "educational_constraints": [],
+        "end_s": 24.95538,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 2,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-02-01",
+            "source_ordinal": 0,
+            "source_sha256": "1e0c4796f5abc8d54e6ffa431ff889ab6268597002307a51d7a715a40e57a71b",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-02",
+            "source_ordinal": 1,
+            "source_sha256": "28f60ba2cad61056064f159d13d44da6eb5748bbc0c0dc096fe33978ec4ef567",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0005",
+            "source_ordinal": null,
+            "source_sha256": "80b72477614510e782511c234c07684fd839328f26ce128a9caee921d98a8954",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-02-02",
+            "source_ordinal": 1,
+            "source_sha256": "87c38bfdef109a3d0e2c10f51a3e17e74df24f346e31541bd46e50235e2c25a3",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0006",
+            "source_ordinal": null,
+            "source_sha256": "b18c78df77c6663da0b8d4f0fc900105b37380d688645a76eb529cd5fb0e7d60",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-02-03",
+            "source_ordinal": 2,
+            "source_sha256": "f6ea8446f9af73b1a74ce6e0c6c3f9a3e4b03995197f85ce1fc5f02694fdfc98",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0007",
+            "source_ordinal": null,
+            "source_sha256": "80fa748bf5bc0336fe5ad5ffaf4153fa310d43de22b32287af717e14e7f3a210",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-02-04",
+            "source_ordinal": 3,
+            "source_sha256": "7869e9e3cc4b73452c1220b8a8cde9c8edf5c12c88a281cf1ecbbdb3003e851f",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0008",
+            "source_ordinal": null,
+            "source_sha256": "534e29dade6b6d3eb3c79e6b9144e9d8e92b77422916415dc3349ee63a6941c8",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-02-05",
+            "source_ordinal": 4,
+            "source_sha256": "472267de231841968f2f90ec3b1156df40911faa6be26e1a9a4e041b3565c093",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0009",
+            "source_ordinal": null,
+            "source_sha256": "e8b842a2ce724bd7a83f27b7bd9427ee147840baae205bbfc9e3c63e371ba815",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-02-06",
+            "source_ordinal": 5,
+            "source_sha256": "8964c9c55b77028272ffbb0e38d3b4a02d4863aaa45adc821ee943af138b56a5",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0010",
+            "source_ordinal": null,
+            "source_sha256": "d4fdb629927a06324bb39f8023a9b66da9e8de2147d178e787c2a05d56b6ecd2",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-02-07",
+            "source_ordinal": 6,
+            "source_sha256": "6d24b9f23c75b30574213a7fdbc7bf4f0d24b19e82f01a1dcbf6531ee60a432c",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0011",
+            "source_ordinal": null,
+            "source_sha256": "2b5e69daba8eb7da454139c90d7ab962b6fdf4bf80ba333f329d312c469ef317",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-02-08",
+            "source_ordinal": 7,
+            "source_sha256": "b3ca07d0d6ba187bf1675bb520f50cac611c41ebeaa000c82963ac13ea6231e0",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0012",
+            "source_ordinal": null,
+            "source_sha256": "34b14e6e0f6b3f79aecb6450badae4256e709b84185b04b1bbb3bdb9b7d4c5b1",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-02-a70094a7ee",
+        "source_texts": [
+          "Roșu, roșu",
+          "Mărul este roșu",
+          "Roșu ca căpșuna",
+          "Roșu, roșu",
+          "Galben, galben",
+          "Soarele e galben",
+          "Galben ca banana",
+          "Galben, galben"
+        ],
+        "start_s": 8.305,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-02-a70094a7ee",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-04-01320afe6d",
+          "required_previous_scene_id": "variant-01-vocal-section-section-02-a70094a7ee",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 15.47662,
+        "educational_constraints": [],
+        "end_s": 40.432,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 3,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-03-01",
+            "source_ordinal": 0,
+            "source_sha256": "83e22537857077e2855555dfeae7b49ad715b2b1472d3c47d03079683b3a3337",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-03",
+            "source_ordinal": 2,
+            "source_sha256": "79116defbb6cb1741457f3eb87c67a7413c9d847e0a35801ef3bcf8c14cf04af",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0013",
+            "source_ordinal": null,
+            "source_sha256": "d601ca7efa8dd1b3260567251c615eb951140e2f0f17411376c0c7c3d6ae05e1",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-03-02",
+            "source_ordinal": 1,
+            "source_sha256": "0da24950031407a290886753aa3e8208789585e7ae46fa2b0d800e9e87cc086d",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0014",
+            "source_ordinal": null,
+            "source_sha256": "c2aa634dcacede21f3dc9890506b1203ff9112a6f237fd3ea93637c6f70e23d6",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-03-03",
+            "source_ordinal": 2,
+            "source_sha256": "7902f3da89374028843a0639c6c684383efa4fd9ec29cc56a9dab7b955fdcf4a",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0015",
+            "source_ordinal": null,
+            "source_sha256": "4c771f3c4745df540b9b792542ba53b70431dabcb258cf4f2dbd072d93f6b0d8",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-03-04",
+            "source_ordinal": 3,
+            "source_sha256": "be98ac0169d6a0904dda687d7e64467c1f21748f4a73911cc737eebad67a814f",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0016",
+            "source_ordinal": null,
+            "source_sha256": "691d8d0ff56944269f345ae35306b218c3cdbf01a2e518e44e8d7f3bc129f147",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-03-05",
+            "source_ordinal": 4,
+            "source_sha256": "ff325884bb8f9ab1a7a905b0c40aadcd33542df29efd0c5c7c91b492ec6c489c",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0017",
+            "source_ordinal": null,
+            "source_sha256": "5aac0fa2d4ef706199d565d041964d2e4a71fe2b2f2b81f950182da6319c921c",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-03-06",
+            "source_ordinal": 5,
+            "source_sha256": "1505d835e33b88aad568f91dafa241fa13262e278388f5b8b41c818013f30af5",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0018",
+            "source_ordinal": null,
+            "source_sha256": "b1d1fc811cc9911af78ff256e07786b69b9eeb485902fbe9233a656bc6308c2d",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-03-07",
+            "source_ordinal": 6,
+            "source_sha256": "2925e14bb4ab370069601eb1cbfc1a2b002ee62470573e2fb65a9f226897ca58",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0019",
+            "source_ordinal": null,
+            "source_sha256": "dccc7ba662205067dc31191f8dda6bed60e4ae69f3f0d503330ce62371c78f01",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-03-08",
+            "source_ordinal": 7,
+            "source_sha256": "7951b797ba1badea9bfe2669f72b02e788fdb752964e17e787550f3aa424fd3a",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0020",
+            "source_ordinal": null,
+            "source_sha256": "b280381df457ec6073885429ccee45cebdb69ee666cc813fa7400f3c35f32bdf",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-03-572211da2e",
+        "source_texts": [
+          "Culori, culori",
+          "Vino și spune cu mine",
+          "Roșu, galben, albastru, verde",
+          "Spunem iar și iar!",
+          "Culori, culori",
+          "Vrei să le arătăm din nou?",
+          "Roșu, galben, albastru, verde",
+          "Spunem iar și iar!"
+        ],
+        "start_s": 24.95538,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-03-572211da2e",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-05-965d760173",
+          "required_previous_scene_id": "variant-01-vocal-section-section-03-572211da2e",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 15.842619999999997,
+        "educational_constraints": [],
+        "end_s": 56.27462,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 4,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-04-01",
+            "source_ordinal": 0,
+            "source_sha256": "6b9686bb8adf3abe34155493f8e6e04bdbd74464e70d94d6c1d60f1b720dd4df",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-04",
+            "source_ordinal": 3,
+            "source_sha256": "fb6180224deef9c0eaef85f333797d63638069098a6127c3ea1acb9f02aac1c7",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0021",
+            "source_ordinal": null,
+            "source_sha256": "beff10e63ff36364245896ef075c54d15e63cf4d02ff9456b61ae10b1b698747",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-04-02",
+            "source_ordinal": 1,
+            "source_sha256": "e9882d449b823fe61e83c64f79c46cf40daf6161586c7ae938d01c6ddfb23ee6",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0022",
+            "source_ordinal": null,
+            "source_sha256": "540df7420a5b9bdff3a65d07f14ff239463e1f1b33abf54a672d3cca6d8071a6",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-04-03",
+            "source_ordinal": 2,
+            "source_sha256": "4a626e494f0b38f2926e33d6386215476822114de24e1ed2f67f27490c6867f4",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0023",
+            "source_ordinal": null,
+            "source_sha256": "73b072a4183499ccdb8d61718833882592a7945b7c9c65d1abd14540cb34fe19",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-04-04",
+            "source_ordinal": 3,
+            "source_sha256": "e13d014ff4aed0db9cc668ee646d3395c8ec4d2dab1d6c95b2dc5519c113bc0c",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0024",
+            "source_ordinal": null,
+            "source_sha256": "f5bd111e48098f3c8c06b81ce8fd859f5d72765589dd22e6831c5c2cddf52b2f",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-04-05",
+            "source_ordinal": 4,
+            "source_sha256": "0fedb40d2d8fe5d12cd69a1e96e69f2393cccc6a64c72fde02809682c373ded3",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0025",
+            "source_ordinal": null,
+            "source_sha256": "4c0c0c0364d48a6e6bf7be67d6747adc6869c159e726ab88f5c9a49326b20bf4",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-04-06",
+            "source_ordinal": 5,
+            "source_sha256": "22b07820a860db3c48d58be256250eed808bcdd917d8ad1952e090c6d650a700",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0026",
+            "source_ordinal": null,
+            "source_sha256": "a16dc95fed68dc9fca7e29d43bf99aea7997d0876baf72f0d686f857cb31665c",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-04-07",
+            "source_ordinal": 6,
+            "source_sha256": "d52ac7313d9e50a8ce2c470a5915554f9c0616c13768b4489dbad9ec0f7b78be",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0027",
+            "source_ordinal": null,
+            "source_sha256": "70b06d19deee6bfe3ebfc935bd2f3600689d32261fa6cf0cfe6b6b18a328c712",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-04-08",
+            "source_ordinal": 7,
+            "source_sha256": "8290c19b5a70eece9135dab73a3751dc716588ec87c0afedac6f16107b8ccebb",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0028",
+            "source_ordinal": null,
+            "source_sha256": "12335472d35cb5d357f31c44cb082ccc60cb338921b9587b5cd5c0481682f787",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-04-01320afe6d",
+        "source_texts": [
+          "Albastru, albastru",
+          "Cerul este albastru",
+          "Albastru ca marea",
+          "Albastru, albastru",
+          "Verde, verde",
+          "Iarba este verde",
+          "Verde ca frunza",
+          "Verde, verde"
+        ],
+        "start_s": 40.432,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-04-01320afe6d",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-06-c2e900a0eb",
+          "required_previous_scene_id": "variant-01-vocal-section-section-04-01320afe6d",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 16.22753,
+        "educational_constraints": [],
+        "end_s": 72.50215,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 5,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-05-01",
+            "source_ordinal": 0,
+            "source_sha256": "ddbc0772dd32fbad92abb6d7b5b0c04bc24ee8f0ec8f2ae1c724828037012f0d",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-05",
+            "source_ordinal": 4,
+            "source_sha256": "d8f0373c7a57e9b4c938af0014f2937828151ccc9046251decdd33142208af90",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0029",
+            "source_ordinal": null,
+            "source_sha256": "bd2390eaf839a429281aa4b31242745915cde430511b5b9deead17694dc82b2f",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-05-02",
+            "source_ordinal": 1,
+            "source_sha256": "3c70cedc7d0f04ad3910d194a39d7fb050ca12740b832148a9a13f33beff15c2",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0030",
+            "source_ordinal": null,
+            "source_sha256": "2952a59158448e945115e5ab73c4ae8b6418622a71f31a0c118a367493683c82",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-05-03",
+            "source_ordinal": 2,
+            "source_sha256": "8eb6607acf0a616f1257263f9448da4464a34c7bb692d693e8c5768be0f83741",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0031",
+            "source_ordinal": null,
+            "source_sha256": "7b41d8362f233d733debc225864fe7cfc06bfe2ada22c7965a238eff4c26246e",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-05-04",
+            "source_ordinal": 3,
+            "source_sha256": "2daca5e955ba027e4044b3ba77c026f4197b426e107728f94aeb37c69ec1f310",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0032",
+            "source_ordinal": null,
+            "source_sha256": "15ef9f89a90b79acfbc7b62fe22238422302a0e0cbebbe5570ba965f2db1e101",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-05-05",
+            "source_ordinal": 4,
+            "source_sha256": "71fb0e13a4dd5ce142ab7ec135ec5f6fefe51a5ed44fd2d165edbdbd5847f21d",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0033",
+            "source_ordinal": null,
+            "source_sha256": "040b44853ea282c9be94dd25ea15b3b5de9eead8ed1fc4e2e4996d2255e8c868",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-05-06",
+            "source_ordinal": 5,
+            "source_sha256": "f3137100ff95a18b2beb9aeab45993079585ba23a1683a9a86d98c4fc9ca11b4",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0034",
+            "source_ordinal": null,
+            "source_sha256": "33d471224d2a1774ba2aa00a954a31c7185f3a8577687d26703f043e839c6edd",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-05-07",
+            "source_ordinal": 6,
+            "source_sha256": "a023ffa74cef7d041e2128e948440c2452c9c2182ca0f8fc672023896453173e",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0035",
+            "source_ordinal": null,
+            "source_sha256": "43f9f9c9497535e32b104c7b439070c9ac53ade8673c65c2b0a11fde1593d721",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-05-08",
+            "source_ordinal": 7,
+            "source_sha256": "5cf51612f6c7595a005fd1a73561e4b73f683aef55fed7f97ac7e837bc696fdd",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0036",
+            "source_ordinal": null,
+            "source_sha256": "a58685fef70c08d2580a8ca4ae99034c51c65751803f2ab6d9b24aceb11387c6",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-05-965d760173",
+        "source_texts": [
+          "Culori, culori",
+          "Hai să le cântăm din nou",
+          "Portocaliu, mov, roz și maro",
+          "Spunem iar și iar!",
+          "Culori, culori",
+          "Le arătăm cu mâna ta",
+          "Portocaliu, mov, roz și maro",
+          "Spunem iar și iar!"
+        ],
+        "start_s": 56.27462,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-05-965d760173",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-07-a3572846f8",
+          "required_previous_scene_id": "variant-01-vocal-section-section-05-965d760173",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 14.00018,
+        "educational_constraints": [],
+        "end_s": 86.50233,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 6,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-06-01",
+            "source_ordinal": 0,
+            "source_sha256": "48719c46ad0b32bd2ec6553fcf3968949b9d19b8a648d1ec6c87d9d347333773",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-06",
+            "source_ordinal": 5,
+            "source_sha256": "1d71787cf74ff2535282078ebb290168bd25cb4fd0baf27d70577a5f7e1510b1",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0037",
+            "source_ordinal": null,
+            "source_sha256": "bd4d6426b43ac097c8dd830082dc2fdf633f0c6f7988284e8b466f5bf2052951",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-06-02",
+            "source_ordinal": 1,
+            "source_sha256": "e5a1f3a32371ef79c5fe0fb9e1fb06f042b8b532b861d2f39c11e4c57fc47cf8",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0038",
+            "source_ordinal": null,
+            "source_sha256": "d58c26989db1d00c13d704bf7bafbe352e2ac592366045c25ab15084d8392ac5",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-06-03",
+            "source_ordinal": 2,
+            "source_sha256": "5bef9c75355fcf107f86c5e536b2f9dee4ee1725440f224b60c98f18de766a0d",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0039",
+            "source_ordinal": null,
+            "source_sha256": "4f4adf19572dd6df0098d29a2763a06c635a54d551ba826f837bb90cdeb3154d",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-06-04",
+            "source_ordinal": 3,
+            "source_sha256": "cdf5aaf7205f00302354251e4c54ee6a29c2321c6b515d36467bb5e413b574fa",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0040",
+            "source_ordinal": null,
+            "source_sha256": "fca9a1d2e0169a5e43be0eadfafe60a61f60c9417741f7542842c3fa5ba01037",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-06-05",
+            "source_ordinal": 4,
+            "source_sha256": "d96c9958771e85608263c6a312024873088bed962ff114770690cfa2fd81ab80",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0041",
+            "source_ordinal": null,
+            "source_sha256": "a557db2b18978101211e9548f7fe86611380de24812e7606564a96e98acbf077",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-06-06",
+            "source_ordinal": 5,
+            "source_sha256": "e6ca9f43e40b140eed0f28d18154dd99e951535d5ef1a098ad321d4f37c02795",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0042",
+            "source_ordinal": null,
+            "source_sha256": "775a2ba43ed77578f6a1fa82c8427db969848ebbdd88e081e347c41c1fae733e",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-06-07",
+            "source_ordinal": 6,
+            "source_sha256": "5a792b2d3234515053071eca2041be7cefc4d37609a7056369e7af4d7a6743bc",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0043",
+            "source_ordinal": null,
+            "source_sha256": "88c5ae7eeb18e217460e453ddb65d6434fdf49aa492e0b273dd4ef6ef6f925aa",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-06-08",
+            "source_ordinal": 7,
+            "source_sha256": "9a72b598b3468ea984a10350fe8b038c6e21f64336ced1c7f491970bca651170",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0044",
+            "source_ordinal": null,
+            "source_sha256": "0994461bc60740252b58bc1fe07bde6942e162e864c919629faedbe43e981d05",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-06-c2e900a0eb",
+        "source_texts": [
+          "Portocaliu, portocaliu",
+          "Morcovul e portocaliu",
+          "Portocaliu ca apusul",
+          "Portocaliu, portocaliu",
+          "Mov, mov",
+          "Floarea este mov",
+          "Mov ca magia",
+          "Mov, mov"
+        ],
+        "start_s": 72.50215,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-06-c2e900a0eb",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-08-b51d28d7bc",
+          "required_previous_scene_id": "variant-01-vocal-section-section-06-c2e900a0eb",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 22.22905,
+        "educational_constraints": [],
+        "end_s": 108.73138,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 7,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-07-01",
+            "source_ordinal": 0,
+            "source_sha256": "91c2a0dda1883ae2830116cd7f26036511c696b358e32ab25324d950079e4478",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-07",
+            "source_ordinal": 6,
+            "source_sha256": "36f96a8319569495f39cb39da87b8373a43790793a8fa2d5bb070b26194ea770",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0045",
+            "source_ordinal": null,
+            "source_sha256": "c9988302a8c3d147167016caf8aec9e3ca6d8272f63d89b85f625651b598acec",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-07-02",
+            "source_ordinal": 1,
+            "source_sha256": "773dd83a27d5c55880c66a3f15e38afa88418ee5c690f8bacc2fc21d15e919df",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0046",
+            "source_ordinal": null,
+            "source_sha256": "a8cf6ee0ec1f2815e31af7e2cc854cceb8e9e7533319a6b310a64c92ffef4387",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-07-03",
+            "source_ordinal": 2,
+            "source_sha256": "2102c96c6b02e492f2072a3969c9366f45619b11575590ca670936ca81d4fa6b",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0047",
+            "source_ordinal": null,
+            "source_sha256": "4a3a049eb20182322f0dcc9bcb3184f8decf778ce4febf4c3190783f3b73167a",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-07-04",
+            "source_ordinal": 3,
+            "source_sha256": "a989a226dba3a28ba8c6281c41c562d40a5e913e4e1cac55e5dc2588cb1b6186",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0048",
+            "source_ordinal": null,
+            "source_sha256": "990ae2da49ff377968f0e6ee2eb7ab3979d16acf8de0d5b24208d739f1febff3",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-07-05",
+            "source_ordinal": 4,
+            "source_sha256": "220c599deb85154ad4d5872be072d781b6e117180815b7a18f6df307cec7fe6d",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0049",
+            "source_ordinal": null,
+            "source_sha256": "ac1a683cfeaf6d5ae43302e2d733903487c78722610994d4f3dbdcf13090054c",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-07-06",
+            "source_ordinal": 5,
+            "source_sha256": "af4651e9ea6a74e33249e9586a91798e49d69af72617542e1584fa0df6f913f5",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0050",
+            "source_ordinal": null,
+            "source_sha256": "bbe1d94255f6fd819d284129c091f029f2f28c6cc1113d846ac6e9e79c952520",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-07-07",
+            "source_ordinal": 6,
+            "source_sha256": "47b0189c5a574b5109b412c42d2c58f4a61eb195b791cf77c685a693480b18a1",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0051",
+            "source_ordinal": null,
+            "source_sha256": "75664dcaafc45b89154e4d288f88cf7c421104038e030ce6d2493120a0d14f66",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-07-08",
+            "source_ordinal": 7,
+            "source_sha256": "57ba216ac37768ae40b8b645bf344303b2c32689159c1fd77baf80b6c3fec1c1",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0052",
+            "source_ordinal": null,
+            "source_sha256": "37c2e8dad07c5cb00f3bd5c956c2f8ccb3bf6f80fa64731af94784d8f7618829",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-07-a3572846f8",
+        "source_texts": [
+          "Arată culoarea!",
+          "Degetul pe roșu",
+          "Degetul pe galben",
+          "Arată culoarea!",
+          "Acum pe albastru",
+          "Acum pe verde",
+          "Bate din palme, dă avânt!",
+          "Toate culorile sunt prieteni"
+        ],
+        "start_s": 86.50233,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-07-a3572846f8",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-vocal-section-section-09-580b14cde4",
+          "required_previous_scene_id": "variant-01-vocal-section-section-07-a3572846f8",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 29.975539999999995,
+        "educational_constraints": [],
+        "end_s": 138.70692,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 8,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-08-01",
+            "source_ordinal": 0,
+            "source_sha256": "e27fd83d19772c1a9d352665a4342136956d1a28b003893ef1f5b7af76486d83",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-08",
+            "source_ordinal": 7,
+            "source_sha256": "cbaea95cc7a4e6dcd281fd23383539b6d26c574d81893ff68fdd88cfbdf6b388",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0053",
+            "source_ordinal": null,
+            "source_sha256": "5ccd78958c361a3994ce1a78849eedc3376da4db438de5c3bebc28e17f5ca071",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-08-02",
+            "source_ordinal": 1,
+            "source_sha256": "2cc13991ac89353ec38d0b0afe9ddf8492637014f355d40e86dff9ea2a5e354f",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0054",
+            "source_ordinal": null,
+            "source_sha256": "0a22ce86cf1bce3a65c9f965ef6ff303c3234bcdf39541692069263ca513d51e",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-08-03",
+            "source_ordinal": 2,
+            "source_sha256": "1535999dedcaa5c39567ed5498ba3fa4927da73c2456b5e8cda70f9061a43aa6",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0055",
+            "source_ordinal": null,
+            "source_sha256": "ab46faad3fb009e5ab654446dd54620ae05e1288fda4779e4893d26784ac3f74",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-08-04",
+            "source_ordinal": 3,
+            "source_sha256": "bc7eef20999fe83584410cddf6592cc2e0f6db8c0dcc9bb6476b16e2af307c3d",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0056",
+            "source_ordinal": null,
+            "source_sha256": "5e21b8288b9a849d4fa0922b33a7bf626b2aa14c4b15d50bed9900cfd449039b",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-08-05",
+            "source_ordinal": 4,
+            "source_sha256": "479ab2e07402f97e554f6e1b35cf7db5a925ab34728d60a2f2f58274a18af41d",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0057",
+            "source_ordinal": null,
+            "source_sha256": "d081d742d5d0c82523cca1257ab4be74c8a3e24045bdba98cbdd353825a03879",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-08-06",
+            "source_ordinal": 5,
+            "source_sha256": "0519aa5a9b7b4594443a37fe42c01e17f76d6217d9cb00c8abacf11d2536efce",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0058",
+            "source_ordinal": null,
+            "source_sha256": "54c01d9ec3c67fb5f8492d52f0fdecdb686aed16c99f041bf2590e6c42a061b6",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-08-07",
+            "source_ordinal": 6,
+            "source_sha256": "407cfe8cc90ca289a031a4f150167508123f3c424a569512b8a79217d188db06",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0059",
+            "source_ordinal": null,
+            "source_sha256": "567241b69ade441f856187434602154b21c103d04522bba982348fe632e636e1",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-08-08",
+            "source_ordinal": 7,
+            "source_sha256": "7ca6faa1af4429b9dd503cc210cb9052a6ac00a1c7faa577534397ba73328d45",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0060",
+            "source_ordinal": null,
+            "source_sha256": "b882dd7a1a596b566fe024d9030b099d56bb45bbf23faa69903d4b7d431c23bb",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-08-b51d28d7bc",
+        "source_texts": [
+          "Culori, culori",
+          "Spunem iar și iar",
+          "Roșu, galben, albastru, verde",
+          "Portocaliu, mov, roz și maro",
+          "Culori, culori",
+          "Le iubim pe toate",
+          "Spunem iar și iar!",
+          "Spunem iar și iar!"
+        ],
+        "start_s": 108.73138,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-08-b51d28d7bc",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": "variant-01-instrumental_outro-variant-01-instrumental-outro-0e99d4f9c5",
+          "required_previous_scene_id": "variant-01-vocal-section-section-08-b51d28d7bc",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 8.899079999999998,
+        "educational_constraints": [],
+        "end_s": 147.606,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 9,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "line-09-01",
+            "source_ordinal": 0,
+            "source_sha256": "7fdfc87eda64d1192edb5940d3c62306f591d8fd1b811b913d4820230e5fe1bf",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-09",
+            "source_ordinal": 8,
+            "source_sha256": "3b409515737f19e6a8f869318b285e0f481622e4fdc629c007fde817de1b095b",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0061",
+            "source_ordinal": null,
+            "source_sha256": "77972d634da3caa0cb433e394ffe2f96241582450a89f84059a3493e9d8ca48d",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-09-02",
+            "source_ordinal": 1,
+            "source_sha256": "51e267de718907c1cee02340c5fb834871c40c78ee31ca6f2906e68148c2bf7a",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0062",
+            "source_ordinal": null,
+            "source_sha256": "1048702430abd57970407bb619caaec8d405386b4f77758e25f30c47b5d684d9",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-09-03",
+            "source_ordinal": 2,
+            "source_sha256": "c6514e721d7be0d677a45dedc1621377908037af0810276fc9434039a5cdf49a",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0063",
+            "source_ordinal": null,
+            "source_sha256": "e00b34ffe3d799e9d25f5fc2ffba86906e8eb8da44e3d8f17a65675ef397a926",
+            "source_type": "alignment_line"
+          },
+          {
+            "source_id": "line-09-04",
+            "source_ordinal": 3,
+            "source_sha256": "50eca369dcf7f5e6dbc264e92bb01ff93884e21bb83daf10a42eb8d8d006e219",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "variant-01-line-0064",
+            "source_ordinal": null,
+            "source_sha256": "d399afa32a8b400602729a12770542b71b459c8360a91332d82e39cc5657f4f4",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_scene_id": "variant-01-vocal-section-section-09-580b14cde4",
+        "source_texts": [
+          "Bravo, copii!",
+          "Acum știi culorile",
+          "Roșu, galben, albastru, verde",
+          "La revedere, culori!"
+        ],
+        "start_s": 138.70692,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-vocal-section-section-09-580b14cde4",
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "aspect_ratio": "16:9",
+        "camera": {
+          "angle": "unspecified",
+          "focus_target": "unspecified",
+          "movement_intent": "unspecified",
+          "shot_size": "unspecified"
+        },
+        "character_ids": [],
+        "character_wardrobe_overrides": [],
+        "composition": {
+          "background": [],
+          "depth": "unspecified",
+          "focus_subject": "unspecified",
+          "foreground": [],
+          "framing": "unspecified",
+          "midground": []
+        },
+        "continuity_requirements": {
+          "required_next_scene_id": null,
+          "required_previous_scene_id": "variant-01-vocal-section-section-09-580b14cde4",
+          "shared_object_ids": [],
+          "shared_subject_ids": []
+        },
+        "duration_s": 1.593999999999994,
+        "educational_constraints": [],
+        "end_s": 149.2,
+        "environment": {
+          "background_type": "unspecified",
+          "ground_type": "unspecified",
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "lighting": {
+          "brightness": "unspecified",
+          "direction": "unspecified",
+          "lighting_type": "unspecified",
+          "temperature": "unspecified"
+        },
+        "negative_constraints": [],
+        "ordinal": 10,
+        "palette": {
+          "background_complexity": "unspecified",
+          "contrast": "unspecified",
+          "palette_intent": "unspecified",
+          "saturation": "unspecified"
+        },
+        "positive_constraints": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-outro",
+            "source_ordinal": null,
+            "source_sha256": "8796f0b4908763622bd76e7c72b17b8c18dc9ce0dcf9cf2cc0fe3986a3ca6043",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_scene_id": "variant-01-instrumental_outro-variant-01-instrumental-outro-0e99d4f9c5",
+        "source_texts": [],
+        "start_s": 147.606,
+        "status": "valid",
+        "style": {
+          "complexity": "simple",
+          "medium": "3d_animation",
+          "readability": "high",
+          "render_style": "friendly_stylized",
+          "shape_language": "soft_rounded_shapes",
+          "target_age_group": "2_to_5"
+        },
+        "subjects": [],
+        "visual_scene_id": "visual-variant-01-instrumental_outro-variant-01-instrumental-outro-0e99d4f9c5",
+        "warnings": []
+      }
+    ],
+    "schema_version": "1.0",
+    "semantic_sha256": "cbc0933e055c52352ac04625a7ca0e3b3a11ba3d70ecef8a3c6cb5ece666d568",
+    "source_scene_plan_sha256": "fe026a0428742853205a51e7e948fa0f6ca1b494370b0209044498a46b88e058",
+    "status": "valid",
+    "warnings": []
+  },
+  "dependency_sha256": "86bedd9c1b66050d2f5aeaff8c7a452b49953c1c6f73008d41443f9736017b5b",
+  "provider_metadata": {},
+  "review_required": false,
+  "semantic_sha256": "f5b7b831797faf1979b1ebc240eabcc92707262b60176b0acf71aa8418dd12ea",
+  "stage": "visual_plan",
+  "status": "generated",
+  "version": 1,
+  "warnings": []
+}

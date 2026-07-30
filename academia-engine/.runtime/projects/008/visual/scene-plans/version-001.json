@@ -1,0 +1,3140 @@
+{
+  "data": {
+    "audio_duration_s": 164.32,
+    "audio_sha256": "c2f7f97ac6953a098e7dbf707d7315a848ef6a89556f08cf377bc30b17becf87",
+    "audio_variant_id": "variant-01",
+    "dependency_metadata": {
+      "alignment_sha256": "20697fa887c7e9e7110f1a275545518adca423878cccaa317e264fc0833cf8c8",
+      "audio_duration_s": 164.32,
+      "audio_sha256": "c2f7f97ac6953a098e7dbf707d7315a848ef6a89556f08cf377bc30b17becf87",
+      "audio_variant_id": "variant-01",
+      "configuration_sha256": "ea1dc7ad8a6bdb357e1298652d1b5435c5c940dff8aa3f473e933dc846d599d5",
+      "lyrics_sha256": "46943ec8888b0adc65518f4e7b769efbe5fe12e69c488040c650355b5867fded",
+      "planner_version": "17.1.0",
+      "semantic_metadata_sha256": "d1874cca6e33390203db0fdeccba8f3a97b2fe9bba1525e0ff8bb7e4a8f1328c"
+    },
+    "planner_version": "17.1.0",
+    "project_id": "008",
+    "scenes": [
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 0,
+        "scene_id": "variant-01-instrumental_intro-variant-01-instrumental-intro-05c96df4db",
+        "scene_type": "instrumental_intro",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-intro",
+            "source_ordinal": null,
+            "source_sha256": "ae07147b5b053c68a95c49b08ebc9fa0c2220e34941b49f9201c14268a82a765",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-intro"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.638,
+          "end_s": 0.638,
+          "start_s": 0.0
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 1,
+        "scene_id": "variant-01-vocal-variant-01-line-0001-5a9dc4020c",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-01-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-01-01",
+            "source_ordinal": 0,
+            "source_sha256": "5b3cf06befb6f7df5ee8a11b5d70a6b17117950f56d33cac12bc940eca929826",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-01",
+            "source_ordinal": 0,
+            "source_sha256": "0c7daa0b2cb1837733351c919029ff6ac8107fac9b3936253a3b7cdd7da293f7",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0001",
+            "source_ordinal": null,
+            "source_sha256": "6d5305ff1e7de2b4459e7bce765f1f096343e67eadf2349823db0c5ec089658d",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-01"
+        ],
+        "source_texts": [
+          "Hai să învățăm!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.64933,
+          "end_s": 2.28733,
+          "start_s": 0.638
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 2,
+        "scene_id": "variant-01-vocal-variant-01-line-0002-5e6d8b63e6",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-01-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-01-02",
+            "source_ordinal": 1,
+            "source_sha256": "34da828b1f7bcdbc32da99590ac9d0e4056de3b25b83eab1b31c7b8bf5c5d317",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-01",
+            "source_ordinal": 0,
+            "source_sha256": "0c7daa0b2cb1837733351c919029ff6ac8107fac9b3936253a3b7cdd7da293f7",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0002",
+            "source_ordinal": null,
+            "source_sha256": "88793aa350e2e5382d2a0fc73a362a1c2a05937735594be5487e4508cf625758",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-01"
+        ],
+        "source_texts": [
+          "Anotimpurile sunt patru"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.6863300000000003,
+          "end_s": 5.027,
+          "start_s": 2.34067
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 3,
+        "scene_id": "variant-01-vocal-variant-01-line-0003-7e4c77ff9e",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-01-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-01-03",
+            "source_ordinal": 2,
+            "source_sha256": "9753604fc89e72c3f831c3f81ec16f3e67a034aea8096d2a178d7bfc9ef66d26",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-01",
+            "source_ordinal": 0,
+            "source_sha256": "0c7daa0b2cb1837733351c919029ff6ac8107fac9b3936253a3b7cdd7da293f7",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0003",
+            "source_ordinal": null,
+            "source_sha256": "4c29d6ad2cebe50d0786707c23325416e494c4dcb1fe35d640dcf877ba2e246b",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-01"
+        ],
+        "source_texts": [
+          "Să le cântăm împreună"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 5.27217,
+          "end_s": 10.37867,
+          "start_s": 5.1065
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 4,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-01-7efc9a7ca3",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-01",
+            "source_ordinal": null,
+            "source_sha256": "b1e084273cd7e3bfd9b68ddd90c9271e8b9ef83c1ed25521cf95d3ddd3190b51",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-01"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.00666000000000011,
+          "end_s": 10.38533,
+          "start_s": 10.37867
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 5,
+        "scene_id": "variant-01-vocal-variant-01-line-0004-ce02b3bcbf",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-02-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-02-01",
+            "source_ordinal": 0,
+            "source_sha256": "1bc35eb6bcfb2c52d9cc5f3c0407e7a14518acd0ac0167e5de3edfbb7c56b5bc",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-02",
+            "source_ordinal": 1,
+            "source_sha256": "27996e98c97c742c59f13183968f3d3888188f6c2f6786d5b89b79e4390e65eb",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0004",
+            "source_ordinal": null,
+            "source_sha256": "b9fa90cb4b64ce3ad08f6f0aeb67c39d41bc7f1148316cbaa0fbd4f0d85aa4f2",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-02"
+        ],
+        "source_texts": [
+          "Primăvara e verde"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.1416699999999995,
+          "end_s": 12.527,
+          "start_s": 10.38533
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 6,
+        "scene_id": "variant-01-vocal-variant-01-line-0005-98553d21db",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-02-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-02-02",
+            "source_ordinal": 1,
+            "source_sha256": "57f9288d2bb6012d40ee9ca5598763d5e480bcb071bd6dd9bc5f1194b2162626",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-02",
+            "source_ordinal": 1,
+            "source_sha256": "27996e98c97c742c59f13183968f3d3888188f6c2f6786d5b89b79e4390e65eb",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0005",
+            "source_ordinal": null,
+            "source_sha256": "3c0c436982d0ab2bf95cba27f0eec1f1d01c685838017530cc4f7158107836b7",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-02"
+        ],
+        "source_texts": [
+          "Floare mică se deschide"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.68567,
+          "end_s": 15.239,
+          "start_s": 12.55333
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 7,
+        "scene_id": "variant-01-vocal-variant-01-line-0006-a871e6134b",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-02-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-02-03",
+            "source_ordinal": 2,
+            "source_sha256": "1b3ba548c582525e97d1cd30d82572ed6640845ab84cff2162da0bf237d0f84b",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-02",
+            "source_ordinal": 1,
+            "source_sha256": "27996e98c97c742c59f13183968f3d3888188f6c2f6786d5b89b79e4390e65eb",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0006",
+            "source_ordinal": null,
+            "source_sha256": "2f1db7a3050354f423f0fae597fa69f113f1e944911f0335b627be72d7fa0db0",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-02"
+        ],
+        "source_texts": [
+          "Păsările se întorc"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.153999999999998,
+          "end_s": 17.473,
+          "start_s": 15.319
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 8,
+        "scene_id": "variant-01-vocal-variant-01-line-0007-ace0349dcf",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-02-04"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-02-04",
+            "source_ordinal": 3,
+            "source_sha256": "c166f30a6fad1f96c3e0ad0d7bc9e6fc5e6117645c7784cf6882f521fc46cf09",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-02",
+            "source_ordinal": 1,
+            "source_sha256": "27996e98c97c742c59f13183968f3d3888188f6c2f6786d5b89b79e4390e65eb",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0007",
+            "source_ordinal": null,
+            "source_sha256": "c1b522158ecca45bb9965ab1aaeeac0db9d813af802007d9a704eff9618e0e9a",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-02"
+        ],
+        "source_texts": [
+          "Plouă blând, plouă lin"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.6729999999999983,
+          "end_s": 20.186,
+          "start_s": 17.513
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 9,
+        "scene_id": "variant-01-vocal-variant-01-line-0008-ab82a9eee2",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-02-05"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-02-05",
+            "source_ordinal": 4,
+            "source_sha256": "aaaf4e3ef32526137347db243780372771121035dee106feacf9a8582305a506",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-02",
+            "source_ordinal": 1,
+            "source_sha256": "27996e98c97c742c59f13183968f3d3888188f6c2f6786d5b89b79e4390e65eb",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0008",
+            "source_ordinal": null,
+            "source_sha256": "364abb30edd619c77e9fe21c3d00d9385f3e718e3415cea901cd53c666015c78",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-02"
+        ],
+        "source_texts": [
+          "Muguri și iarba verde"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.7949999999999982,
+          "end_s": 22.101,
+          "start_s": 20.306
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 10,
+        "scene_id": "variant-01-vocal-variant-01-line-0009-a34c24ae3f",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-02-06"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-02-06",
+            "source_ordinal": 5,
+            "source_sha256": "65f0ee5dc6591fe77b408b3706fc7d6b3e12401a3680799529f77da9ebe519cb",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-02",
+            "source_ordinal": 1,
+            "source_sha256": "27996e98c97c742c59f13183968f3d3888188f6c2f6786d5b89b79e4390e65eb",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0009",
+            "source_ordinal": null,
+            "source_sha256": "aafee56bf85eeac58bcec634bf34103550797e20f280ccc4dea6788de5ac80df",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-02"
+        ],
+        "source_texts": [
+          "Zâmbim și alergăm afară"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 3.916270000000001,
+          "end_s": 26.09727,
+          "start_s": 22.181
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 11,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-02-7e2874f829",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-02",
+            "source_ordinal": null,
+            "source_sha256": "3534eaa62aba96cbc12a44759924e7e12a3ad077b70b379f0bb6ee620e548d03",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-02"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.007279999999997955,
+          "end_s": 26.10455,
+          "start_s": 26.09727
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 12,
+        "scene_id": "variant-01-vocal-variant-01-line-0010-568badf589",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-03-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-03-01",
+            "source_ordinal": 0,
+            "source_sha256": "7109f0ba94ea74d9166696364b9dd81e133c7fb356b89d80b497aa0f14621dc5",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-03",
+            "source_ordinal": 2,
+            "source_sha256": "242500958d9d5a64671896ac90a9735f6de37f61d7ef73df218942fdfd47488e",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0010",
+            "source_ordinal": null,
+            "source_sha256": "e95f679fa0623572c109c8fc6abdab1645bede9768804054e15f2ba4772cb9c6",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-03"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.4989500000000007,
+          "end_s": 28.6035,
+          "start_s": 26.10455
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 13,
+        "scene_id": "variant-01-vocal-variant-01-line-0011-0c4d9aa854",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-03-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-03-02",
+            "source_ordinal": 1,
+            "source_sha256": "f51b3ac072b7846a117e87bc10e55c9f623c111d91df24b76e7ae6b40e52a61c",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-03",
+            "source_ordinal": 2,
+            "source_sha256": "242500958d9d5a64671896ac90a9735f6de37f61d7ef73df218942fdfd47488e",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0011",
+            "source_ordinal": null,
+            "source_sha256": "9a408450531eb740fe6e511c82f65a4bbb2eea16921d35cb2b9e86e4252baa5d",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-03"
+        ],
+        "source_texts": [
+          "Vara! Toamna!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.9156000000000013,
+          "end_s": 30.6386,
+          "start_s": 28.723
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 14,
+        "scene_id": "variant-01-vocal-variant-01-line-0012-73f158193d",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-03-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-03-03",
+            "source_ordinal": 2,
+            "source_sha256": "9079d9700609cd7c7c430f26de7d17dda938a6c4cf3513ab095f4a449e25c488",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-03",
+            "source_ordinal": 2,
+            "source_sha256": "242500958d9d5a64671896ac90a9735f6de37f61d7ef73df218942fdfd47488e",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0012",
+            "source_ordinal": null,
+            "source_sha256": "cd15ebfc0a7729644233f2fb14874f094251bceab7495022a1d24fe6e2a2bde3",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-03"
+        ],
+        "source_texts": [
+          "Sunt patru anotimpuri!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 5.145799999999998,
+          "end_s": 35.864,
+          "start_s": 30.7182
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 15,
+        "scene_id": "variant-01-vocal-variant-01-line-0013-f3318b9bb8",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-03-04"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-03-04",
+            "source_ordinal": 3,
+            "source_sha256": "6df957a51a18ab5408ed5017c53771a4ba61eded0fe503536acdbda6e22d44ce",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-03",
+            "source_ordinal": 2,
+            "source_sha256": "242500958d9d5a64671896ac90a9735f6de37f61d7ef73df218942fdfd47488e",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0013",
+            "source_ordinal": null,
+            "source_sha256": "ae5f65c7497fa2a08f2ff89f5976f537ea8c9de38aba358fb47fadd3fb8e500a",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-03"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.433499999999995,
+          "end_s": 38.3375,
+          "start_s": 35.904
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 16,
+        "scene_id": "variant-01-vocal-variant-01-line-0014-9c1bb2052e",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-03-05"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-03-05",
+            "source_ordinal": 4,
+            "source_sha256": "7610e9fd3617f4cc4564e5f63ec7d0c9f702702643d8072da08566541aa8eefd",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-03",
+            "source_ordinal": 2,
+            "source_sha256": "242500958d9d5a64671896ac90a9735f6de37f61d7ef73df218942fdfd47488e",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0014",
+            "source_ordinal": null,
+            "source_sha256": "5413a8fd0262ab1d85c53677abada032cfb6888fa7d6fd45cbc147b06ba28604",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-03"
+        ],
+        "source_texts": [
+          "Vara! Toamna!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.333750000000002,
+          "end_s": 40.79075,
+          "start_s": 38.457
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 17,
+        "scene_id": "variant-01-vocal-variant-01-line-0015-1cfb2cb23d",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-03-06"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-03-06",
+            "source_ordinal": 5,
+            "source_sha256": "d2de5733d3505637b7334d1866df2d9bde8b70ccb4d0d68b14f36e7a4b70dbcf",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-03",
+            "source_ordinal": 2,
+            "source_sha256": "242500958d9d5a64671896ac90a9735f6de37f61d7ef73df218942fdfd47488e",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0015",
+            "source_ordinal": null,
+            "source_sha256": "484a6ee0caec6e3d8b2ba2302ae4a540facb7ff601608c2006da1e9d7f046fb0",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-03"
+        ],
+        "source_texts": [
+          "Hai să le spunem iar!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 4.914589999999997,
+          "end_s": 45.80509,
+          "start_s": 40.8905
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 18,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-03-2c39a812ed",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-03",
+            "source_ordinal": null,
+            "source_sha256": "39078a8034141ebfa5d10bcf07f7d9729fdfdbbcadceb48e93fa1d57e1018f72",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-03"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.04355000000000331,
+          "end_s": 45.84864,
+          "start_s": 45.80509
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 19,
+        "scene_id": "variant-01-vocal-variant-01-line-0016-b58890637c",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-04-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-04-01",
+            "source_ordinal": 0,
+            "source_sha256": "a08e1e5ebd68fe3fc286519bb724d7e9692136748e217b83b02ce978bb432039",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-04",
+            "source_ordinal": 3,
+            "source_sha256": "198f848f094d2b8ed13ebbc9432fd24bedef1aaff241b5e28fa30f015c0efb5f",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0016",
+            "source_ordinal": null,
+            "source_sha256": "e9babb555db87656f40f1d839e85f87cb0b4799c7e4c940eb7ad900b02267dd7",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-04"
+        ],
+        "source_texts": [
+          "Vara e caldă"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.1833599999999933,
+          "end_s": 48.032,
+          "start_s": 45.84864
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 20,
+        "scene_id": "variant-01-vocal-variant-01-line-0017-6f17dc30c5",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-04-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-04-02",
+            "source_ordinal": 1,
+            "source_sha256": "b0c8d8d19d9f6b974aeb0fe3a17187ca12522df691d8ebdb7ba64a01c0f2613c",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-04",
+            "source_ordinal": 3,
+            "source_sha256": "198f848f094d2b8ed13ebbc9432fd24bedef1aaff241b5e28fa30f015c0efb5f",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0017",
+            "source_ordinal": null,
+            "source_sha256": "b5803f6ba145dc4459b7f34f0f452f9814c82039f54b5285f310e1e6db597069",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-04"
+        ],
+        "source_texts": [
+          "Soarele strălucește sus"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.393500000000003,
+          "end_s": 50.505,
+          "start_s": 48.1115
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 21,
+        "scene_id": "variant-01-vocal-variant-01-line-0018-b0242db3e4",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-04-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-04-03",
+            "source_ordinal": 2,
+            "source_sha256": "7a52d035f33da8e2f506a5625c039affa5e1fc85b2bb3eb2845731f5c6738b81",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-04",
+            "source_ordinal": 3,
+            "source_sha256": "198f848f094d2b8ed13ebbc9432fd24bedef1aaff241b5e28fa30f015c0efb5f",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0018",
+            "source_ordinal": null,
+            "source_sha256": "b378d89312ea4df436567f150d080a0b1d2ea8c15cc1a41eeff2bfd57fb79101",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-04"
+        ],
+        "source_texts": [
+          "Ne jucăm în parc"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.9549999999999983,
+          "end_s": 52.58,
+          "start_s": 50.625
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 22,
+        "scene_id": "variant-01-vocal-variant-01-line-0019-c56d5e0d73",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-04-04"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-04-04",
+            "source_ordinal": 3,
+            "source_sha256": "975b34447de7d1571205b19518b6d586171a8b5ff34f4213c04e24e7a1fb3145",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-04",
+            "source_ordinal": 3,
+            "source_sha256": "198f848f094d2b8ed13ebbc9432fd24bedef1aaff241b5e28fa30f015c0efb5f",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0019",
+            "source_ordinal": null,
+            "source_sha256": "f0971b7e02327bf44ca1c309fc10ca6746f93297fb90b9101795fc6956ec573a",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-04"
+        ],
+        "source_texts": [
+          "Mâncăm fructe dulci"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.7120000000000033,
+          "end_s": 55.372,
+          "start_s": 52.66
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 23,
+        "scene_id": "variant-01-vocal-variant-01-line-0020-7d7bc6eccf",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-04-05"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-04-05",
+            "source_ordinal": 4,
+            "source_sha256": "9e96981b0fdd73b2cd843d3f84ec0e5a995ab86759efedd7c733ff84ebc71fac",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-04",
+            "source_ordinal": 3,
+            "source_sha256": "198f848f094d2b8ed13ebbc9432fd24bedef1aaff241b5e28fa30f015c0efb5f",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0020",
+            "source_ordinal": null,
+            "source_sha256": "0ffa8eded7a2eb57ea9fad5b460f643c611f9ee5e838ebae4c949662200b9cf9",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-04"
+        ],
+        "source_texts": [
+          "Sari, aleargă, joacă"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.0350000000000037,
+          "end_s": 57.527,
+          "start_s": 55.492
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 24,
+        "scene_id": "variant-01-vocal-variant-01-line-0021-93e75b5a5a",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-04-06"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-04-06",
+            "source_ordinal": 5,
+            "source_sha256": "500a20d372ae31a36a2169ab458dd52879a606c30f8bc135c28f6dd256822d8b",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-04",
+            "source_ordinal": 3,
+            "source_sha256": "198f848f094d2b8ed13ebbc9432fd24bedef1aaff241b5e28fa30f015c0efb5f",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0021",
+            "source_ordinal": null,
+            "source_sha256": "371bc5f979304cd0768b5aeff4c1e38830494eb3f813f4bf560b1b6416ef6ceb",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-04"
+        ],
+        "source_texts": [
+          "Zi lungă și veselă"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 3.9245499999999964,
+          "end_s": 61.53055,
+          "start_s": 57.606
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 25,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-04-ba62694d07",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-04",
+            "source_ordinal": null,
+            "source_sha256": "f7ebcc6604bf0626b99ac490caa885a6a48dcf9123116d5a47207f51fbf16b3b",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-04"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.014540000000003772,
+          "end_s": 61.54509,
+          "start_s": 61.53055
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 26,
+        "scene_id": "variant-01-vocal-variant-01-line-0022-dcfbd971c0",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-05-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-05-01",
+            "source_ordinal": 0,
+            "source_sha256": "4b9babee6ab9b3ea1c84f24d4f9e14719c032e21a1d01b941062cc40c4b874bc",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-05",
+            "source_ordinal": 4,
+            "source_sha256": "25ce4966ad101dc27a68ced2c84cb9dec6d7747c8b7c6bf4442a9b3358c2144b",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0022",
+            "source_ordinal": null,
+            "source_sha256": "1dbc6ef3f5b1fcfa207a6185a1778bf87918e77e5a97e667ed88ff669b30e32a",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-05"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.563909999999993,
+          "end_s": 64.109,
+          "start_s": 61.54509
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 27,
+        "scene_id": "variant-01-vocal-variant-01-line-0023-ff36012b06",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-05-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-05-02",
+            "source_ordinal": 1,
+            "source_sha256": "e83afaa4e97da9faefd69ea79bb4d1697695a9f0eea9e2a8a4050affc49f3e2a",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-05",
+            "source_ordinal": 4,
+            "source_sha256": "25ce4966ad101dc27a68ced2c84cb9dec6d7747c8b7c6bf4442a9b3358c2144b",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0023",
+            "source_ordinal": null,
+            "source_sha256": "9f1dad1e9412e95d15975316935b5dd5ed36cba5ae4ca65e9ecb4857ecce5982",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-05"
+        ],
+        "source_texts": [
+          "Vara! Toamna!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.9147999999999996,
+          "end_s": 66.1438,
+          "start_s": 64.229
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 28,
+        "scene_id": "variant-01-vocal-variant-01-line-0024-52a33cb7d3",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-05-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-05-03",
+            "source_ordinal": 2,
+            "source_sha256": "6a374a862c49866364b9f28ea6b03c6136f81c2115b914bd81f9857138392ecc",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-05",
+            "source_ordinal": 4,
+            "source_sha256": "25ce4966ad101dc27a68ced2c84cb9dec6d7747c8b7c6bf4442a9b3358c2144b",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0024",
+            "source_ordinal": null,
+            "source_sha256": "a73686a70f5a80f1340dc0b506d11cf05c33fd415035bab3970a0ca6f29e4d12",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-05"
+        ],
+        "source_texts": [
+          "Sunt patru anotimpuri!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 4.029399999999995,
+          "end_s": 70.253,
+          "start_s": 66.2236
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 29,
+        "scene_id": "variant-01-vocal-variant-01-line-0025-5a85dd99b6",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-05-04"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-05-04",
+            "source_ordinal": 3,
+            "source_sha256": "52ad2d2034618c34fe09d031bd98fe0b57e682c8cb100d8f2f7f911850a5aaa9",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-05",
+            "source_ordinal": 4,
+            "source_sha256": "25ce4966ad101dc27a68ced2c84cb9dec6d7747c8b7c6bf4442a9b3358c2144b",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0025",
+            "source_ordinal": null,
+            "source_sha256": "c3347ab35f3968e354c01ce750bf233d65ea0b668a209327093b6f0ff14c4224",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-05"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.8374999999999915,
+          "end_s": 71.1305,
+          "start_s": 70.293
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 30,
+        "scene_id": "variant-01-vocal-variant-01-line-0026-109f7b30e6",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-05-05"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-05-05",
+            "source_ordinal": 4,
+            "source_sha256": "ecda5040ae47554eb0217e4f356e6fac264f0519b2c114c6c812c305bada0d89",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-05",
+            "source_ordinal": 4,
+            "source_sha256": "25ce4966ad101dc27a68ced2c84cb9dec6d7747c8b7c6bf4442a9b3358c2144b",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0026",
+            "source_ordinal": null,
+            "source_sha256": "9f07517cfdd3a43e77e67ee5b79ccaf670b613226cfdcfc7f3c1ec1d28f78d60",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-05"
+        ],
+        "source_texts": [
+          "Vara! Toamna!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 5.126750000000001,
+          "end_s": 76.37675,
+          "start_s": 71.25
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 31,
+        "scene_id": "variant-01-vocal-variant-01-line-0027-ce330d4889",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-05-06"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-05-06",
+            "source_ordinal": 5,
+            "source_sha256": "6b81ec59f92c088e58ec99cf3605e007a00afae50ac1e03432aad2733dfd98a4",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-05",
+            "source_ordinal": 4,
+            "source_sha256": "25ce4966ad101dc27a68ced2c84cb9dec6d7747c8b7c6bf4442a9b3358c2144b",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0027",
+            "source_ordinal": null,
+            "source_sha256": "4f76014cbc16dd44458208c0e9f1995db3cf45ab946c2ff024f95905f8094572",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-05"
+        ],
+        "source_texts": [
+          "Hai să le spunem iar!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 4.680669999999992,
+          "end_s": 81.15717,
+          "start_s": 76.4765
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 32,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-05-c71b7dd2b1",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-05",
+            "source_ordinal": null,
+            "source_sha256": "b955ede6a1a93c041448b3aff9fef84d5e7d00c677206a5e76ff3ad5c5277cf5",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-05"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.006579999999999586,
+          "end_s": 81.16375,
+          "start_s": 81.15717
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 33,
+        "scene_id": "variant-01-vocal-variant-01-line-0028-100245555d",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-06-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-06-01",
+            "source_ordinal": 0,
+            "source_sha256": "6705e6dc5d90d458b73a9bc557d907929a7ee31d261e382028766f656fd31c35",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-06",
+            "source_ordinal": 5,
+            "source_sha256": "de50fe38ed47c5b2e758ea1da9417700d472f7e0dac1c0d75d3de7712af76772",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0028",
+            "source_ordinal": null,
+            "source_sha256": "c445048229b09932a37a780fb6fe118c20fed5df164c6ff60426ac8a3c62816c",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-06"
+        ],
+        "source_texts": [
+          "Toamna e colorată"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.373250000000013,
+          "end_s": 83.537,
+          "start_s": 81.16375
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 34,
+        "scene_id": "variant-01-vocal-variant-01-line-0029-8947337928",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-06-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-06-02",
+            "source_ordinal": 1,
+            "source_sha256": "c7c02dee2eac3e68cdf4b3ce5aadc38d3b2c14668f8716232f479a6033d7e2ab",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-06",
+            "source_ordinal": 5,
+            "source_sha256": "de50fe38ed47c5b2e758ea1da9417700d472f7e0dac1c0d75d3de7712af76772",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0029",
+            "source_ordinal": null,
+            "source_sha256": "01323f099e0ef46a7764972ab529b0b9e5e0a8ea98fc4ab14bcae250f57b4e41",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-06"
+        ],
+        "source_texts": [
+          "Frunzele cad ușor"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.4339999999999975,
+          "end_s": 86.011,
+          "start_s": 83.577
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 35,
+        "scene_id": "variant-01-vocal-variant-01-line-0030-9f79d55d86",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-06-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-06-03",
+            "source_ordinal": 2,
+            "source_sha256": "69b4044d1eca548b389fed2eb62eb73cb141fff4119e9f89e12532ee35578129",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-06",
+            "source_ordinal": 5,
+            "source_sha256": "de50fe38ed47c5b2e758ea1da9417700d472f7e0dac1c0d75d3de7712af76772",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0030",
+            "source_ordinal": null,
+            "source_sha256": "d37a843637eac64a09455ded992ef0a2ea59669880ea3c698c206e84f7a713e3",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-06"
+        ],
+        "source_texts": [
+          "Strângem mere și frunze"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.366669999999999,
+          "end_s": 88.404,
+          "start_s": 86.03733
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 36,
+        "scene_id": "variant-01-vocal-variant-01-line-0031-5330867388",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-06-04"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-06-04",
+            "source_ordinal": 3,
+            "source_sha256": "c117744c77124ce8677a5073e647773daa26247c3dee06be9c13f6e185f1e3d4",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-06",
+            "source_ordinal": 5,
+            "source_sha256": "de50fe38ed47c5b2e758ea1da9417700d472f7e0dac1c0d75d3de7712af76772",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0031",
+            "source_ordinal": null,
+            "source_sha256": "c240df3cd754c812fb67426b11f033bab747a8a072264a22e44d89bc0b5488a9",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-06"
+        ],
+        "source_texts": [
+          "Vântul suflă lin"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.234000000000009,
+          "end_s": 90.718,
+          "start_s": 88.484
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 37,
+        "scene_id": "variant-01-vocal-variant-01-line-0032-885a012a66",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-06-05"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-06-05",
+            "source_ordinal": 4,
+            "source_sha256": "82b90adec4b05a2659e61dc83a1587375ca88a4803d02faefdc6a45d5eb97b00",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-06",
+            "source_ordinal": 5,
+            "source_sha256": "de50fe38ed47c5b2e758ea1da9417700d472f7e0dac1c0d75d3de7712af76772",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0032",
+            "source_ordinal": null,
+            "source_sha256": "545fa1cdfc0aa7239267b13957742082d0d5b52728d0c3963e05d01e641cdf0c",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-06"
+        ],
+        "source_texts": [
+          "Ne punem jachete ușoare"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.5159999999999911,
+          "end_s": 92.314,
+          "start_s": 90.798
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 38,
+        "scene_id": "variant-01-vocal-variant-01-line-0033-a05b504420",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-06-06"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-06-06",
+            "source_ordinal": 5,
+            "source_sha256": "fe41e98cbb1e343fcf54bed7a063a04726caf565ed31e2bc09636efcedb75062",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-06",
+            "source_ordinal": 5,
+            "source_sha256": "de50fe38ed47c5b2e758ea1da9417700d472f7e0dac1c0d75d3de7712af76772",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0033",
+            "source_ordinal": null,
+            "source_sha256": "8adcedb192abced55cc3db963080661faf1acbc47696f211ad77f7fc0496d359",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-06"
+        ],
+        "source_texts": [
+          "Sărim în covor de frunze"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 3.279899999999998,
+          "end_s": 95.7529,
+          "start_s": 92.473
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 39,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-06-cb2f6e16e4",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-06",
+            "source_ordinal": null,
+            "source_sha256": "4394a03c2c0d887b4cc8324679922595db345a37be005839c60eabe48ea914de",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-06"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.007900000000006457,
+          "end_s": 95.7608,
+          "start_s": 95.7529
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 40,
+        "scene_id": "variant-01-vocal-variant-01-line-0034-f2dfd4caa1",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-07-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-07-01",
+            "source_ordinal": 0,
+            "source_sha256": "daee74b564c1f88268ea6d2a3ab1ca71d7b0b2a5c6113d6a14e166619182e4b9",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-07",
+            "source_ordinal": 6,
+            "source_sha256": "0b871ca5f3d44bbeabbfdc11e425e0836f41556c27b22bf7557e25917e1e9910",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0034",
+            "source_ordinal": null,
+            "source_sha256": "9a848842a9f6a5ead26960b9736286d006f5a687ae97a0d6953708735f3da981",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-07"
+        ],
+        "source_texts": [
+          "Iarna e albă"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.2601999999999975,
+          "end_s": 97.021,
+          "start_s": 95.7608
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 41,
+        "scene_id": "variant-01-vocal-variant-01-line-0035-d46888cba6",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-07-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-07-02",
+            "source_ordinal": 1,
+            "source_sha256": "de85d3696804e625c8df65152942088d3d902522362c284ee0368c6fca5feb60",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-07",
+            "source_ordinal": 6,
+            "source_sha256": "0b871ca5f3d44bbeabbfdc11e425e0836f41556c27b22bf7557e25917e1e9910",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0035",
+            "source_ordinal": null,
+            "source_sha256": "0bea56a12b3f9cae42317789d7b3e526df5bb7a07306befdf8a975249d53e2b6",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-07"
+        ],
+        "source_texts": [
+          "Ninge lin, ninge mult"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 3.5702500000000015,
+          "end_s": 100.691,
+          "start_s": 97.12075
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 42,
+        "scene_id": "variant-01-vocal-variant-01-line-0036-397a05cf3a",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-07-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-07-03",
+            "source_ordinal": 2,
+            "source_sha256": "c6a090791a6f53a7b6fc1551a9cdf2f265f0472283c2c5b49dc722f243b13927",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-07",
+            "source_ordinal": 6,
+            "source_sha256": "0b871ca5f3d44bbeabbfdc11e425e0836f41556c27b22bf7557e25917e1e9910",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0036",
+            "source_ordinal": null,
+            "source_sha256": "125b64fec7032b9c76fc4e41d9c45a4deaa908f6793e26d8cc0af99dd5b24a53",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-07"
+        ],
+        "source_texts": [
+          "Facem om de zăpadă"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.6159999999999997,
+          "end_s": 102.367,
+          "start_s": 100.751
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 43,
+        "scene_id": "variant-01-vocal-variant-01-line-0037-ac2252a60a",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-07-04"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-07-04",
+            "source_ordinal": 3,
+            "source_sha256": "242ac3cc9a6c5b299757b55f23dae76ed9ae0b878b9778801e626d51d14eb684",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-07",
+            "source_ordinal": 6,
+            "source_sha256": "0b871ca5f3d44bbeabbfdc11e425e0836f41556c27b22bf7557e25917e1e9910",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0037",
+            "source_ordinal": null,
+            "source_sha256": "a30b1c83d62cd934f9c165645bedccd7f24eb5012614536e724e01269073080e",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-07"
+        ],
+        "source_texts": [
+          "Ne punem haine groase"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 3.0720000000000027,
+          "end_s": 105.479,
+          "start_s": 102.407
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 44,
+        "scene_id": "variant-01-vocal-variant-01-line-0038-bc5afe75cc",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-07-05"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-07-05",
+            "source_ordinal": 4,
+            "source_sha256": "9a20caefff5d059ec63e2bdc14a4b972d8b8fcafc31b38929bdbff7b87178fdc",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-07",
+            "source_ordinal": 6,
+            "source_sha256": "0b871ca5f3d44bbeabbfdc11e425e0836f41556c27b22bf7557e25917e1e9910",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0038",
+            "source_ordinal": null,
+            "source_sha256": "d7971966acbe68374bffe9377843d90408065bf6817433a4070a98ee32306f3d",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-07"
+        ],
+        "source_texts": [
+          "Mănuși și căciulițe"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.9145000000000039,
+          "end_s": 107.473,
+          "start_s": 105.5585
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 45,
+        "scene_id": "variant-01-vocal-variant-01-line-0039-e4c79f9e97",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-07-06"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-07-06",
+            "source_ordinal": 5,
+            "source_sha256": "b833e71e1ed3902b0e7c87fd7bbc366e24b045e6005e422cb1d42c6b084adad4",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-07",
+            "source_ordinal": 6,
+            "source_sha256": "0b871ca5f3d44bbeabbfdc11e425e0836f41556c27b22bf7557e25917e1e9910",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0039",
+            "source_ordinal": null,
+            "source_sha256": "f90636eb689be210a9605c61a67adf860e04c4db3724b5cda203c48c6fa457e0",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-07"
+        ],
+        "source_texts": [
+          "Bucurie și clopoței"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 5.393270000000001,
+          "end_s": 112.98627,
+          "start_s": 107.593
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 46,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-07-4f6046fa1d",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-07",
+            "source_ordinal": null,
+            "source_sha256": "18d0781b97498a110cc45d6fe1808bd25b6359a46cde1d239a140c913216d4af",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-07"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.007279999999994402,
+          "end_s": 112.99355,
+          "start_s": 112.98627
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 47,
+        "scene_id": "variant-01-vocal-variant-01-line-0040-a5cc6bf2dc",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-08-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-08-01",
+            "source_ordinal": 0,
+            "source_sha256": "4f9dc45396638f746e5bddd3e4dc6a50a5696822130293e97d5cf42152b1f4e4",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-08",
+            "source_ordinal": 7,
+            "source_sha256": "7f533dc524ece4d7709ad0f5844f962629ed309529432b384dd26fae210b0e5a",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0040",
+            "source_ordinal": null,
+            "source_sha256": "96a8c4665ad0719ffa6d5e94f96e516b28cca0e32ba340e321a47822ed5c1c14",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-08"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.5779500000000013,
+          "end_s": 115.5715,
+          "start_s": 112.99355
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 48,
+        "scene_id": "variant-01-vocal-variant-01-line-0041-a02f891283",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-08-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-08-02",
+            "source_ordinal": 1,
+            "source_sha256": "db5f3deda8bdd0b9ce57baf04645e8a6485bf9069bf5b35c89851b9c57c3eb31",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-08",
+            "source_ordinal": 7,
+            "source_sha256": "7f533dc524ece4d7709ad0f5844f962629ed309529432b384dd26fae210b0e5a",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0041",
+            "source_ordinal": null,
+            "source_sha256": "51c9a0f8063e0382ec3b184770a1c432c6aa0e871400e99144031cb3fd710d88",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-08"
+        ],
+        "source_texts": [
+          "Vara! Toamna!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 1.9158000000000044,
+          "end_s": 117.6068,
+          "start_s": 115.691
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 49,
+        "scene_id": "variant-01-vocal-variant-01-line-0042-b59ceb381d",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-08-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-08-03",
+            "source_ordinal": 2,
+            "source_sha256": "8b1c167cb60a99a9ea269cfa94e54b5d8124ada858188eb568f345d7eda50696",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-08",
+            "source_ordinal": 7,
+            "source_sha256": "7f533dc524ece4d7709ad0f5844f962629ed309529432b384dd26fae210b0e5a",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0042",
+            "source_ordinal": null,
+            "source_sha256": "8ce81478ed954ed01b7422385a1d584178563d6d8fcf85783f54ce6ef5b9517c",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-08"
+        ],
+        "source_texts": [
+          "Sunt patru anotimpuri!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 5.1458999999999975,
+          "end_s": 122.8325,
+          "start_s": 117.6866
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 50,
+        "scene_id": "variant-01-vocal-variant-01-line-0043-c1b1b25ec9",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-08-04"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-08-04",
+            "source_ordinal": 3,
+            "source_sha256": "8a6438ac86f4cb1b7394255d8bbfe638b04870d0ca5680a59e760f55d285a07c",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-08",
+            "source_ordinal": 7,
+            "source_sha256": "7f533dc524ece4d7709ad0f5844f962629ed309529432b384dd26fae210b0e5a",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0043",
+            "source_ordinal": null,
+            "source_sha256": "ad4a4944175c87efbf088e8c8356dfcff0233ac556d1b35729f7037b7a0079bb",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-08"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.4339999999999975,
+          "end_s": 125.306,
+          "start_s": 122.872
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 51,
+        "scene_id": "variant-01-vocal-variant-01-line-0044-2b56a8dc51",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-08-05"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-08-05",
+            "source_ordinal": 4,
+            "source_sha256": "cf81ec66179e900887c5bb8777a5977cab4d40b3586d61938946087fb06254c8",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-08",
+            "source_ordinal": 7,
+            "source_sha256": "7f533dc524ece4d7709ad0f5844f962629ed309529432b384dd26fae210b0e5a",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0044",
+            "source_ordinal": null,
+            "source_sha256": "9593673f88648d1ecceef165bdbd8422b664b925cdbd50ffd569719c94f57512",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-08"
+        ],
+        "source_texts": [
+          "Vara! Toamna!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.333749999999995,
+          "end_s": 127.75975,
+          "start_s": 125.426
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 52,
+        "scene_id": "variant-01-vocal-variant-01-line-0045-63c3d2e2a9",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-08-06"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-08-06",
+            "source_ordinal": 5,
+            "source_sha256": "6b1c8a01d01400cdbec2b0934923255ea54859ccbc9ee3378a598332731e47e7",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-08",
+            "source_ordinal": 7,
+            "source_sha256": "7f533dc524ece4d7709ad0f5844f962629ed309529432b384dd26fae210b0e5a",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0045",
+            "source_ordinal": null,
+            "source_sha256": "f625d5723b48f1b395d5ab744e04d15adece9da07b7fb0194df7da5b43878ef3",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-08"
+        ],
+        "source_texts": [
+          "Hai să le spunem iar!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.366829999999993,
+          "end_s": 130.22633,
+          "start_s": 127.8595
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 53,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-08-af52b76a5b",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-08",
+            "source_ordinal": null,
+            "source_sha256": "a099a3ba26d172e41b39c0b036035626992b1fc0792321f8240c71e44b9d27b5",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-08"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.0066700000000139426,
+          "end_s": 130.233,
+          "start_s": 130.22633
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 54,
+        "scene_id": "variant-01-vocal-variant-01-line-0046-3706cc917b",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-09-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-09-01",
+            "source_ordinal": 0,
+            "source_sha256": "1771dfec4e296f0807caecbc8c99bd87ff0ed677efb0d0af84854c721f91e74d",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-09",
+            "source_ordinal": 8,
+            "source_sha256": "f17165307428460e234b6c1ceb3583670b1d0b14f58b20caa0a48f6ef844df8d",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0046",
+            "source_ordinal": null,
+            "source_sha256": "619485d5434171579ae2a7cd25ea367e2112e6050475b2e0436648040f7fbadc",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-09"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 4.766999999999996,
+          "end_s": 135.0,
+          "start_s": 130.233
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 55,
+        "scene_id": "variant-01-vocal-variant-01-line-0047-2c039b0b29",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-09-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-09-02",
+            "source_ordinal": 1,
+            "source_sha256": "47d17b590864e4be7ccbaba436c0dd21e181479508092c32a6ea2c6747882c5a",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-09",
+            "source_ordinal": 8,
+            "source_sha256": "f17165307428460e234b6c1ceb3583670b1d0b14f58b20caa0a48f6ef844df8d",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0047",
+            "source_ordinal": null,
+            "source_sha256": "2b0048be3ab3d8b7c838dbcd72fc1ea4d6f042cd10b456910caa89584c8be666",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-09"
+        ],
+        "source_texts": [
+          "Vara! Toamna!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.1377999999999986,
+          "end_s": 137.2178,
+          "start_s": 135.08
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 56,
+        "scene_id": "variant-01-vocal-variant-01-line-0048-df0b5aef2b",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-09-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-09-03",
+            "source_ordinal": 2,
+            "source_sha256": "3014295308ec47f33a5c5235507edab0b4aa0afd24cf3e6056863bbbafe0bcda",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-09",
+            "source_ordinal": 8,
+            "source_sha256": "f17165307428460e234b6c1ceb3583670b1d0b14f58b20caa0a48f6ef844df8d",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0048",
+            "source_ordinal": null,
+            "source_sha256": "02685c8280468fc4229b4383c70aa6d136365361a188e58267634bc985b56c39",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-09"
+        ],
+        "source_texts": [
+          "Sunt patru anotimpuri!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 5.13839999999999,
+          "end_s": 142.42,
+          "start_s": 137.2816
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 57,
+        "scene_id": "variant-01-vocal-variant-01-line-0049-a2ce1d248d",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-09-04"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-09-04",
+            "source_ordinal": 3,
+            "source_sha256": "5ab5bdec3e1951962e6696dfa08854b1c8fc281e492d3487093bd2f77457f4fd",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-09",
+            "source_ordinal": 8,
+            "source_sha256": "f17165307428460e234b6c1ceb3583670b1d0b14f58b20caa0a48f6ef844df8d",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0049",
+            "source_ordinal": null,
+            "source_sha256": "b9f08b78b31e9a818340a611c77cf4b86e87b57f1be2107b9d1e060a8520a600",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-09"
+        ],
+        "source_texts": [
+          "Iarna! Primăvara!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.4335000000000093,
+          "end_s": 144.9335,
+          "start_s": 142.5
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 58,
+        "scene_id": "variant-01-vocal-variant-01-line-0050-9ed617869a",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-09-05"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-09-05",
+            "source_ordinal": 4,
+            "source_sha256": "6aa350555640cd412f1c24d58ada8d735ae2b9697877b6ab2baadcf5f8a7d023",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-09",
+            "source_ordinal": 8,
+            "source_sha256": "f17165307428460e234b6c1ceb3583670b1d0b14f58b20caa0a48f6ef844df8d",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0050",
+            "source_ordinal": null,
+            "source_sha256": "a4a4b59da2120bb8bf083f23f993c353dcf56118ac84881e08b94687985cfeb4",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-09"
+        ],
+        "source_texts": [
+          "Vara! Toamna!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 2.2537499999999966,
+          "end_s": 147.30675,
+          "start_s": 145.053
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 59,
+        "scene_id": "variant-01-vocal-variant-01-line-0051-0193087f66",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-09-06"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-09-06",
+            "source_ordinal": 5,
+            "source_sha256": "0bee51a51956cdaa6268e012a911ee9479156dc26cd2db3877ffbebc5d9c78ad",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-09",
+            "source_ordinal": 8,
+            "source_sha256": "f17165307428460e234b6c1ceb3583670b1d0b14f58b20caa0a48f6ef844df8d",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0051",
+            "source_ordinal": null,
+            "source_sha256": "617c6f0790984639588712a9a099bb721a267ea8a669ba3ec3eaed00fc30148f",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-09"
+        ],
+        "source_texts": [
+          "Hai să le spunem iar!"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 5.01400000000001,
+          "end_s": 152.4205,
+          "start_s": 147.4065
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 60,
+        "scene_id": "variant-01-instrumental_break-variant-01-instrumental-break-09-4a84f73fd5",
+        "scene_type": "instrumental_break",
+        "source_line_ids": [],
+        "source_references": [
+          {
+            "source_id": "variant-01-instrumental-break-09",
+            "source_ordinal": null,
+            "source_sha256": "46297b7fc4fd3bf07d964d7a3c1a9fc4ce4f65f2cc9cab7b541173087cc1600b",
+            "source_type": "instrumental_section"
+          }
+        ],
+        "source_section_ids": [
+          "variant-01-instrumental-break-09"
+        ],
+        "source_texts": [],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 0.013249999999999318,
+          "end_s": 152.43375,
+          "start_s": 152.4205
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 61,
+        "scene_id": "variant-01-vocal-variant-01-line-0052-0a433c71ac",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-10-01"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-10-01",
+            "source_ordinal": 0,
+            "source_sha256": "cef735763d6962cce089339ab1648d09b5af110c8da40b09bf607cc5da239aa1",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-10",
+            "source_ordinal": 9,
+            "source_sha256": "d69df4bace31655e272bd43e88b7d16ab6874c13f13ec053ebe32decaf97ad76",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0052",
+            "source_ordinal": null,
+            "source_sha256": "e22079623218dd979671afcb68e36517f34c3fbcee6c02f1d144a9eb49b4a7dc",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-10"
+        ],
+        "source_texts": [
+          "Acum știm anotimpurile"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 3.2312499999999886,
+          "end_s": 155.665,
+          "start_s": 152.43375
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 62,
+        "scene_id": "variant-01-vocal-variant-01-line-0053-ef6edb6beb",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-10-02"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-10-02",
+            "source_ordinal": 1,
+            "source_sha256": "f89adc2c89c444633dc11d4e12ab5ed756c27af17e7a9fb4407a28b4d4fed1da",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-10",
+            "source_ordinal": 9,
+            "source_sha256": "d69df4bace31655e272bd43e88b7d16ab6874c13f13ec053ebe32decaf97ad76",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0053",
+            "source_ordinal": null,
+            "source_sha256": "0dfcd4db1fb465393a64467b80c557a984afa68e979ce9f8f9bbadb8f2711636",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-10"
+        ],
+        "source_texts": [
+          "Iarna, Primăvara, Vara, Toamna"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 5.1059999999999945,
+          "end_s": 160.851,
+          "start_s": 155.745
+        },
+        "warnings": []
+      },
+      {
+        "actions": [],
+        "continuity_hints": [],
+        "educational_constraints": [],
+        "environment": {
+          "location": "unspecified",
+          "time_of_day": "unspecified",
+          "weather": "unspecified"
+        },
+        "mood": "unspecified",
+        "ordinal": 63,
+        "scene_id": "variant-01-vocal-variant-01-line-0054-8b8482cf52",
+        "scene_type": "vocal",
+        "source_line_ids": [
+          "line-10-03"
+        ],
+        "source_references": [
+          {
+            "source_id": "line-10-03",
+            "source_ordinal": 2,
+            "source_sha256": "babe2bb26fa51fe47f556e2a64fe30ec3ac3cd9a53d9bac50f53a5c6429112a0",
+            "source_type": "lyrics_line"
+          },
+          {
+            "source_id": "section-10",
+            "source_ordinal": 9,
+            "source_sha256": "d69df4bace31655e272bd43e88b7d16ab6874c13f13ec053ebe32decaf97ad76",
+            "source_type": "lyrics_section"
+          },
+          {
+            "source_id": "variant-01-line-0054",
+            "source_ordinal": null,
+            "source_sha256": "cc7773d282baa2620a7e59029b2b14795e612ee6de07c853ffeeea52469a8277",
+            "source_type": "alignment_line"
+          }
+        ],
+        "source_section_ids": [
+          "section-10"
+        ],
+        "source_texts": [
+          "Să le cântăm din nou! (repetați refrenul)"
+        ],
+        "status": "valid",
+        "subjects": [],
+        "timing": {
+          "duration_s": 3.3889999999999816,
+          "end_s": 164.32,
+          "start_s": 160.931
+        },
+        "warnings": []
+      }
+    ],
+    "schema_version": "1.0",
+    "semantic_sha256": "086204f4e74afe1505b23055d78e56323bf1e2e739da94c40c7a97a3530209e8",
+    "source_alignment_sha256": "20697fa887c7e9e7110f1a275545518adca423878cccaa317e264fc0833cf8c8",
+    "source_lyrics_sha256": "46943ec8888b0adc65518f4e7b769efbe5fe12e69c488040c650355b5867fded",
+    "status": "valid",
+    "unplanned_line_ids": [],
+    "warnings": []
+  },
+  "dependency_sha256": "2f221331c8938adb1bcb7c49890c0bc9bdbfdb4d268b1084677dc93c996b6dff",
+  "provider_metadata": {},
+  "review_required": false,
+  "semantic_sha256": "c56c72387603ae19ad4f2b3c76081b5780188952ecf52ad3800a394efe21fc67",
+  "stage": "scene_plan",
+  "status": "generated",
+  "version": 1,
+  "warnings": []
+}

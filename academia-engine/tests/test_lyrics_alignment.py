@@ -44,6 +44,23 @@ class LyricsAlignmentTests(unittest.TestCase):
     def test_timestamp_beyond_audio_duration_is_invalid(self):
         with self.assertRaises(LyricsAlignmentInvalid): build(words(),duration=10)
 
+    def test_small_allowed_provider_overrun_is_clamped_to_audio_duration(self):
+        provider=list(words()); duration=provider[-1].end_seconds-.2
+        value=build(tuple(provider),duration=duration)
+        self.assertEqual(duration,value.words[-1].end_seconds); self.assertLessEqual(max(line.end_seconds for line in value.lines),duration)
+
+    def test_word_entirely_inside_allowed_trailing_overrun_is_ignored(self):
+        provider=list(words()); duration=provider[-1].start_seconds-.1
+        provider[-1]=provider[-1].model_copy(update={"start_seconds":duration+.1,"end_seconds":duration+.3})
+        value=build(tuple(provider),duration=duration)
+        self.assertTrue(value.words); self.assertTrue(all(word.end_seconds<=duration for word in value.words))
+        self.assertEqual(len(provider)-1,len(value.words))
+
+    def test_zero_duration_provider_word_is_ignored(self):
+        provider=list(words()); provider[-1]=provider[-1].model_copy(update={"end_seconds":provider[-1].start_seconds})
+        value=build(tuple(provider))
+        self.assertEqual(len(provider)-1,len(value.words))
+
     def test_instrumental_is_explicit(self):
         value=LyricsAlignmentNormalizer().build(variant_id="variant-01",audio_artifact_id="audio",audio_sha256="a"*64,
             provider_task_id="task",provider_audio_id="audio",audio_duration_seconds=20,language="ro",source="suno",

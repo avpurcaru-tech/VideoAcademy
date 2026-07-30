@@ -1,0 +1,15 @@
+{
+  "approved_version": 2,
+  "artifact_paths": [
+    "alignment/version-002.json"
+  ],
+  "dependency_hashes": {
+    "lyrics": "a67eb3b65ba21e4c292f9800d49e105436fe7a2b69e0516a23e94fe3868dd5db",
+    "music": "9c5315146824141d7f06ac72d774265625b08be89943933a00a08e0f00768bda",
+    "prompts": "bc1afbbbe27a528659c5b90bf7c1a67c26eba4cc1c82a548482056fe9303092c",
+    "scene_plan": "57684381b5b9e7b668ccf3c55250b5cad76bc8a410336dfc6eaea47a70daefe1",
+    "visual_plan": "fdc5f75ff6ebb63569eb8a5ca2151e76dd45d40f59edb9a9e71c90e60b65ec8f"
+  },
+  "stage": "alignment",
+  "validation_summary": "approved artifact and workflow dependency snapshot validated"
+}
